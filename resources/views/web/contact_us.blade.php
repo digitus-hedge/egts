@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - EGIS Erbil Gate Technical Services</title>
+    <title>Contact Us - EGTS Erbil Gate Technical Services</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
@@ -101,7 +101,7 @@
                             </div>
                             <div>
                                 <span class="ct-info-label">Email</span>
-                                <span class="ct-info-value">info@egis-iq.com</span>
+                                <span class="ct-info-value">info@egts-iq.com</span>
                             </div>
                         </div>
 

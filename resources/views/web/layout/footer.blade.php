@@ -5,7 +5,7 @@
         <div class="footer-inner">
             {{-- Company Info --}}
             <div class="footer-col footer-brand">
-                <img src="{{ asset('images/footer-logo.webp') }}" alt="EGIS Logo" class="footer-logo">
+                <img src="{{ asset('images/footer-logo.webp') }}" alt="EGTS Logo" class="footer-logo">
                 <p>
                     Erbil Gate Technical Services Ltd. — precision machining and technical services for oilfield and energy industries.
                 </p>
@@ -41,7 +41,7 @@
                     <li>Ankawa Industrial Area</li>
                     <li>Kurdistan Region, Iraq</li>
                     <li>Phone: +964 750 467 8530</li>
-                    <li>Email: info@egis-iq.com</li>
+                    <li>Email: info@egts-iq.com</li>
                 </ul>
             </div>
         </div>
