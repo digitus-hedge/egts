@@ -74,7 +74,7 @@ class BannerRequest extends FormRequest
     {
         $validator->after(function (Validator $validator) {
 
-            $banner = $this->route('banner'); // null on create, Banner model on edit
+            $banner = \App\Models\Banner::first(); // the single existing banner row, or null if none saved yet
 
             // Count newly uploaded images in this request
             $newImageCount = collect(['image_1', 'image_2', 'image_3'])

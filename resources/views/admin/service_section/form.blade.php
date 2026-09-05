@@ -1,6 +1,8 @@
 @extends('admin.layout')
-@section('title', $serviceSection->exists ? 'Edit Service Section' : 'Add Service Section')
+@section('title', 'Service Section')
 @section('content')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @if ($errors->any())
     <div class="alert alert-error">
@@ -10,27 +12,36 @@
     </div>
 @endif
 
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: @json(session('success')),
+                confirmButtonColor: '#3b3b58',
+                timer: 2500,
+                timerProgressBar: true
+            });
+        });
+    </script>
+@endif
+
 <div class="form-header">
     <h4>
-        <i class="bi bi-{{ $serviceSection->exists ? 'pencil-square' : 'plus-circle' }}"></i>
-        {{ $serviceSection->exists ? 'Edit Service Section' : 'Add Service Section' }}
+        <i class="bi bi-file-text"></i>
+        Service Section
     </h4>
-    <a href="{{ route('admin.home.services.section') }}" class="btn-back">
-        <i class="bi bi-arrow-left"></i> Back to list
-    </a>
 </div>
 
-<form action="{{ $serviceSection->exists ? route('admin.home.services.section.update', $serviceSection->id) : route('admin.home.services.section.store') }}"
+<form action="{{ route('admin.home.services.section.store') }}"
       method="POST" class="banner-form" id="serviceSectionForm">
     @csrf
-    @if ($serviceSection->exists)
-        @method('PUT')
-    @endif
 
     <div class="container-fluid px-0">
         <div class="row">
 
-          
+
 
             <div class="col-md-8">
                 <div class="form-card">
@@ -63,10 +74,10 @@
 
             <div class="col-md-12">
                 <div class="form-actions">
-                    <a href="{{ route('admin.home.services.section') }}" class="btn-cancel">Cancel</a>
+                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel">Cancel</a>
                     <button type="submit" class="btn-submit">
                         <i class="bi bi-check-lg"></i>
-                        {{ $serviceSection->exists ? 'Update' : 'Save' }}
+                        Save
                     </button>
                 </div>
             </div>

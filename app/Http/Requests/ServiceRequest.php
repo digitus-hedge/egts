@@ -1,10 +1,8 @@
 <?php
-// app/Http/Requests/ServiceRequest.php
 
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ServiceRequest extends FormRequest
 {
@@ -16,24 +14,19 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:150',
-            'description' => 'required|string|max:500',
-            'content'     => 'nullable|string',
-            'image'       => [
-                $this->isMethod('POST') ? 'required' : 'nullable',
-                'image',
-                'mimes:jpeg,jpg,png,webp',
-                'max:2048',
-            ],
-            'sort_order'  => 'nullable|integer|min:0',
-            'status'      => 'nullable|boolean',
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'image.required' => 'Please upload an image for this service.',
+            'title'                     => 'required|string|max:255',
+            'description'               => 'required|string|max:500',
+            'process_description'       => 'nullable|string',
+            'technical_scope'           => 'nullable|array',
+            'technical_scope.*'         => 'nullable|string|max:255',
+            'specifications'            => 'nullable|array',
+            'specifications.*.specification' => 'nullable|string|max:255',
+            'specifications.*.details'       => 'nullable|string|max:255',
+            'specifications.*.compliance'    => 'nullable|string|max:100',
+            'image'                     => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'gallery.*'                 => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'sort_order'                => 'nullable|integer|min:0',
+            'status'                    => 'nullable|boolean',
         ];
     }
 }

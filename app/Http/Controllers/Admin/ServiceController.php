@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/Admin/ServiceController.php
 
 namespace App\Http\Controllers\Admin;
 
@@ -11,7 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
 
 class ServiceController extends Controller
 {
@@ -29,7 +27,6 @@ class ServiceController extends Controller
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             })
-            ->orderBy('sort_order')
             ->paginate($perPage)
             ->withQueryString();
 
@@ -47,16 +44,7 @@ class ServiceController extends Controller
         $data = $request->validated();
 
         $service = new Service();
-        $service->title = $data['title'];
-        $service->description = $data['description'];
-        $service->content = $data['content'] ?? null;
-        $service->sort_order = $data['sort_order'] ?? 0;
-        $service->status = $data['status'] ?? 0;
-
-        if ($request->hasFile('image')) {
-            $service->image = $this->processAndStoreImage($request->file('image'));
-        }
-
+        $this->fillService($service, $data, $request);
         $service->save();
 
         return redirect()
@@ -72,20 +60,7 @@ class ServiceController extends Controller
     public function update(ServiceRequest $request, Service $service)
     {
         $data = $request->validated();
-
-        $service->title = $data['title'];
-        $service->description = $data['description'];
-        $service->content = $data['content'] ?? null;
-        $service->sort_order = $data['sort_order'] ?? 0;
-        $service->status = $data['status'] ?? 0;
-
-        if ($request->hasFile('image')) {
-            if ($service->image) {
-                Storage::disk('public')->delete($service->image);
-            }
-            $service->image = $this->processAndStoreImage($request->file('image'));
-        }
-
+        $this->fillService($service, $data, $request);
         $service->save();
 
         return redirect()
@@ -95,6 +70,13 @@ class ServiceController extends Controller
 
     public function destroy(Service $service)
     {
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
+        foreach ($service->gallery ?? [] as $img) {
+            Storage::disk('public')->delete($img);
+        }
+
         $service->delete();
 
         return redirect()
@@ -102,14 +84,62 @@ class ServiceController extends Controller
             ->with('success', 'Service deleted successfully.');
     }
 
+    private function fillService(Service $service, array $data, Request $request): void
+    {
+        $service->title = $data['title'];
+        $service->slug = Str::slug($data['title']);
+        $service->description = $data['description'];
+        $service->process_description = $data['process_description'] ?? null;
+
+        $service->technical_scope = collect($data['technical_scope'] ?? [])
+            ->filter(fn ($v) => trim((string) $v) !== '')
+            ->values()
+            ->all();
+
+        $service->specifications = collect($data['specifications'] ?? [])
+            ->filter(fn ($row) => !empty($row['specification']) || !empty($row['details']) || !empty($row['compliance']))
+            ->values()
+            ->all();
+
+        $service->status = $data['status'] ?? 0;
+
+        if ($request->hasFile('image')) {
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
+            $service->image = $this->processAndStoreImage($request->file('image'));
+        }
+
+        if ($request->hasFile('gallery')) {
+            $existingGallery = $service->gallery ?? [];
+            foreach ($request->file('gallery') as $file) {
+                if (count($existingGallery) >= 3) break;
+                $existingGallery[] = $this->processAndStoreImage($file);
+            }
+            $service->gallery = array_values($existingGallery);
+        }
+
+        // Remove gallery images the admin marked for deletion
+        if ($request->filled('remove_gallery')) {
+            $toRemove = $request->input('remove_gallery');
+            $currentGallery = $service->gallery ?? [];
+
+            foreach ($toRemove as $path) {
+                Storage::disk('public')->delete($path);
+            }
+
+            $service->gallery = array_values(array_diff($currentGallery, $toRemove));
+        }
+    }
+
     private function processAndStoreImage($file): string
     {
         $filename = 'services/' . Str::random(20) . '.webp';
 
-        $manager = ImageManager::usingDriver(Driver::class);
-        $image = $manager->decode($file);
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
         $image->cover($this->imageWidth, $this->imageHeight);
-        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $this->compressQuality);
+        $encoded = $image->toWebp(quality: $this->compressQuality);
 
         Storage::disk('public')->put($filename, (string) $encoded);
 

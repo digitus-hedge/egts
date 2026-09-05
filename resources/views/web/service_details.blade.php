@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Threading Services - EGTS Erbil Gate Technical Services</title>
+    <title>{{ $service->title }} - EGTS Erbil Gate Technical Services</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
@@ -16,11 +16,11 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="sd-hero" style="background-image: url('{{ asset('images/thread.jpg') }}');">
+        <section class="sd-hero" @if($service->image) style="background-image: url('{{ asset('storage/' . $service->image) }}');" @endif>
             <div class="sd-hero-overlay"></div>
             <div class="sd-hero-content">
                 <span class="sd-hero-eyebrow">SERVICE DETAIL</span>
-                <h1>API Threading Services:<br>Detailed Specifications</h1>
+                <h1>{{ $service->title }}:<br>Detailed Specifications</h1>
             </div>
         </section>
         {{-- ===== End Page Hero Section ===== --}}
@@ -95,29 +95,32 @@
                 <div class="sd-overview-grid">
                     <div class="sd-overview-col">
                         <h3>Process Description</h3>
-                        <p>Our API threading process follows a strict step-by-step methodology, ensuring every connection meets exacting dimensional and mechanical tolerances. Each thread is cut, inspected, and gauged in line with API and premium connection licensor requirements before it leaves our facility, with full documentation provided for every step of the service.</p>
+                        <p>{{ $service->process_description }}</p>
                     </div>
 
+                    @if (!empty($service->technical_scope))
                     <div class="sd-overview-col">
                         <h3>Technical Scope &amp; Capabilities</h3>
                         <ul class="sd-scope-list">
-                            <li>Thread types: Buttress, LTC, STC, Extreme Line</li>
-                            <li>Thread sizes: 2 3/8" through 13 3/8"</li>
-                            <li>Full re-cutting and re-threading capability</li>
-                            <li>Projects completed to API 5B / API Q1 standards</li>
-                            <li>Assets inspected and certified prior to dispatch</li>
+                            @foreach ($service->technical_scope as $point)
+                                <li>{{ $point }}</li>
+                            @endforeach
                         </ul>
                     </div>
+                    @endif
                 </div>
 
+                @if ($service->image)
                 <div class="sd-visual-box">
-                    <img src="{{ asset('images/service-1.webp') }}" alt="API Threading Process Visual">
+                    <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }} Process Visual">
                 </div>
+                @endif
             </div>
         </section>
         {{-- ===== End Overview & Technical Process ===== --}}
 
         {{-- ===== Technical Specifications & Features ===== --}}
+        @if (!empty($service->specifications))
         <section class="sd-specs-section">
             <div class="sd-specs-inner">
                 <span class="sd-section-eyebrow">TECHNICAL SPECIFICATIONS &amp; FEATURES</span>
@@ -133,41 +136,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Thread Form</td>
-                                <td>Buttress and V-0.038R thread form</td>
-                                <td>API 5B</td>
-                            </tr>
-                            <tr>
-                                <td>Tolerance</td>
-                                <td>Full range thread taper and tolerance</td>
-                                <td>API 5B</td>
-                            </tr>
-                            <tr>
-                                <td>API Standard</td>
-                                <td>OD Master ID Gauging</td>
-                                <td>API 5B</td>
-                            </tr>
-                            <tr>
-                                <td>API Standard</td>
-                                <td>OD Master Gauging</td>
-                                <td>API Q1</td>
-                            </tr>
-                            <tr>
-                                <td>API Standard</td>
-                                <td>API 5CT / 5B Casing &amp; Tubing</td>
-                                <td>API 5CT</td>
-                            </tr>
-                            <tr>
-                                <td>API Standard</td>
-                                <td>API 7-1 / 7-2 Rotary Connections</td>
-                                <td>API 7-2</td>
-                            </tr>
+                            @foreach ($service->specifications as $row)
+                                <tr>
+                                    <td>{{ $row['specification'] ?? '' }}</td>
+                                    <td>{{ $row['details'] ?? '' }}</td>
+                                    <td>{{ $row['compliance'] ?? '' }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
+        @endif
         {{-- ===== End Technical Specifications & Features ===== --}}
 
         {{-- ===== Gallery & Related Services ===== --}}
@@ -229,42 +210,38 @@
 
             <div class="sd-gallery-inner">
 
+                @if (!empty($service->gallery))
                 <div class="sd-gallery-col">
                     <span class="sd-section-eyebrow">GALLERY</span>
                     <h2>Service Images</h2>
 
                     <div class="sd-gallery-grid">
-                        <div class="sd-gallery-item">
-                            <img src="{{ asset('images/service-1.webp') }}" alt="API Threading Gallery 1">
-                        </div>
-                        <div class="sd-gallery-item">
-                            <img src="{{ asset('images/service-3.webp') }}" alt="API Threading Gallery 2">
-                        </div>
-                        <div class="sd-gallery-item">
-                            <img src="{{ asset('images/service-5.webp') }}" alt="API Threading Gallery 3">
-                        </div>
+                        @foreach ($service->gallery as $img)
+                            <div class="sd-gallery-item">
+                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $service->title }} Gallery">
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+                @endif
 
+                @if ($relatedServices->count())
                 <div class="sd-related-col">
                     <span class="sd-section-eyebrow">RELATED SERVICES</span>
                     <h2>You May Also Need</h2>
 
                     <div class="sd-related-grid">
-                        <a href="{{ url('/services/premium-connection-machining') }}" class="sd-related-item">
-                            <img src="{{ asset('images/service-2.webp') }}" alt="Premium Connection Machining">
-                            <span>Premium Connection Machining</span>
-                        </a>
-                        <a href="{{ url('/services/repair-remanufacturing') }}" class="sd-related-item">
-                            <img src="{{ asset('images/service-7.webp') }}" alt="Repair & Remanufacturing">
-                            <span>Repair &amp; Remanufacturing</span>
-                        </a>
-                        <a href="{{ url('/services/quality-control-calibration') }}" class="sd-related-item">
-                            <img src="{{ asset('images/service-8.webp') }}" alt="Quality Control & Calibration">
-                            <span>Quality Control &amp; Calibration</span>
-                        </a>
+                        @foreach ($relatedServices as $related)
+                            <a href="{{ url('/services/' . $related->slug) }}" class="sd-related-item">
+                                @if ($related->image)
+                                    <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->title }}">
+                                @endif
+                                <span>{{ $related->title }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
+                @endif
 
             </div>
         </section>
@@ -276,7 +253,7 @@
                 <div class="sd-consult-left">
                     <span class="sd-section-eyebrow">GET IN TOUCH</span>
                     <h2>Request a Consultation</h2>
-                    <p>Talk to our technical team about API threading specifications, lead times, and capacity for your next project.</p>
+                    <p>Talk to our technical team about {{ Str::lower($service->title) }} specifications, lead times, and capacity for your next project.</p>
                 </div>
 
                 <form class="sd-consult-form" action="{{ url('/contact/submit') }}" method="POST">

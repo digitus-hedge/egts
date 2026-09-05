@@ -1,5 +1,4 @@
 <?php
-// app/Models/Service.php
 
 namespace App\Models;
 
@@ -11,20 +10,15 @@ class Service extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'title',
-        'description',
-        'content',
-        'image',
-        'sort_order',
+        'title', 'slug', 'description', 'process_description',
+        'technical_scope', 'specifications', 'image', 'gallery',
         'status',
     ];
 
     protected $casts = [
-        'status' => 'boolean',
+        'technical_scope' => 'array',
+        'specifications'  => 'array',
+        'gallery'         => 'array',
+        'status'          => 'boolean',
     ];
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1)->orderBy('sort_order');
-    }
 }

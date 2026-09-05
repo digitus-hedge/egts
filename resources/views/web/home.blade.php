@@ -16,13 +16,30 @@
         {{-- ===== Hero Banner Section ===== --}}
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
-        <section class="hero-banner" style="background-image: url('{{ asset('images/banner.webp') }}');">
+        @php
+            $bannerImages = collect([$banner->image_1 ?? null, $banner->image_2 ?? null, $banner->image_3 ?? null])
+                ->filter()
+                ->map(fn ($img) => asset('storage/' . $img))
+                ->values();
+            $bannerVideo = $banner->video ?? null;
+            $heroTitle = $banner->title ?? '';
+            $heroDescription = $banner->description ?? '';
+            $fallbackImage = $bannerImages->first() ?? '';
+        @endphp
+
+        <section class="hero-banner" id="heroBanner" @if($fallbackImage) style="background-image: url('{{ $fallbackImage }}');" @endif>
+
+            @if ($bannerVideo)
+                <video class="hero-video-bg" autoplay muted loop playsinline>
+                    <source src="{{ asset('storage/' . $bannerVideo) }}" type="video/mp4">
+                </video>
+            @endif
+
             <div class="hero-overlay"></div>
 
             <div class="hero-content">
-                <h1>Precision machining solutions<br>for the oil &amp; gas industry.</h1>
-                <p>Advanced machining, repair, remanufacturing and inspection services engineered for demanding oilfield
-                    and energy applications.</p>
+                <h1>{{ $heroTitle }}</h1>
+                <p>{{ $heroDescription }}</p>
                 <a href="{{ url('/services') }}" class="hero-cta">
                     Explore Our Services
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -32,6 +49,21 @@
                 </a>
             </div>
         </section>
+
+        @if (!$bannerVideo && $bannerImages->count() > 1)
+        <script>
+            (function () {
+                const images = @json($bannerImages);
+                let index = 0;
+                const heroEl = document.getElementById('heroBanner');
+
+                setInterval(() => {
+                    index = (index + 1) % images.length;
+                    heroEl.style.backgroundImage = `url('${images[index]}')`;
+                }, 4000);
+            })();
+        </script>
+        @endif
         {{-- ===== End Hero Banner Section ===== --}}
 
         {{-- ===== About Section ===== --}}
@@ -159,30 +191,18 @@
                     </g>
                 </svg>
             </div>
-
             <div class="about-inner">
                 <div class="about-image">
-                    <img src="{{ asset('images/about.webp') }}" alt="EGTS Technician">
+                    @if ($about && $about->image)
+                        <img src="{{ asset('storage/' . $about->image) }}" alt="{{ $about->title }}">
+                    @endif
                 </div>
-
                 <div class="about-content">
                     <span class="about-eyebrow">ABOUT EGTS</span>
-                    <h2>Built around precision,<br>quality and dependable<br>service.</h2>
-
+                    <h2>{{ $about->title ?? '' }}</h2>
                     <div class="about-text">
-                        <p>Erbil Gate Technical Services Ltd. (EGTS) is an oilfield machine shop serving the Kurdistan
-                            Region of Iraq and international energy markets.</p>
-                        <p>Our modern facility is designed to deliver precision machining, premium thread connections,
-                            repair, remanufacturing and technical inspection services for critical oilfield equipment.
-                        </p>
+                        {!! $about->description ?? '' !!}
                     </div>
-
-                    <ul class="about-checklist">
-                        <li>Modern CNC machining facilities</li>
-                        <li>API &amp; premium thread services</li>
-                        <li>Experienced technical team</li>
-                        <li>Quality-focused processes</li>
-                    </ul>
                 </div>
             </div>
         </section>
@@ -193,29 +213,13 @@
             <div class="stats-overlay"></div>
 
             <div class="stats-inner">
-                <div class="stat-item">
-                    <span class="stat-number">100K</span>
-                    <span class="stat-label">LICENSES</span>
-                    <span class="stat-sub">Held &amp; managed</span>
-                </div>
-
-                <div class="stat-item">
-                    <span class="stat-number">15 +</span>
-                    <span class="stat-label">YEARS</span>
-                    <span class="stat-sub">Industry experience</span>
-                </div>
-
-                <div class="stat-item">
-                    <span class="stat-number">18%</span>
-                    <span class="stat-label">PROJECTS</span>
-                    <span class="stat-sub">Completed metric</span>
-                </div>
-
-                <div class="stat-item">
-                    <span class="stat-number">100K</span>
-                    <span class="stat-label">ASSETS</span>
-                    <span class="stat-sub">Inspected</span>
-                </div>
+                @foreach ($stat->items ?? [] as $item)
+                    <div class="stat-item">
+                        <span class="stat-number">{{ $item['value'] ?? '' }}</span>
+                        <span class="stat-label">{{ $item['label'] ?? '' }}</span>
+                        <span class="stat-sub">{{ $item['description'] ?? '' }}</span>
+                    </div>
+                @endforeach
             </div>
         </section>
         {{-- ===== End Stats Strip Section ===== --}}
@@ -316,121 +320,30 @@
                 {{-- Left sticky column --}}
                 <div class="services-left">
                     <span class="services-eyebrow">OUR SERVICES</span>
-                    <h2>Specialized services<br>for critical oilfield<br>equipment</h2>
-                    <p>EGTS provides machining and inspection services for the oil and gas industry — API threading and
-                        premium connection machining, drill pipe repair, casing and tubing accessories, manufacturing
-                        and remanufacturing of OCTG equipment, make-up and break-out and bucking unit services, and full
-                        technical inspection and quality control backed by calibrated measuring equipment and API thread
-                        gauges.</p>
+                    <h2>{{ $serviceSection->heading }}</h2>
+                    <p>{{ $serviceSection->description }}</p>
                 </div>
 
                 {{-- Right scrolling grid --}}
                 <div class="services-right">
                     <div class="services-grid">
 
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-1.webp') }}" alt="API Threading Services">
-                            <h3>API Threading Services</h3>
-                            <p>API threading and machining solutions for critical oilfield connections.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-2.webp') }}" alt="Premium Connection Machining">
-                            <h3>Premium Connection Machining</h3>
-                            <p>Premium thread machining for demanding drilling applications.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-3.webp') }}" alt="Drill Pipe Inspection">
-                            <h3>Drill Pipe Inspection</h3>
-                            <p>Full technical inspection and quality control for drill pipe.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-4.webp') }}" alt="OCTG Equipment Manufacturing">
-                            <h3>OCTG Equipment Manufacturing</h3>
-                            <p>Manufacturing and remanufacturing of OCTG equipment.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-5.webp') }}" alt="Casing and Tubing Accessories">
-                            <h3>Casing &amp; Tubing Accessories</h3>
-                            <p>Precision-machined casing and tubing accessories.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-6.webp') }}" alt="Make-Up and Break-Out Services">
-                            <h3>Make-Up &amp; Break-Out</h3>
-                            <p>Bucking unit services for reliable connection assembly.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-7.webp') }}" alt="Repair and Remanufacturing">
-                            <h3>Repair &amp; Remanufacturing</h3>
-                            <p>Restoring critical oilfield equipment to original spec.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div class="service-card">
-                            <img src="{{ asset('images/service-8.webp') }}" alt="Quality Control and Calibration">
-                            <h3>Quality Control &amp; Calibration</h3>
-                            <p>Calibrated measuring equipment and API thread gauges.</p>
-                            <a href="{{ url('/services') }}" class="service-link">
-                                READ MORE
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </a>
-                        </div>
+                        @foreach ($services as $service)
+                            <div class="service-card">
+                                @if ($service->image)
+                                    <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}">
+                                @endif
+                                <h3>{{ $service->title }}</h3>
+                                <p>{{ $service->description }}</p>
+                                <a href="{{ url('/services/' . $service->slug) }}" class="service-link">
+                                    READ MORE
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                                    </svg>
+                                </a>
+                            </div>
+                        @endforeach
 
                     </div>
                 </div>
@@ -533,42 +446,31 @@
 
                 <div class="clients-left">
                     <span class="clients-eyebrow">OUR VALUED CLIENTS</span>
-                    <h2>Trusted by Industry.<br>Driven by Partnerships</h2>
-                    <p>At EGTS, we believe strong business relationships are built on trust, reliability, quality, and
-                        consistent performance. We are proud to work with leading companies across the oilfield,
-                        drilling, energy, and industrial sectors, supporting their critical machining and technical
-                        service requirements.</p>
+                    <h2>{{ $clientSection->title ?? '' }}</h2>
+                    <p>{{ $clientSection->description ?? '' }}</p>
                 </div>
 
                 <div class="clients-right">
                     <div class="clients-track">
+                        @php
+                            $clientImages = $clientSection->images ?? [];
+                        @endphp
+
                         {{-- First set --}}
-                        <div class="client-logo"><img src="{{ asset('images/slide logo.webp') }}" alt="Nexgen">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 3.webp') }}"
-                                alt="Atlas Energy Services"></div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 2.webp') }}"
-                                alt="BlueRock Energy"></div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo.webp') }}" alt="Client 4">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 3.webp') }}" alt="Client 5">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 2.webp') }}" alt="Client 6">
-                        </div>
+                        @foreach ($clientImages as $img)
+                            <div class="client-logo">
+                                <img src="{{ asset('storage/' . $img) }}" alt="Client Logo">
+                            </div>
+                        @endforeach
 
                         {{-- Duplicate set for seamless loop --}}
-                        <div class="client-logo"><img src="{{ asset('images/slide logo.webp') }}" alt="Nexgen">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 3.webp') }}"
-                                alt="Atlas Energy Services"></div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 2.webp') }}"
-                                alt="BlueRock Energy"></div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo.webp') }}" alt="Client 4">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 3.webp') }}" alt="Client 5">
-                        </div>
-                        <div class="client-logo"><img src="{{ asset('images/slide logo 2.webp') }}" alt="Client 6">
-                        </div>
+                        @if (count($clientImages) > 1)
+                            @foreach ($clientImages as $img)
+                                <div class="client-logo">
+                                    <img src="{{ asset('storage/' . $img) }}" alt="Client Logo">
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
 
@@ -642,43 +544,38 @@
 
             <div class="why-inner">
                 <span class="why-eyebrow">WHY CHOOSE EGTS</span>
-                <h2>Quality and accountability<br>in every operation.</h2>
-                <p class="why-sub">Our approach is built around dependable execution, safety and continuous
-                    improvement.</p>
+                <h2>{{ $whyChooseUs->heading ?? '' }}</h2>
+                <p class="why-sub">{{ $whyChooseUs->description ?? '' }}</p>
 
                 <div class="why-grid">
 
-                    <div class="why-card" style="background-image: url('{{ asset('images/mission.webp') }}');">
+                    <div class="why-card" @if($whyChooseUs?->mission_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->mission_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>Mission</h3>
-                            <p>To deliver high-quality products and services through continuous improvement, customer
-                                satisfaction and compliance with international standards.</p>
+                            <h3>{{ $whyChooseUs->mission_title ?? '' }}</h3>
+                            <p>{{ $whyChooseUs->mission_description ?? '' }}</p>
                         </div>
                     </div>
 
-                    <div class="why-card" style="background-image: url('{{ asset('images/vision.webp') }}');">
+                    <div class="why-card" @if($whyChooseUs?->vision_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->vision_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>Vision</h3>
-                            <p>To be the leading precision machining partner for the oil and gas industry across the
-                                Kurdistan Region and beyond.</p>
+                            <h3>{{ $whyChooseUs->vision_title ?? '' }}</h3>
+                            <p>{{ $whyChooseUs->vision_description ?? '' }}</p>
                         </div>
                     </div>
 
-                    <div class="why-card" style="background-image: url('{{ asset('images/values.webp') }}');">
+                    <div class="why-card" @if($whyChooseUs?->values_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->values_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>Core Values</h3>
-                            <p>Integrity, safety, precision and accountability guide every project we undertake for our
-                                clients.</p>
+                            <h3>{{ $whyChooseUs->values_title ?? '' }}</h3>
+                            <p>{{ $whyChooseUs->values_description ?? '' }}</p>
                         </div>
                     </div>
 
                     <div class="why-card why-card-commitment">
-                        <h3>OUR COMMITMENT</h3>
-                        <p>We are committed to providing reliable, precise, and timely solutions while maintaining the
-                            highest standards of quality, safety, and customer satisfaction.</p>
+                        <h3>{{ $whyChooseUs->commitment_title ?? '' }}</h3>
+                        <p>{{ $whyChooseUs->commitment_description ?? '' }}</p>
                     </div>
 
                 </div>
@@ -689,7 +586,7 @@
         {{-- ===== Certifications Section ===== --}}
         <section class="certs-section">
             <div class="certs-inner">
-                <h2>Certifications &amp; Licenses</h2>
+                <h2>Certifications & Licenses</h2>
                 <p>EGTS places quality at the center of every operation, with inspection processes designed to verify
                     product requirements and customer expectations.</p>
 

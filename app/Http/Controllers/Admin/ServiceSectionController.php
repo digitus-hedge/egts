@@ -1,67 +1,35 @@
 <?php
-// app/Http/Controllers/Admin/ServiceSectionController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceSectionRequest;
 use App\Models\ServiceSection;
-use Illuminate\Http\Request;
 
 class ServiceSectionController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * SHOW FORM — always the single Service Section (or empty model if none exists yet)
+     */
+    public function index()
     {
-        $perPage = $request->input('per_page', 10);
-        $search = $request->input('search');
-
-        $serviceSections = ServiceSection::query()
-            ->when($search, function ($query, $search) {
-                $query->where('heading', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
-
-        return view('admin.service_section.list', compact('serviceSections', 'search', 'perPage'));
-    }
-
-    public function create()
-    {
-        $serviceSection = new ServiceSection();
+        $serviceSection = ServiceSection::first() ?? new ServiceSection();
         return view('admin.service_section.form', compact('serviceSection'));
     }
 
+    /**
+     * STORE — creates the Service Section if none exists, otherwise updates the existing one
+     */
     public function store(ServiceSectionRequest $request)
     {
-        ServiceSection::create($request->validated());
+        $data = $request->validated();
+
+        $serviceSection = ServiceSection::first() ?? new ServiceSection();
+        $serviceSection->fill($data);
+        $serviceSection->save();
 
         return redirect()
             ->route('admin.home.services.section')
-            ->with('success', 'Service section created successfully.');
-    }
-
-    public function edit(ServiceSection $service_section)
-    {
-        return view('admin.service_section.form', ['serviceSection' => $service_section]);
-    }
-
-    public function update(ServiceSectionRequest $request, ServiceSection $service_section)
-    {
-        $service_section->update($request->validated());
-
-        return redirect()
-            ->route('admin.home.services.section')
-            ->with('success', 'Service section updated successfully.');
-    }
-
-    public function destroy(ServiceSection $service_section)
-    {
-        $service_section->delete();
-
-        return redirect()
-            ->route('admin.home.services.section')
-            ->with('success', 'Service section deleted successfully.');
+            ->with('success', 'Service section saved successfully.');
     }
 }

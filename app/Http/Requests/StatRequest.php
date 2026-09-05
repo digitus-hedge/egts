@@ -1,5 +1,4 @@
 <?php
-// app/Http/Requests/StatRequest.php
 
 namespace App\Http\Requests;
 
@@ -15,11 +14,21 @@ class StatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value'       => 'required|string|max:20',
-            'label'       => 'required|string|max:50',
-            'description' => 'required|string|max:100',
-            'sort_order'  => 'nullable|integer|min:0',
-            'status'      => 'nullable|boolean',
+            'items'               => 'required|array|min:1|max:5',
+            'items.*.value'       => 'required|string|max:50',
+            'items.*.label'       => 'required|string|max:100',
+            'items.*.description' => 'required|string|max:255',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'items.required'         => 'Please add at least 1 stat.',
+            'items.max'               => 'You can add a maximum of 5 stats.',
+            'items.*.value.required'  => 'Value is required for each stat.',
+            'items.*.label.required'  => 'Label is required for each stat.',
+            'items.*.description.required' => 'Description is required for each stat.',
         ];
     }
 }

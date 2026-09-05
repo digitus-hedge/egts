@@ -1,26 +1,49 @@
 @extends('admin.layout')
-@section('title', $banner->exists ? 'Edit Banner' : 'Add New Banner')
+@section('title', 'Banner Section')
 @section('content')
 
-    
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
 
     <div class="form-header">
         <h4>
-            <i class="bi bi-{{ $banner->exists ? 'pencil-square' : 'plus-circle' }}"></i>
-            {{ $banner->exists ? 'Edit Banner' : 'Add New Banner' }}
+            <i class="bi bi-image"></i>
+            Banner Section
         </h4>
-        <a href="{{ route('admin.home.banner') }}" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Back to list
-        </a>
     </div>
+        @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved!',
+                    text: @json(session('success')),
+                    confirmButtonColor: '#3b3b58',
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
 
-   <form action="{{ $banner->exists ? route('admin.home.banner.update', $banner->id) : route('admin.home.banner.store') }}"
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: @json(session('error')),
+                    confirmButtonColor: '#e74c3c'
+                });
+            });
+        </script>
+    @endif
+
+   <form action="{{ route('admin.home.banner.store') }}"
       method="POST" enctype="multipart/form-data" class="banner-form">
     @csrf
-    @if ($banner->exists)
-        @method('PUT')
-    @endif
 
     <div class="container-fluid px-0">
         <div class="row">
@@ -123,10 +146,10 @@
 
             <div class="col-md-12">
                 <div class="form-actions">
-                    <a href="{{ route('admin.home.banner') }}" class="btn-cancel">Cancel</a>
+                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel">Cancel</a>
                     <button type="submit" class="btn-submit">
                         <i class="bi bi-check-lg"></i>
-                        {{ $banner->exists ? 'Update Banner' : 'Save Banner' }}
+                        Save Banner
                     </button>
                 </div>
             </div>
@@ -176,6 +199,67 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        function enforceMutualExclusivity() {
+            const imageInputs = document.querySelectorAll('input[name="image_1"], input[name="image_2"], input[name="image_3"]');
+            const videoInput = document.querySelector('input[name="video"]');
+            const imageSection = document.querySelector('.image-grid').closest('.form-card');
+            const videoSection = videoInput.closest('.form-card');
+
+            function anyImageSelected() {
+                return Array.from(imageInputs).some(input => input.files && input.files.length > 0);
+            }
+
+            function videoSelected() {
+                return videoInput.files && videoInput.files.length > 0;
+            }
+
+            function updateState() {
+                if (videoSelected()) {
+                    imageInputs.forEach(input => input.value = '');
+                    imageSection.style.opacity = '0.4';
+                    imageSection.style.pointerEvents = 'none';
+
+                    let note = imageSection.querySelector('.exclusivity-note');
+                    if (!note) {
+                        note = document.createElement('p');
+                        note.className = 'exclusivity-note';
+                        imageSection.insertBefore(note, imageSection.firstChild.nextSibling);
+                    }
+                    note.innerHTML = '<i class="bi bi-info-circle"></i> Images are disabled because a video is selected. Remove the video to enable images.';
+
+                } else if (anyImageSelected()) {
+                    videoInput.value = '';
+                    videoSection.style.opacity = '0.4';
+                    videoSection.style.pointerEvents = 'none';
+
+                    let note = videoSection.querySelector('.exclusivity-note');
+                    if (!note) {
+                        note = document.createElement('p');
+                        note.className = 'exclusivity-note';
+                        videoSection.insertBefore(note, videoSection.firstChild.nextSibling);
+                    }
+                    note.innerHTML = '<i class="bi bi-info-circle"></i> Video is disabled because an image is selected. Remove all images to enable video.';
+
+                } else {
+                    imageSection.style.opacity = '1';
+                    imageSection.style.pointerEvents = 'auto';
+                    videoSection.style.opacity = '1';
+                    videoSection.style.pointerEvents = 'auto';
+
+                    const imgNote = imageSection.querySelector('.exclusivity-note');
+                    if (imgNote) imgNote.remove();
+
+                    const vidNote = videoSection.querySelector('.exclusivity-note');
+                    if (vidNote) vidNote.remove();
+                }
+            }
+
+            imageInputs.forEach(input => input.addEventListener('change', updateState));
+            videoInput.addEventListener('change', updateState);
+        }
+
+        document.addEventListener('DOMContentLoaded', enforceMutualExclusivity);
     </script>
 
     <style>
@@ -428,6 +512,18 @@
 .file-size-info.size-error {
     color: #e74c3c;
     font-weight: 600;
+}
+
+.exclusivity-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff8e1;
+    color: #8a6d00;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    margin-bottom: 14px;
 }
 
     </style>

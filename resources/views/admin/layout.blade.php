@@ -68,11 +68,11 @@
             max-height: 0;
             overflow: hidden;
             background: #17171f;
-            transition: max-height 0.25s ease;
+            transition: max-height 0.3s ease;
         }
 
         .has-submenu.open .submenu {
-            max-height: 200px;
+            max-height: 400px;
         }
 
         .submenu li a {
@@ -154,62 +154,81 @@
         }
 
         .sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 10px;
-}
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+        }
 
-.sidebar-logo {
-    width: 70px;
-    /* height: 36px; */
-    object-fit: contain;
-    border-radius: 6px;
-}
+        .sidebar-logo {
+            width: 70px;
+            /* height: 36px; */
+            object-fit: contain;
+            border-radius: 6px;
+        }
 
-.sidebar-brand h2 {
-    font-size: 18px;
-    margin: 0;
-    color: #fff;
-}
+        .sidebar-brand h2 {
+            font-size: 18px;
+            margin: 0;
+            color: #fff;
+        }
+
     </style>
 </head>
 
 <body>
 
     <div class="sidebar">
-       <div class="sidebar-brand">
-        <img src="{{ asset('images/logo.webp') }}" alt="EGIS Logo" class="sidebar-logo">
-        <h2>EGIS Admin</h2>
-    </div>
+        <div class="sidebar-brand">
+            <img src="{{ asset('images/logo.webp') }}" alt="EGTS Logo" class="sidebar-logo">
+            <h2>EGTS Admin</h2>
+        </div>
 
         <ul>
             <li>
-                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     Dashboard
                 </a>
             </li>
 
-            <li class="has-submenu {{ request()->routeIs('admin.home') || request()->routeIs('admin.home.*') ? 'open' : '' }}">
+            <li
+                class="has-submenu {{ request()->routeIs('admin.home') || request()->routeIs('admin.home.*') ? 'open' : '' }}">
                 <a onclick="toggleSubmenu(this)">
                     Home
                     <i class="bi bi-chevron-right chevron"></i>
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('admin.home.banner') }}" class="{{ request()->routeIs('admin.home.banner*') ? 'active' : '' }}">Banner Section</a></li>
-                    <li><a href="{{ route('admin.home.about') }}" class="{{ request()->routeIs('admin.home.about*') ? 'active' : '' }}">About Section</a></li>
-                  <li><a href="{{ route('admin.home.stats') }}" class="{{ request()->routeIs('admin.home.stats*') ? 'active' : '' }}">Stats Section</a></li>
-            <li><a href="{{ route('admin.home.services.section') }}" class="{{ request()->routeIs('admin.home.services.section*') ? 'active' : '' }}">Service Section 1</a></li>
-            <li><a href="{{ route('admin.home.services') }}" class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}">Service Section 2</a></li>
+                    <li><a href="{{ route('admin.home.banner') }}"
+                            class="{{ request()->routeIs('admin.home.banner*') ? 'active' : '' }}">Banner Section</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.about') }}"
+                            class="{{ request()->routeIs('admin.home.about*') ? 'active' : '' }}">About Section</a></li>
+                    <li><a href="{{ route('admin.home.stats') }}"
+                            class="{{ request()->routeIs('admin.home.stats*') ? 'active' : '' }}">Stats Section</a></li>
+                    <li><a href="{{ route('admin.home.services.section') }}"
+                            class="{{ request()->routeIs('admin.home.services.section*') ? 'active' : '' }}">Service
+                            Section</a></li>
+                    <li><a href="{{ route('admin.home.clients') }}"
+                            class="{{ request()->routeIs('admin.home.clients*') ? 'active' : '' }}">Client Section</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.why-choose-us') }}"
+                            class="{{ request()->routeIs('admin.home.why-choose-us*') ? 'active' : '' }}">Why Choose
+                            Us</a>
+                    </li>
                 </ul>
-          
-         
 
-            <li><a href="{{ route('admin.about') }}" class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">About</a></li>
-            <li><a href="{{ route('admin.services') }}" class="{{ request()->routeIs('admin.services') ? 'active' : '' }}">Services</a></li>
-            <li><a href="{{ route('admin.contacts') }}" class="{{ request()->routeIs('admin.contacts') ? 'active' : '' }}">Contacts</a></li>
+
+
+            <li><a href="{{ route('admin.about') }}"
+                    class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">About</a></li>
+            <li><a href="{{ route('admin.home.services') }}"
+                    class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}">Services</a>
+            </li>
+            <li><a href="{{ route('admin.contacts') }}"
+                    class="{{ request()->routeIs('admin.contacts') ? 'active' : '' }}">Contacts</a></li>
         </ul>
     </div>
 
@@ -239,6 +258,7 @@
             const parentLi = el.closest('.has-submenu');
             parentLi.classList.toggle('open');
         }
+
     </script>
 
 </body>
