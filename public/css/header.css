@@ -1,10 +1,24 @@
 /* ===== Header Wrapper (floats over hero banner) ===== */
 .site-header {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 50;
+    transition: transform 0.35s ease, background-color 0.3s ease;
+}
+
+.site-header.header-hidden {
+    transform: translateY(-100%);
+}
+
+.site-header.header-scrolled .main-nav {
+    background: rgba(20, 20, 20, 0.95);
+}
+
+.site-header.header-scrolled .top-bar {
+    background: #b40707;
+    opacity: 1;
 }
 
 /* ===== Top Info Bar ===== */
