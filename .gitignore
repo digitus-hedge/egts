@@ -16,9 +16,13 @@
 /public/build
 /public/hot
 /public/storage
+/storage
 /storage/*.key
 /storage/pail
 /vendor
+.gitignore
+composer.json
+composer.lock
 Homestead.json
 Homestead.yaml
 npm-debug.log
