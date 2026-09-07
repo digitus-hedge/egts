@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WhyChooseUsRequest;
-use App\Models\WhyChooseUs;
+use App\Models\About;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
 
-class WhyChooseUsController extends Controller
+class AboutController extends Controller
 {
     protected int $imageWidth = 700;
     protected int $imageHeight = 800;
@@ -23,8 +23,8 @@ class WhyChooseUsController extends Controller
      */
     public function index()
     {
-        $why = WhyChooseUs::first() ?? new WhyChooseUs();
-        return view('admin.why-choose-us.form', compact('why'));
+        $about = About::first() ?? new About();
+        return view('admin.about', compact('about'));
     }
 
     /**
@@ -34,7 +34,7 @@ class WhyChooseUsController extends Controller
     {
         $data = $request->validated();
 
-        $why = WhyChooseUs::first() ?? new WhyChooseUs();
+        $why = About::first() ?? new About();
         $why->heading = $data['heading'];
         $why->description = $data['description'];
 

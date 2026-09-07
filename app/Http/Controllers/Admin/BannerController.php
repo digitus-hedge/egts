@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 class BannerController extends Controller
 {
@@ -93,18 +94,25 @@ class BannerController extends Controller
         }
     }
 
-    private function processAndStoreImage($file): string
+      private function processAndStoreImage($file): string
     {
         $filename = 'banners/' . Str::random(20) . '.webp';
 
+        // 1. Correct instantiation in Intervention v4
         $manager = new ImageManager(new Driver());
-        $image = $manager->read($file);
+        // OR: $manager = ImageManager::usingDriver(Driver::class);
+
+        // 2. Decode the uploaded file path using decodePath()
+        $image = $manager->decodePath($file->getPathname());
+
+        // 3. Process image dimensions
         $image->cover($this->imageWidth, $this->imageHeight);
-        $encoded = $image->encodeByExtension('webp', quality: $this->compressQuality);
 
+        // 4. Encode to WEBP
+        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $this->compressQuality);
+
+        // 5. Save to disk
         Storage::disk('public')->put($filename, (string) $encoded);
-
-        unset($image, $encoded, $manager);
 
         return $filename;
     }
