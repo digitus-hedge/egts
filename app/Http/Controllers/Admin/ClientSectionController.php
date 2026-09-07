@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 class ClientSectionController extends Controller
 {
@@ -30,48 +31,73 @@ class ClientSectionController extends Controller
      * STORE — creates the Client section if none exists, otherwise updates the existing one
      */
     public function store(ClientSectionRequest $request)
-    {
-        $data = $request->validated();
+{
+    $data = $request->validated();
 
-        $client = ClientSection::first() ?? new ClientSection();
-        $client->title = $data['title'];
-        $client->description = $data['description'] ?? null;
+    $client = ClientSection::first() ?? new ClientSection();
+    $client->title = $data['title'];
+    $client->description = $data['description'] ?? null;
 
-        $existingImages = $client->images ?? [];
+    // Get current array of paths from DB: ["clients/MbEDJh7Ywkbu7bEpAYK5.webp", "clients/jQ64qwlfS6H7sxvw5UA7.webp"]
+    $existingImages = $client->images ?? [];
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                if ($file) {
-                    $existingImages[] = $this->processAndStoreImage($file);
-                }
-            }
-        }
+    // 1. Get array of images selected for deletion
+    $removeImages = $request->input('remove_images', []);
 
-        // Remove images marked for deletion
-        if ($request->filled('remove_images')) {
-            foreach ($request->input('remove_images') as $path) {
+    if (!empty($removeImages)) {
+        // Delete each physical file from storage
+        foreach ($removeImages as $path) {
+            if (Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
             }
-            $existingImages = array_values(array_diff($existingImages, $request->input('remove_images')));
         }
 
-        $client->images = array_values($existingImages);
-        $client->save();
-
-        return redirect()
-            ->route('admin.home.clients')
-            ->with('success', 'Client section saved successfully.');
+        // Subtract removed paths from the existing array
+        $existingImages = array_diff($existingImages, $removeImages);
     }
+
+    // 2. Append newly uploaded images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $file) {
+            if ($file && $file->isValid()) {
+                $existingImages[] = $this->processAndStoreImage($file);
+            }
+        }
+    }
+
+    // 3. Re-index array keys to avoid JSON object conversion in DB
+    $finalImages = array_values($existingImages);
+
+    // Save as array if items exist, otherwise set explicitly to null
+    $client->images = !empty($finalImages) ? $finalImages : null;
+
+    $client->save();
+
+    return redirect()
+        ->route('admin.home.clients')
+        ->with('success', 'Client section updated successfully.');
+}
+
+
 
     private function processAndStoreImage($file): string
     {
         $filename = 'clients/' . Str::random(20) . '.webp';
 
+        // 1. Correct instantiation in Intervention v4
         $manager = new ImageManager(new Driver());
-        $image = $manager->read($file);
-        $image->cover($this->imageWidth, $this->imageHeight);
-        $encoded = $image->toWebp(quality: $this->compressQuality);
+        // OR: $manager = ImageManager::usingDriver(Driver::class);
 
+        // 2. Decode the uploaded file path using decodePath()
+        $image = $manager->decodePath($file->getPathname());
+
+        // 3. Process image dimensions
+        $image->cover($this->imageWidth, $this->imageHeight);
+
+        // 4. Encode to WEBP
+        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $this->compressQuality);
+
+        // 5. Save to disk
         Storage::disk('public')->put($filename, (string) $encoded);
 
         return $filename;

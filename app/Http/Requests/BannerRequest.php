@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Banner;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -67,41 +68,33 @@ class BannerRequest extends FormRequest
 
     /**
      * Custom conditional validation:
-     * - At least 1 image is required (new upload OR already saved on the banner when editing)
-     * - Video becomes required only if there are no images at all (new or existing)
+     * Requires AT LEAST ONE media source (Either an image or a video).
+     * Works for both creation and editing.
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
+            $banner = Banner::first();
 
-            $banner = \App\Models\Banner::first(); // the single existing banner row, or null if none saved yet
+            // Check for newly uploaded images or existing saved images
+            $hasNewImage = collect(['image_1', 'image_2', 'image_3'])
+                ->contains(fn ($field) => $this->hasFile($field));
 
-            // Count newly uploaded images in this request
-            $newImageCount = collect(['image_1', 'image_2', 'image_3'])
-                ->filter(fn ($field) => $this->hasFile($field))
-                ->count();
+            $hasExistingImage = $banner && collect(['image_1', 'image_2', 'image_3'])
+                ->contains(fn ($field) => !empty($banner->{$field}));
 
-            // Count images already stored on the banner (only relevant on edit)
-            $existingImageCount = 0;
-            if ($banner) {
-                $existingImageCount = collect(['image_1', 'image_2', 'image_3'])
-                    ->filter(fn ($field) => !empty($banner->{$field}))
-                    ->count();
-            }
+            $hasImage = $hasNewImage || $hasExistingImage;
 
-            $totalImages = $newImageCount + $existingImageCount;
-
-            // Rule 1: at least 1 image required (new or existing)
-            if ($totalImages < 1) {
-                $validator->errors()->add('image_1', 'Please upload at least 1 image (maximum 3 allowed).');
-            }
-
-            // Rule 2: video required ONLY if no images exist at all
+            // Check for newly uploaded video or existing saved video
             $hasNewVideo = $this->hasFile('video');
             $hasExistingVideo = $banner && !empty($banner->video);
 
-            if ($totalImages < 1 && !$hasNewVideo && !$hasExistingVideo) {
-                $validator->errors()->add('video', 'Since no images were uploaded, a video is required.');
+            $hasVideo = $hasNewVideo || $hasExistingVideo;
+
+            // Validation Rule: If NO image AND NO video exist, show validation errors
+            if (!$hasImage && !$hasVideo) {
+                $validator->errors()->add('image_1', 'Please upload at least one image or a video for the banner.');
+                $validator->errors()->add('video', 'Please upload a video or at least one image for the banner.');
             }
         });
     }

@@ -9,11 +9,11 @@
         <i class="bi bi-exclamation-circle"></i>
         <div>
             Please fill below fields before submitting:
-            <ul style="margin: 6px 0 0 18px;">
+            <!-- <ul style="margin: 6px 0 0 18px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
-            </ul>
+            </ul> -->
         </div>
     </div>
 @endif
@@ -50,7 +50,7 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <div class="form-group">
-                        <label><i class="bi bi-type-h1"></i> Heading</label>
+                        <label><i class="bi bi-type-h1"></i> Heading <span class="text-danger">*</span></label>
                         <input type="text" name="heading" value="{{ old('heading', $why->heading) }}"
                                class="{{ $errors->has('heading') ? 'input-error' : '' }}"
                                placeholder="e.g. Quality and accountability in every operation.">
@@ -59,17 +59,22 @@
                         @enderror
                     </div>
                     <div class="form-group" style="margin-top:16px;">
-                        <label><i class="bi bi-card-text"></i> Description</label>
-                        <textarea name="description" rows="3" placeholder="Our approach is built around...">{{ old('description', $why->description) }}</textarea>
+                        <label><i class="bi bi-card-text"></i> Description <span class="text-danger">*</span></label>
+                        <textarea name="description" rows="3" 
+                                  class="{{ $errors->has('description') ? 'input-error' : '' }}"
+                                  placeholder="Our approach is built around...">{{ old('description', $why->description) }}</textarea>
+                        @error('description')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>
 
-            {{-- Mission --}}
+            {{-- Mission, Vision, Core Values --}}
             @php $blocks = [
                 'mission' => 'Mission',
-                'vision' => 'Vision',
-                'values' => 'Core Values',
+                'vision'  => 'Vision',
+                'values'  => 'Core Values',
             ]; @endphp
 
             @foreach ($blocks as $key => $label)
@@ -77,18 +82,32 @@
                     <div class="form-card block-card">
                         <label class="section-label"><i class="bi bi-flag"></i> {{ $label }}</label>
 
+                        {{-- Block Title --}}
                         <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" name="{{ $key }}_title" value="{{ old($key.'_title', $why->{$key.'_title'}) }}" placeholder="{{ $label }}">
+                            <label>Title <span class="text-danger">*</span></label>
+                            <input type="text" name="{{ $key }}_title" 
+                                   value="{{ old($key.'_title', $why->{$key.'_title'}) }}" 
+                                   class="{{ $errors->has($key.'_title') ? 'input-error' : '' }}"
+                                   placeholder="{{ $label }}">
+                            @error($key.'_title')
+                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                            @enderror
                         </div>
 
+                        {{-- Block Description --}}
                         <div class="form-group" style="margin-top:12px;">
-                            <label>Description</label>
-                            <textarea name="{{ $key }}_description" rows="4" placeholder="Describe the {{ strtolower($label) }}...">{{ old($key.'_description', $why->{$key.'_description'}) }}</textarea>
+                            <label>Description <span class="text-danger">*</span></label>
+                            <textarea name="{{ $key }}_description" rows="4" 
+                                      class="{{ $errors->has($key.'_description') ? 'input-error' : '' }}"
+                                      placeholder="Describe the {{ strtolower($label) }}...">{{ old($key.'_description', $why->{$key.'_description'}) }}</textarea>
+                            @error($key.'_description')
+                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                            @enderror
                         </div>
 
+                        {{-- Block Image --}}
                         <div class="form-group" style="margin-top:12px;">
-                            <label>Background Image</label>
+                            <label>Background Image <span class="text-danger">*</span></label>
                             <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p>
 
                             <div class="image-upload-box">
@@ -107,7 +126,7 @@
                                            onchange="previewImage(this, 'preview-{{ $key }}')" hidden>
                                 </label>
                                 @error($key.'_image')
-                                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    <span class="field-error d-block mt-2"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -115,19 +134,30 @@
                 </div>
             @endforeach
 
-            {{-- Commitment (text only, no image) --}}
+            {{-- Commitment --}}
             <div class="col-md-12">
                 <div class="form-card block-card commitment-card">
                     <label class="section-label"><i class="bi bi-shield-check"></i> Commitment</label>
 
                     <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" name="commitment_title" value="{{ old('commitment_title', $why->commitment_title) }}" placeholder="e.g. OUR COMMITMENT">
+                        <label>Title <span class="text-danger">*</span></label>
+                        <input type="text" name="commitment_title" 
+                               value="{{ old('commitment_title', $why->commitment_title) }}" 
+                               class="{{ $errors->has('commitment_title') ? 'input-error' : '' }}"
+                               placeholder="e.g. OUR COMMITMENT">
+                        @error('commitment_title')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group" style="margin-top:12px;">
-                        <label>Description</label>
-                        <textarea name="commitment_description" rows="4" placeholder="We are committed to providing...">{{ old('commitment_description', $why->commitment_description) }}</textarea>
+                        <label>Description <span class="text-danger">*</span></label>
+                        <textarea name="commitment_description" rows="4" 
+                                  class="{{ $errors->has('commitment_description') ? 'input-error' : '' }}"
+                                  placeholder="We are committed to providing...">{{ old('commitment_description', $why->commitment_description) }}</textarea>
+                        @error('commitment_description')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>

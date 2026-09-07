@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\HomeAbout;
 
 class HomeAboutRequest extends FormRequest
 {
@@ -50,7 +51,8 @@ class HomeAboutRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $about = $this->route('home_about');
+            // Fetch the existing record from the database directly
+            $about = HomeAbout::first();
 
             $hasNewImage = $this->hasFile('image');
             $hasExistingImage = $about && !empty($about->image);
