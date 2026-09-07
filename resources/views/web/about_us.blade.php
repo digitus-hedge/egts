@@ -323,7 +323,7 @@
 
     <div class="au-foundation-inner">
         <span class="au-eyebrow">OUR FOUNDATION</span>
-        <h2>Safety, values &amp; Environment (HSE)</h2>
+        <h2>Safety, values & Environment (HSE)</h2>
         <p class="au-foundation-sub">We prioritize safety, strong values, and environmental responsibility in every operation.</p>
 
         <div class="au-foundation-grid">
@@ -357,33 +357,54 @@
         <p class="au-infra-sub">Our facility combines modern machinery and inspection equipment to support demanding oilfield applications</p>
 
         <div class="au-infra-carousel">
-            <button class="au-infra-arrow au-infra-prev" aria-label="Previous">
+            <button class="au-infra-arrow au-infra-prev" id="infraPrev" aria-label="Previous">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
                 </svg>
             </button>
 
-            <div class="au-infra-grid">
-                <div class="au-infra-item">
-                    <img src="{{ asset('images/infra-cnc.jpg') }}" alt="CNC Lathes">
-                    <h3>CNC Lathes</h3>
-                    <p>Modern CNC machining capability for accurate, repeatable component production.</p>
-                </div>
+            <div class="au-infra-viewport">
+                <div class="au-infra-track" id="infraTrack">
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-1.webp') }}" alt="CNC Lathes">
+                        <h3>CNC Lathes</h3>
+                        <p>Modern CNC machining capability for accurate, repeatable component production.</p>
+                    </div>
 
-                <div class="au-infra-item">
-                    <img src="{{ asset('images/infra-makeup.jpg') }}" alt="Make-up & Break-out Equipment">
-                    <h3>Make-up &amp; Break-out Equipment</h3>
-                    <p>Controlled connection handling for critical oilfield threading applications.</p>
-                </div>
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-2.webp') }}" alt="Make-up & Break-out Equipment">
+                        <h3>Make-up & Break-out Equipment</h3>
+                        <p>Controlled connection handling for critical oilfield threading applications.</p>
+                    </div>
 
-                <div class="au-infra-item">
-                    <img src="{{ asset('images/infra-inspection.jpg') }}" alt="Inspection & Measuring">
-                    <h3>Inspection &amp; Measuring</h3>
-                    <p>Precision measuring and thread inspection equipment supporting quality assurance.</p>
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-3.webp') }}" alt="Inspection & Measuring">
+                        <h3>Inspection & Measuring</h3>
+                        <p>Precision measuring and thread inspection equipment supporting quality assurance.</p>
+                    </div>
+
+                    {{-- TEMP: placeholder duplicates for testing slider, replace with real dynamic items later --}}
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-4.webp') }}" alt="CNC Lathes">
+                        <h3>CNC Lathes</h3>
+                        <p>Modern CNC machining capability for accurate, repeatable component production.</p>
+                    </div>
+
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-5.webp') }}" alt="Make-up & Break-out Equipment">
+                        <h3>Make-up & Break-out Equipment</h3>
+                        <p>Controlled connection handling for critical oilfield threading applications.</p>
+                    </div>
+
+                    <div class="au-infra-item">
+                        <img src="{{ asset('images/service-6.webp') }}" alt="Inspection & Measuring">
+                        <h3>Inspection & Measuring</h3>
+                        <p>Precision measuring and thread inspection equipment supporting quality assurance.</p>
+                    </div>
                 </div>
             </div>
 
-            <button class="au-infra-arrow au-infra-next" aria-label="Next">
+            <button class="au-infra-arrow au-infra-next" id="infraNext" aria-label="Next">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6" />
                 </svg>
@@ -391,7 +412,130 @@
         </div>
     </div>
 </section>
+
+<script>
+    (function () {
+        const track = document.getElementById('infraTrack');
+        const prevBtn = document.getElementById('infraPrev');
+        const nextBtn = document.getElementById('infraNext');
+        const items = track.querySelectorAll('.au-infra-item');
+
+        let currentIndex = 0;
+
+        function getVisibleCount() {
+            if (window.innerWidth <= 767) return 1;
+            if (window.innerWidth <= 991) return 2;
+            return 3;
+        }
+
+        function updateSlide() {
+            const visibleCount = getVisibleCount();
+            const maxIndex = Math.max(0, items.length - visibleCount);
+            currentIndex = Math.min(currentIndex, maxIndex);
+
+            const itemWidth = items[0].getBoundingClientRect().width;
+            const gap = parseFloat(getComputedStyle(track).gap) || 0;
+            const offset = currentIndex * (itemWidth + gap);
+
+            track.style.transform = `translateX(-${offset}px)`;
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex >= maxIndex;
+        }
+
+        nextBtn.addEventListener('click', function () {
+            const visibleCount = getVisibleCount();
+            const maxIndex = Math.max(0, items.length - visibleCount);
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlide();
+            }
+        });
+
+        prevBtn.addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlide();
+            }
+        });
+
+        window.addEventListener('resize', updateSlide);
+        updateSlide();
+    })();
+</script>
 {{-- ===== End About Us — Behind the Scenes Section ===== --}}
+
+{{-- ===== About Us — Closing CTA Section ===== --}}
+<section class="au-closing-section">
+    <div class="au-bg-decor au-bg-decor-left">
+        <svg viewBox="0 0 220 400" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(140,10) rotate(-12)">
+                <circle cx="22" cy="22" r="20" />
+                <line x1="22" y1="22" x2="32" y2="10" />
+                <circle cx="22" cy="22" r="3" fill="currentColor" stroke="none" />
+            </g>
+            <g transform="translate(10,110) rotate(18)">
+                <polygon points="26,0 48,13 48,39 26,52 4,39 4,13" />
+            </g>
+            <g transform="translate(130,220) rotate(-8)">
+                <circle cx="8" cy="8" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="26" cy="8" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="8" cy="26" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="26" cy="26" r="3.5" fill="currentColor" stroke="none" />
+            </g>
+            <g transform="translate(20,310) rotate(6)">
+                <circle cx="28" cy="28" r="24" />
+                <circle cx="28" cy="28" r="9" />
+                <line x1="28" y1="0" x2="28" y2="7" />
+                <line x1="28" y1="49" x2="28" y2="56" />
+                <line x1="0" y1="28" x2="7" y2="28" />
+                <line x1="49" y1="28" x2="56" y2="28" />
+            </g>
+        </svg>
+    </div>
+
+    <div class="au-bg-decor au-bg-decor-right">
+        <svg viewBox="0 0 220 400" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(30,20) rotate(15)">
+                <polygon points="26,0 48,13 48,39 26,52 4,39 4,13" />
+            </g>
+            <g transform="translate(140,120) rotate(-10)">
+                <circle cx="28" cy="28" r="24" />
+                <circle cx="28" cy="28" r="9" />
+                <line x1="28" y1="0" x2="28" y2="7" />
+                <line x1="28" y1="49" x2="28" y2="56" />
+                <line x1="0" y1="28" x2="7" y2="28" />
+                <line x1="49" y1="28" x2="56" y2="28" />
+            </g>
+            <g transform="translate(20,220) rotate(10)">
+                <circle cx="22" cy="22" r="20" />
+                <line x1="22" y1="22" x2="12" y2="10" />
+                <circle cx="22" cy="22" r="3" fill="currentColor" stroke="none" />
+            </g>
+            <g transform="translate(130,320) rotate(12)">
+                <circle cx="8" cy="8" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="26" cy="8" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="8" cy="26" r="3.5" fill="currentColor" stroke="none" />
+                <circle cx="26" cy="26" r="3.5" fill="currentColor" stroke="none" />
+            </g>
+        </svg>
+    </div>
+
+    <div class="au-closing-inner">
+        <div class="au-closing-image">
+            <img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">
+        </div>
+
+        <div class="au-closing-content">
+            <h2>Built on quality.<br>Driven by trust.</h2>
+            <p>Partner with EGTS for precision machining, premium threading, repair, remanufacturing, and technical inspection services. With advanced capabilities, experienced professionals, and a strong commitment to quality and safety, we deliver reliable, efficient, and industry-focused solutions designed to meet demanding standards and keep your operations performing at their best.</p>
+            <a href="{{ url('/contact') }}" class="au-closing-btn">Contact Our Team</a>
+        </div>
+    </div>
+</section>
+{{-- ===== End About Us — Closing CTA Section ===== --}}
 
     </main>
 
