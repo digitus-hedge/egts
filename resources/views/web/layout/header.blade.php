@@ -59,8 +59,9 @@
                 <nav class="nav-links">
                     <a href="{{ url('/') }}">Home</a>
                     <a href="{{ url('/about') }}">About Us</a>
-                    <a href="{{ url('/services') }}">Services</a>
                     <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
+                    <a href="{{ url('/services') }}">Services</a>
+                    <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
                     <a href="{{ url('/contact') }}">Contact</a>
                 </nav>
 
@@ -76,8 +77,9 @@
             <div id="mobile-menu" class="mobile-menu">
                 <a href="{{ url('/') }}">Home</a>
                 <a href="{{ url('/about') }}">About Us</a>
-                <a href="{{ url('/services') }}">Services</a>
                 <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
+                <a href="{{ url('/services') }}">Services</a>
+                <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
                 <a href="{{ url('/contact') }}">Contact</a>
                 <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
             </div>

@@ -11,14 +11,12 @@ class Service extends Model
 
     protected $fillable = [
         'title', 'slug', 'description', 'process_description',
-        'technical_scope', 'specifications', 'image', 'gallery',
-        'status',
+        'technical_scope', 'specifications', 'image', 'gallery'
     ];
 
     protected $casts = [
         'technical_scope' => 'array',
         'specifications'  => 'array',
         'gallery'         => 'array',
-        'status'          => 'boolean',
     ];
 }

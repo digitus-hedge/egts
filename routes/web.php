@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceDetailController;
+use App\Http\Controllers\ServicesListController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
@@ -19,10 +20,7 @@ Route::get('/about', function () {
     return view('web.about_us');
 });
 
-Route::get('/services', function () {
-    return view('web.services');
-});
-
+Route::get('/services', [ServicesListController::class, 'index']);
 Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
 
 Route::get('/facility_capabilities', function () {

@@ -101,7 +101,6 @@ class ServiceController extends Controller
             ->values()
             ->all();
 
-        $service->status = $data['status'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($service->image) {
