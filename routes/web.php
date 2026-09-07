@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ClientSectionController;
 use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
@@ -76,7 +77,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/why-choose-us', [WhyChooseUsController::class, 'index'])->name('home.why-choose-us');
         Route::post('home/why-choose-us', [WhyChooseUsController::class, 'store'])->name('home.why-choose-us.store');
 
-        Route::get('about', [DashboardController::class, 'about'])->name('about');
+   
+
+        Route::get('about', [AboutController::class, 'index'])->name('about');       // Shows form directly (pre-filled if exists)
+        Route::post('about', [AboutController::class, 'store'])->name('about.store'); // Creates or updates
+
         Route::get('services', [DashboardController::class, 'services'])->name('services');
 
         Route::get('home/contact-banner', [ContactBannerController::class, 'index'])->name('home.contact-banner');

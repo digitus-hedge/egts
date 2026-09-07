@@ -15,9 +15,9 @@ class ServiceSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'label'       => 'nullable|string|max:50',
-            'heading'     => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
+            'label'       => 'nullable|string|max:0',
+            'heading'     => 'required|string|max:60',
+            'description' => 'required|string|max:600',
         ];
     }
 }

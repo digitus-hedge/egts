@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <label><i class="bi bi-type"></i> Title</label>
                         <input type="text" name="title" value="{{ old('title', $about->title) }}"
-                               class="{{ $errors->has('title') ? 'input-error' : '' }}"
+                               class="{{ $errors->has('title') ? 'input-error' : '' }}" 
                                placeholder="Enter title">
                         @error('title')
                             <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
@@ -59,7 +59,9 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-image"></i> Image</label>
-                    <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong></p>
+                    <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong>
+                        — Recommended size: <strong>{{ $imageWidth ?? 550 }} × {{ $imageHeight ?? 560 }}px</strong>
+                </p>
 
                     <div class="image-upload-box">
                         <div class="preview-wrap">
@@ -85,18 +87,25 @@
                 </div>
             </div>
 
-            <div class="col-md-12">
-                <div class="form-card">
-                    <label class="section-label"><i class="bi bi-code-slash"></i> Description (HTML)</label>
-                    <p class="hint-text">Enter raw HTML exactly as it should appear — this field saves your markup as-is, with no editor interference.</p>
+        <div class="col-md-12">
+    <div class="form-card">
+        <label class="section-label"><i class="bi bi-code-slash"></i> Description (HTML)</label>
+        <p class="hint-text">Enter raw HTML exactly as it should appear — this field saves your markup as-is.</p>
 
-                    <textarea name="description" id="description-input" rows="14" class="html-textarea {{ $errors->has('description') ? 'input-error' : '' }}" placeholder="<p>Write HTML content here...</p>">{{ old('description', $about->description) }}</textarea>
+        <textarea name="description" id="description-input" rows="14" 
+                  class="html-textarea {{ $errors->has('description') ? 'input-error' : '' }}" 
+                  placeholder="<p>Write HTML content here...</p>">{{ old('description', $about->description) }}</textarea>
 
-                    @error('description')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+        <!-- Live Character Counter -->
+        <div class="text-end mt-1">
+            <small id="char-count-msg" class="text-muted"><span id="char-count">0</span> / 600 characters</small>
+        </div>
+
+        @error('description')
+            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+        @enderror
+    </div>
+</div>
 
             <div class="col-md-12">
                 <div class="form-actions">
@@ -115,24 +124,52 @@
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script>
-    tinymce.init({
-        selector: '#description-input',
-        height: 400,
-        menubar: false,
-        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount',
-        toolbar: 'undo redo | blocks | bold italic forecolor | ' +
-            'alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent | link image media table | code preview fullscreen | removeformat help',
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size:14px }',
-        branding: false,
-        promotion: false,
-        // Ensures the textarea's value stays in sync before native form submission
-        setup: function (editor) {
-            editor.on('change', function () {
-                editor.save();
-            });
+ tinymce.init({
+    selector: '#description-input',
+    height: 400,
+    menubar: false,
+    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+    toolbar: 'undo redo | blocks | bold italic forecolor | ' +
+        'alignleft aligncenter alignright alignjustify | ' +
+        'bullist numlist outdent indent | link image media table | code preview fullscreen | removeformat help',
+    content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size:14px }',
+    branding: false,
+    promotion: false,
+
+    setup: function (editor) {
+        const maxChars = 600;
+
+        function updateCounter() {
+            editor.save();
+            const count = editor.plugins.wordcount ? editor.plugins.wordcount.body.getCharacterCount() : 0;
+            const charCountEl = document.getElementById('char-count');
+            const charCountMsg = document.getElementById('char-count-msg');
+
+            if (charCountEl && charCountMsg) {
+                charCountEl.textContent = count;
+                if (count > maxChars) {
+                    charCountMsg.classList.remove('text-muted');
+                    charCountMsg.classList.add('text-danger');
+                } else {
+                    charCountMsg.classList.remove('text-danger');
+                    charCountMsg.classList.add('text-muted');
+                }
+            }
         }
-    });
+
+        editor.on('init keyup change paste Undo Redo', updateCounter);
+
+        // Block typing past limit
+        editor.on('keydown', function (e) {
+            const count = editor.plugins.wordcount ? editor.plugins.wordcount.body.getCharacterCount() : 0;
+            const allowedKeys = [8, 46, 37, 38, 39, 40]; // Backspace, Delete, Arrow keys
+
+            if (count >= maxChars && !allowedKeys.includes(e.keyCode) && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+            }
+        });
+    }
+});
 </script>
 
     <script>

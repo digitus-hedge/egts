@@ -2,7 +2,9 @@
 @section('title', 'About Us Section')
 @section('content')
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
 
 @if ($errors->any())
     <div class="alert alert-error">
@@ -40,37 +42,95 @@
     </h4>
 </div>
 
-<form action="{{ route('admin.home.why-choose-us.store') }}" method="POST" enctype="multipart/form-data" class="banner-form">
-    @csrf
+<form action="{{ route('admin.about.store') }}" method="POST" enctype="multipart/form-data" class="banner-form" id="aboutForm">    @csrf
 
     <div class="container-fluid px-0">
         <div class="row">
 
-            {{-- Main heading block --}}
+            {{-- 1. BANNER SECTION --}}
             <div class="col-md-12">
                 <div class="form-card">
+                    <label class="section-label"><i class="bi bi-image"></i> Banner Section</label>
+
                     <div class="form-group">
-                        <label><i class="bi bi-type-h1"></i> Heading <span class="text-danger">*</span></label>
-                        <input type="text" name="heading" value="{{ old('heading', $why->heading) }}"
-                               class="{{ $errors->has('heading') ? 'input-error' : '' }}"
-                               placeholder="e.g. Quality and accountability in every operation.">
-                        @error('heading')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
+                        <label>Heading <span class="text-danger">*</span></label>
+                        <input type="text" name="banner_heading" value="{{ old('banner_heading', $why->banner_heading) }}"
+                               class="{{ $errors->has('banner_heading') ? 'input-error' : '' }}">
+                        @error('banner_heading')<span class="field-error">{{ $message }}</span>@enderror
                     </div>
-                    <div class="form-group" style="margin-top:16px;">
-                        <label><i class="bi bi-card-text"></i> Description <span class="text-danger">*</span></label>
-                        <textarea name="description" rows="3" 
-                                  class="{{ $errors->has('description') ? 'input-error' : '' }}"
-                                  placeholder="Our approach is built around...">{{ old('description', $why->description) }}</textarea>
-                        @error('description')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
+
+                    <div class="form-group" style="margin-top:14px;">
+                        <label>Description <span class="text-danger">*</span></label>
+                        <textarea name="banner_description" rows="4"  class=" {{ $errors->has('banner_description') ? 'input-error' : '' }}">{{ old('banner_description', $why->banner_description) }}</textarea>
+                        @error('banner_description')<span class="field-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group" style="margin-top:14px;">
+                        <label>Banner Image</label>
+                        <p class="hint-text">Max 2MB — JPG, PNG, WEBP</p>
+                        <div class="image-upload-box">
+                            <div class="preview-wrap">
+                                @if ($why->banner_image)
+                                    <img src="{{ Storage::url($why->banner_image) }}" class="preview-img" id="preview-banner">
+                                @else
+                                    <div class="preview-placeholder" id="preview-banner"><i class="bi bi-image"></i></div>
+                                @endif
+                            </div>
+                            <label class="upload-btn">
+                                <i class="bi bi-upload"></i> Choose file
+                                <input type="file" name="banner_image" accept="image/*" onchange="previewImage(this,'preview-banner')" hidden>
+                            </label>
+                            @error('banner_image')<span class="field-error d-block mt-2">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Mission, Vision, Core Values --}}
+            {{-- 2. SECTION TWO --}}
+            <div class="col-md-12">
+                <div class="form-card">
+                    <label class="section-label"><i class="bi bi-layout-text-window"></i> ABOUT EGTS</label>
+
+                    <div class="form-group">
+                        <label>Heading <span class="text-danger">*</span></label>
+                        <input type="text" name="about_heading" value="{{ old('about_heading', $why->about_heading) }}"
+                               class="{{ $errors->has('about_heading') ? 'input-error' : '' }}">
+                        @error('about_heading')<span class="field-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group" style="margin-top:14px;">
+                        <label>Description <span class="text-danger">*</span></label>
+                        <textarea name="about_description" class="rich-text {{ $errors->has('about_description') ? 'input-error' : '' }}">{{ old('about_description', $why->about_description) }}</textarea>
+                        @error('about_description')<span class="field-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="row" style="margin-top:14px;">
+                        @foreach (['image_one' => 'Image One', 'image_two' => 'Image Two'] as $suffix => $label)
+                            @php $field = 'section_two_' . $suffix; @endphp
+                            <div class="col-md-6">
+                                <label>{{ $label }}</label>
+                                <div class="image-upload-box">
+                                    <div class="preview-wrap">
+                                        @if ($why->{$field})
+                                            <img src="{{ Storage::url($why->{$field}) }}" class="preview-img" id="preview-{{ $field }}">
+                                        @else
+                                            <div class="preview-placeholder" id="preview-{{ $field }}"><i class="bi bi-image"></i></div>
+                                        @endif
+                                    </div>
+                                    <label class="upload-btn">
+                                        <i class="bi bi-upload"></i> Choose file
+                                        <input type="file" name="{{ $field }}" accept="image/*" onchange="previewImage(this,'preview-{{ $field }}')" hidden>
+                                    </label>
+                                    @error($field)<span class="field-error d-block mt-2">{{ $message }}</span>@enderror
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+
+               {{-- Mission, Vision, Core Values --}}
             @php $blocks = [
                 'mission' => 'Mission',
                 'vision'  => 'Vision',
@@ -94,16 +154,27 @@
                             @enderror
                         </div>
 
-                        {{-- Block Description --}}
-                        <div class="form-group" style="margin-top:12px;">
-                            <label>Description <span class="text-danger">*</span></label>
-                            <textarea name="{{ $key }}_description" rows="4" 
-                                      class="{{ $errors->has($key.'_description') ? 'input-error' : '' }}"
-                                      placeholder="Describe the {{ strtolower($label) }}...">{{ old($key.'_description', $why->{$key.'_description'}) }}</textarea>
-                            @error($key.'_description')
-                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                            @enderror
-                        </div>
+                         {{-- Block Description (Plain) --}}
+            <div class="form-group" style="margin-top:12px;">
+                <label>Description (Plain Text) <span class="text-danger">*</span></label>
+                <textarea name="{{ $key }}_description" rows="4" 
+                          class="{{ $errors->has($key.'_description') ? 'input-error' : '' }}"
+                          placeholder="Describe the {{ strtolower($label) }}...">{{ old($key.'_description', $why->{$key.'_description'}) }}</textarea>
+                @error($key.'_description')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- Block Description (Rich Text) --}}
+            <div class="form-group" style="margin-top:12px;">
+                <label>Description (Rich Text) <span class="text-danger">*</span></label>
+                <textarea name="{{ $key }}_description_rich" id="{{ $key }}-desc-rich"
+                          class="rich-text {{ $errors->has($key.'_description_rich') ? 'input-error' : '' }}"
+                          placeholder="Describe the {{ strtolower($label) }}...">{{ old($key.'_description_rich', $why->{$key.'_description_rich'}) }}</textarea>
+                @error($key.'_description_rich')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
 
                         {{-- Block Image --}}
                         <div class="form-group" style="margin-top:12px;">
@@ -151,14 +222,57 @@
                     </div>
 
                     <div class="form-group" style="margin-top:12px;">
-                        <label>Description <span class="text-danger">*</span></label>
-                        <textarea name="commitment_description" rows="4" 
-                                  class="{{ $errors->has('commitment_description') ? 'input-error' : '' }}"
-                                  placeholder="We are committed to providing...">{{ old('commitment_description', $why->commitment_description) }}</textarea>
-                        @error('commitment_description')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
+    <label>Description (Plain Text) <span class="text-danger">*</span></label>
+    <textarea name="commitment_description" rows="4" 
+              class="{{ $errors->has('commitment_description') ? 'input-error' : '' }}"
+              placeholder="We are committed to providing...">{{ old('commitment_description', $why->commitment_description) }}</textarea>
+    @error('commitment_description')
+        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+    @enderror
+</div>
+
+<div class="form-group" style="margin-top:12px;">
+    <label>Description (Rich Text) <span class="text-danger">*</span></label>
+    <textarea name="commitment_description_rich" id="commitment-desc-rich"
+              class="rich-text {{ $errors->has('commitment_description_rich') ? 'input-error' : '' }}"
+              placeholder="We are committed to providing...">{{ old('commitment_description_rich', $why->commitment_description_rich) }}</textarea>
+    @error('commitment_description_rich')
+        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+    @enderror
+</div>
+
+</div>
+</div>
+{{-- OUR FOUNDATION --}}
+<div class="col-md-12">
+    <div class="form-card block-card">
+        <label class="section-label"><i class="bi bi-bank"></i> Our Foundation</label>
+
+        <div class="form-group">
+            <label>Heading <span class="text-danger">*</span></label>
+            <input type="text" name="foundation_heading" 
+                   value="{{ old('foundation_heading', $why->foundation_heading) }}" 
+                   class="{{ $errors->has('foundation_heading') ? 'input-error' : '' }}"
+                   placeholder="e.g. Our Foundation">
+            @error('foundation_heading')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea name="foundation_description" rows="4" 
+                      class="{{ $errors->has('foundation_description') ? 'input-error' : '' }}"
+                      placeholder="Describe the foundation...">{{ old('foundation_description', $why->foundation_description) }}</textarea>
+            @error('foundation_description')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+       
+    </div>
+</div>
+
                 </div>
             </div>
 
@@ -171,6 +285,20 @@
                     </button>
                 </div>
             </div>
+
+
+
+            {{-- 3. VISION + 4. MISSION --}}
+           
+
+            {{-- 5. OUR FOUNDATION (intro) --}}
+         
+
+            {{-- 6. FOUNDATION LIST (repeater) --}}
+         {{-- 6. FOUNDATION LIST (fixed: 2 items) --}}
+
+
+         
 
         </div>
     </div>
@@ -195,6 +323,25 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+        function initRichText(selector) {
+        tinymce.init({
+            selector: selector,
+            height: 250,
+            menubar: false,
+            plugins: 'lists link image code table',
+            toolbar: 'undo redo | bold italic | bullist numlist | link | code',
+            branding: false,
+            promotion: false,
+            setup: function (editor) {
+                editor.on('change', function () { editor.save(); });
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        initRichText('.rich-text');
+    });
 </script>
 
 <style>

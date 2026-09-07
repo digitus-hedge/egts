@@ -38,26 +38,26 @@ class WhyChooseUsController extends Controller
         $why->heading = $data['heading'];
         $why->description = $data['description'];
 
-        $why->mission_title = $data['mission_title'];
-        $why->mission_description = $data['mission_description'];
+        // $why->mission_title = $data['mission_title'];
+        // $why->mission_description = $data['mission_description'];
 
-        $why->vision_title = $data['vision_title'];
-        $why->vision_description = $data['vision_description'];
+        // $why->vision_title = $data['vision_title'];
+        // $why->vision_description = $data['vision_description'];
 
-        $why->values_title = $data['values_title'];
-        $why->values_description = $data['values_description'];
+        // $why->values_title = $data['values_title'];
+        // $why->values_description = $data['values_description'];
 
-        $why->commitment_title = $data['commitment_title'];
-        $why->commitment_description = $data['commitment_description'];
+        // $why->commitment_title = $data['commitment_title'];
+        // $why->commitment_description = $data['commitment_description'];
 
-        foreach (['mission_image', 'vision_image', 'values_image'] as $field) {
-            if ($request->hasFile($field)) {
-                if ($why->{$field}) {
-                    Storage::disk('public')->delete($why->{$field});
-                }
-                $why->{$field} = $this->processAndStoreImage($request->file($field));
-            }
-        }
+        // foreach (['mission_image', 'vision_image', 'values_image'] as $field) {
+        //     if ($request->hasFile($field)) {
+        //         if ($why->{$field}) {
+        //             Storage::disk('public')->delete($why->{$field});
+        //         }
+        //         $why->{$field} = $this->processAndStoreImage($request->file($field));
+        //     }
+        // }
 
         $why->save();
 
@@ -66,39 +66,6 @@ class WhyChooseUsController extends Controller
             ->with('success', 'Why Choose Us section saved successfully.');
     }
 
-    // private function processAndStoreImage($file): string
-    // {
-    //     $filename = 'why-choose-us/' . Str::random(20) . '.webp';
-
-    //     $manager = new ImageManager(new Driver());
-    //     $image = $manager->read($file);
-    //     $image->cover($this->imageWidth, $this->imageHeight);
-    //     $encoded = $image->toWebp(quality: $this->compressQuality);
-
-    //     Storage::disk('public')->put($filename, (string) $encoded);
-
-    //     return $filename;
-    // }
-
-     private function processAndStoreImage($file): string
-    {
-        $filename = 'why-choose-us/' . Str::random(20) . '.webp';
-
-        // Initialize ImageManager with GD Driver
-        $manager = new ImageManager(new Driver());
-
-        // Read image path
-        $image = $manager->read($file->getPathname());
-
-        // Resize/Crop
-        $image->cover($this->imageWidth, $this->imageHeight);
-
-        // Encode to WebP
-        $encoded = $image->toWebp($this->compressQuality ?? 80);
-
-        // Save to storage disk
-        Storage::disk('public')->put($filename, (string) $encoded);
-
-        return $filename;
-    }
+  
+    
 }

@@ -16,14 +16,17 @@ class BannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|min:3|max:255',
-            'description' => 'required|string|max:2000',
+            'title'       => 'required|string|min:3|max:60',
+            'description' => 'required|string|max:200',
 
             'image_1' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'image_2' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'image_3' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
 
             'video'   => 'nullable|mimes:mp4,mov,avi,wmv|max:5120',
+
+            'meta_title'       => 'nullable|string|max:60',
+            'meta_description' => 'nullable|string|max:160',
         ];
     }
 
@@ -36,6 +39,9 @@ class BannerRequest extends FormRequest
 
             'description.required' => 'Please enter a banner description.',
             'description.max'      => 'Description cannot exceed :max characters.',
+
+             'meta_title.max'       => 'Meta title cannot exceed :max characters.',
+            'meta_description.max' => 'Meta description cannot exceed :max characters.',
 
             'image_1.image'        => 'Image 1 must be a valid image file.',
             'image_2.image'        => 'Image 2 must be a valid image file.',
@@ -63,6 +69,8 @@ class BannerRequest extends FormRequest
             'image_2'     => 'Image 2',
             'image_3'     => 'Image 3',
             'video'       => 'video',
+                      'meta_title'        => 'meta title',
+            'meta_description'  => 'meta description',
         ];
     }
 
@@ -76,7 +84,7 @@ class BannerRequest extends FormRequest
 
             $hasNewVideo = $this->hasFile('video');
             $hasNewImage = collect(['image_1', 'image_2', 'image_3'])
-                ->contains(fn ($field) => $this->hasFile($field));
+                ->contains(fn($field) => $this->hasFile($field));
 
             // If new video uploaded, images will be wiped out
             $hasVideoAfterSave = $hasNewVideo || (! $hasNewImage && $banner && ! empty($banner->video));

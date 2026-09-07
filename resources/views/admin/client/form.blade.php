@@ -70,7 +70,9 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-images"></i> Client Logos / Images</label>
-                    <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong> per image</p>
+                    <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong> per image
+                        — Recommended size: <strong>{{ $imageWidth ?? 90 }} × {{ $imageHeight ?? 60 }}px</strong>
+                </p>
 
                     {{-- Existing saved images --}}
                     @if (!empty($client->images))
@@ -105,7 +107,7 @@
                     @enderror
                 </div>
             </div>
-            
+
 
             <div class="col-md-12">
                 <div class="form-actions">

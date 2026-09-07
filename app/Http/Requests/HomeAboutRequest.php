@@ -15,8 +15,18 @@ class HomeAboutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|min:3|max:255',
-            'description' => 'required|string',
+            'title'       => 'required|string|min:3|max:60',
+            'description' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    // Strip HTML tags (e.g. from TinyMCE/CKEditor) to count pure character length
+                    $plainText = trim(strip_tags($value));
+                    if (mb_strlen($plainText) > 600) {
+                        $fail('Description cannot exceed 600 characters.');
+                    }
+                },
+            ],
             'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
         ];
     }

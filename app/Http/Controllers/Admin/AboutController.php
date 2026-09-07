@@ -3,101 +3,102 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WhyChooseUsRequest;
-use App\Models\About;
+use App\Http\Requests\AboutUsRequest;
+use App\Models\AboutUs;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
 
 class AboutController extends Controller
 {
-    protected int $imageWidth = 700;
-    protected int $imageHeight = 800;
+    protected int $imageWidth = 1000;
+    protected int $imageHeight = 700;
     protected int $compressQuality = 70;
 
-    /**
-     * SHOW FORM — always the single Why Choose Us section (or empty model if none exists yet)
-     */
     public function index()
     {
-        $about = About::first() ?? new About();
-        return view('admin.about', compact('about'));
+        $why = AboutUs::first() ?? new AboutUs();
+
+        return view('admin.about', compact('why'));
     }
 
-    /**
-     * STORE — creates the section if none exists, otherwise updates the existing one
-     */
-    public function store(WhyChooseUsRequest $request)
+    public function store(AboutUsRequest $request)
     {
         $data = $request->validated();
 
-        $why = About::first() ?? new About();
-        $why->heading = $data['heading'];
-        $why->description = $data['description'];
+        $about = AboutUs::first() ?? new AboutUs();
 
-        $why->mission_title = $data['mission_title'];
-        $why->mission_description = $data['mission_description'];
+        $about->fill([
+            'banner_heading'     => $data['banner_heading'],
+            'banner_description' => $data['banner_description'],
 
-        $why->vision_title = $data['vision_title'];
-        $why->vision_description = $data['vision_description'];
+            'about_heading'     => $data['about_heading'],
+            'about_description' => $data['about_description'],
 
-        $why->values_title = $data['values_title'];
-        $why->values_description = $data['values_description'];
+            'mission_title'            => $data['mission_title'],
+            'mission_description'      => $data['mission_description'],
+            'mission_description_rich' => $data['mission_description_rich'],
 
-        $why->commitment_title = $data['commitment_title'];
-        $why->commitment_description = $data['commitment_description'];
+            'vision_title'             => $data['vision_title'],
+            'vision_description'       => $data['vision_description'],
+            'vision_description_rich'  => $data['vision_description_rich'],
 
-        foreach (['mission_image', 'vision_image', 'values_image'] as $field) {
+            'values_title'             => $data['values_title'],
+            'values_description'       => $data['values_description'],
+            'values_description_rich'  => $data['values_description_rich'],
+
+            'commitment_title'            => $data['commitment_title'],
+            'commitment_description'      => $data['commitment_description'],
+            'commitment_description_rich' => $data['commitment_description_rich'],
+
+            'foundation_heading'     => $data['foundation_heading'],
+            'foundation_description' => $data['foundation_description'],
+        ]);
+
+        $imageFields = [
+            'banner_image',
+            'section_two_image_one',
+            'section_two_image_two',
+            'mission_image',
+            'vision_image',
+            'values_image',
+        ];
+
+        foreach ($imageFields as $field) {
             if ($request->hasFile($field)) {
-                if ($why->{$field}) {
-                    Storage::disk('public')->delete($why->{$field});
+                if ($about->{$field}) {
+                    Storage::disk('public')->delete($about->{$field});
                 }
-                $why->{$field} = $this->processAndStoreImage($request->file($field));
+                $about->{$field} = $this->processAndStoreImage($request->file($field));
             }
         }
 
-        $why->save();
+        $about->save();
 
         return redirect()
-            ->route('admin.home.why-choose-us')
-            ->with('success', 'Why Choose Us section saved successfully.');
+            ->route('admin.about')
+            ->with('success', 'About Us page saved successfully.');
     }
 
-    // private function processAndStoreImage($file): string
-    // {
-    //     $filename = 'why-choose-us/' . Str::random(20) . '.webp';
-
-    //     $manager = new ImageManager(new Driver());
-    //     $image = $manager->read($file);
-    //     $image->cover($this->imageWidth, $this->imageHeight);
-    //     $encoded = $image->toWebp(quality: $this->compressQuality);
-
-    //     Storage::disk('public')->put($filename, (string) $encoded);
-
-    //     return $filename;
-    // }
-
-    private function processAndStoreImage($file): string
+     private function processAndStoreImage($file): string
     {
-        $filename = 'why-choose-us/' . Str::random(20) . '.webp';
+        $filename = 'about-us/' . Str::random(20) . '.webp';
 
-        // 1. Correct instantiation in Intervention v4
+        // Initialize ImageManager with GD Driver
         $manager = new ImageManager(new Driver());
-        // OR: $manager = ImageManager::usingDriver(Driver::class);
 
-        // 2. Decode the uploaded file path using decodePath()
-        $image = $manager->decodePath($file->getPathname());
+        // Read image path
+        $image = $manager->read($file->getPathname());
 
-        // 3. Process image dimensions
+        // Resize/Crop
         $image->cover($this->imageWidth, $this->imageHeight);
 
-        // 4. Encode to WEBP
-        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $this->compressQuality);
+        // Encode to WebP
+        $encoded = $image->toWebp($this->compressQuality ?? 80);
 
-        // 5. Save to disk
+        // Save to storage disk
         Storage::disk('public')->put($filename, (string) $encoded);
 
         return $filename;

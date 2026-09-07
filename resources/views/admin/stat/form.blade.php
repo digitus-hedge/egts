@@ -62,16 +62,29 @@
 </form>
 
 <template id="statRowTemplate">
-    <div class="stats-row">
-        <input type="text" name="items[__INDEX__][value]" placeholder="e.g. 100K">
-        <input type="text" name="items[__INDEX__][label]" placeholder="e.g. LICENSES">
-        <input type="text" name="items[__INDEX__][description]" placeholder="e.g. Held & managed">
-        <button type="button" class="btn-remove-row"><i class="bi bi-trash3"></i></button>
+    <div class="stats-row-wrapper">
+        <div class="stats-row">
+            <div class="input-group-cell">
+                <input type="text" name="items[__INDEX__][value]" maxlength="8" placeholder="e.g. 100K">
+                <span class="field-error error-value" style="display: none;"><i class="bi bi-exclamation-circle"></i> <span class="error-msg"></span></span>
+            </div>
+            <div class="input-group-cell">
+                <input type="text" name="items[__INDEX__][label]" maxlength="20" placeholder="e.g. LICENSES">
+                <span class="field-error error-label" style="display: none;"><i class="bi bi-exclamation-circle"></i> <span class="error-msg"></span></span>
+            </div>
+            <div class="input-group-cell">
+                <input type="text" name="items[__INDEX__][description]" maxlength="20" placeholder="e.g. Held & managed">
+                <span class="field-error error-description" style="display: none;"><i class="bi bi-exclamation-circle"></i> <span class="error-msg"></span></span>
+            </div>
+            <button type="button" class="btn-remove-row"><i class="bi bi-trash3"></i></button>
+        </div>
     </div>
 </template>
 
-<script>
+
+   <script>
     const existingItems = @json(old('items', $stat->items ?? []));
+    const validationErrors = @json($errors->toArray());
     const maxRows = 5;
     const rowsContainer = document.getElementById('statsRows');
     const template = document.getElementById('statRowTemplate');
@@ -79,7 +92,7 @@
     const maxHint = document.getElementById('maxHint');
 
     function rowCount() {
-        return rowsContainer.querySelectorAll('.stats-row').length;
+        return rowsContainer.querySelectorAll('.stats-row-wrapper').length;
     }
 
     function updateAddButtonState() {
@@ -88,34 +101,52 @@
         maxHint.style.display = reachedMax ? 'block' : 'none';
     }
 
-    function addRow(data = { value: '', label: '', description: '' }) {
+    function addRow(data = { value: '', label: '', description: '' }, indexOverride = null) {
         if (rowCount() >= maxRows) return;
 
-        const index = rowCount();
+        const index = indexOverride !== null ? indexOverride : rowCount();
         const clone = template.content.cloneNode(true);
-        const rowEl = clone.querySelector('.stats-row');
+        const wrapperEl = clone.querySelector('.stats-row-wrapper');
 
-        rowEl.querySelectorAll('input').forEach(input => {
+        // Re-index Name attributes
+        wrapperEl.querySelectorAll('input').forEach(input => {
             input.name = input.name.replace('__INDEX__', index);
         });
 
-        rowEl.querySelector('input[name$="[value]"]').value = data.value ?? '';
-        rowEl.querySelector('input[name$="[label]"]').value = data.label ?? '';
-        rowEl.querySelector('input[name$="[description]"]').value = data.description ?? '';
+        // Populate Input Values
+        wrapperEl.querySelector('input[name$="[value]"]').value = data.value ?? '';
+        wrapperEl.querySelector('input[name$="[label]"]').value = data.label ?? '';
+        wrapperEl.querySelector('input[name$="[description]"]').value = data.description ?? '';
 
-        rowEl.querySelector('.btn-remove-row').addEventListener('click', function () {
-            rowEl.remove();
+        // Attach Inline Server-Side Validation Errors
+        ['value', 'label', 'description'].forEach(field => {
+            const errorKey = `items.${index}.${field}`;
+            if (validationErrors[errorKey]) {
+                const errorEl = wrapperEl.querySelector(`.error-${field}`);
+                const inputEl = wrapperEl.querySelector(`input[name="items[${index}][${field}]"]`);
+                
+                if (errorEl && inputEl) {
+                    errorEl.querySelector('.error-msg').textContent = validationErrors[errorKey][0];
+                    errorEl.style.display = 'inline-flex';
+                    inputEl.classList.add('input-error');
+                }
+            }
+        });
+
+        // Row Removal Event
+        wrapperEl.querySelector('.btn-remove-row').addEventListener('click', function () {
+            wrapperEl.remove();
             reindexRows();
             updateAddButtonState();
         });
 
-        rowsContainer.appendChild(rowEl);
+        rowsContainer.appendChild(wrapperEl);
         updateAddButtonState();
     }
 
     function reindexRows() {
-        rowsContainer.querySelectorAll('.stats-row').forEach((row, i) => {
-            row.querySelectorAll('input').forEach(input => {
+        rowsContainer.querySelectorAll('.stats-row-wrapper').forEach((wrapper, i) => {
+            wrapper.querySelectorAll('input').forEach(input => {
                 input.name = input.name.replace(/items\[\d+\]/, `items[${i}]`);
             });
         });
@@ -123,9 +154,9 @@
 
     addBtn.addEventListener('click', () => addRow());
 
-    // Preload existing data, or start with 1 empty row
+    // Preload existing data or default to 1 empty row
     if (existingItems.length > 0) {
-        existingItems.forEach(item => addRow(item));
+        existingItems.forEach((item, idx) => addRow(item, idx));
     } else {
         addRow();
     }

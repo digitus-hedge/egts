@@ -53,7 +53,7 @@
                     <div class="form-group">
                         <label><i class="bi bi-type"></i> Title</label>
                         <input type="text" name="title" value="{{ old('title', $banner->title) }}"
-                               class="{{ $errors->has('title') ? 'input-error' : '' }}"
+                               class="{{ $errors->has('title') ? 'input-error' : '' }}" 
                                placeholder="Enter banner title">
                         @error('title')
                             <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
@@ -63,7 +63,7 @@
                     <div class="form-group">
                         <label><i class="bi bi-text-paragraph"></i> Description</label>
                         <textarea name="description" rows="4"
-                                  class="{{ $errors->has('description') ? 'input-error' : '' }}"
+                                  class="{{ $errors->has('description') ? 'input-error' : '' }}"  
                                   placeholder="Enter banner description">{{ old('description', $banner->description) }}</textarea>
                         @error('description')
                             <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
@@ -75,7 +75,10 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-images"></i> Images (1 to 3 required)</label>
-                    <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong> per image</p>
+                   <p class="hint-text">
+        Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong> per image
+        — Recommended size: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
+    </p>
 
                     @error('image_1')
                         @if (str_contains($message, 'at least 1 image'))
@@ -143,6 +146,37 @@
                     </div>
                 </div>
             </div>
+
+
+              {{-- META / SEO --}}
+            <div class="col-md-12">
+                <div class="form-card">
+                    <label class="section-label"><i class="bi bi-search"></i> SEO Meta</label>
+                    <p class="hint-text">Used for search engine results and social share previews.</p>
+
+                    <div class="form-group">
+                        <label><i class="bi bi-type"></i> Meta Title</label>
+                        <input type="text" name="meta_title" value="{{ old('meta_title', $banner->meta_title) }}"
+                               maxlength="60"
+                               class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
+                               placeholder="Enter meta title (recommended: under 60 characters)">
+                        @error('meta_title')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group" style="margin-top:14px;">
+                        <label><i class="bi bi-text-paragraph"></i> Meta Description</label>
+                        <textarea name="meta_description" rows="3" maxlength="160"
+                                  class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
+                                  placeholder="Enter meta description (recommended: under 160 characters)">{{ old('meta_description', $banner->meta_description) }}</textarea>
+                        @error('meta_description')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
 
             <div class="col-md-12">
                 <div class="form-actions">
