@@ -1,107 +1,168 @@
 /* ==========================================================================
-   PAGE HERO
+   ABOUT US — HERO BANNER
    ========================================================================== */
-.page-hero {
+.au-hero {
     position: relative;
     width: 100%;
-    min-height: 380px;
+    min-height: 750px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     overflow: hidden;
 }
 
-.page-hero-overlay {
+.au-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.75) 0%,
-            rgba(0, 0, 0, 0.4) 100%);
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.1) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
 }
 
-.page-hero-content {
+.au-hero-content {
     position: relative;
     z-index: 1;
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 24px 80px;
     color: #fff;
 }
 
-.page-hero-eyebrow {
-    display: inline-block;
-    font-size: 13px;
+.au-hero-content h1 {
+    font-size: 48px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    color: #fff;
-    border-bottom: 3px solid #fff;
-    padding-bottom: 6px;
-    margin-bottom: 18px;
+    line-height: 1.2;
+    margin: 0 0 20px;
+    max-width: 780px;
 }
 
-.page-hero-content h1 {
-    font-size: 44px;
-    font-weight: 600;
-    margin: 0 0 12px;
-}
-
-.page-hero-content p {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.9);
+.au-hero-content p {
+    font-size: 17px;
+    line-height: 1.6;
     max-width: 560px;
     margin: 0;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 /* ==========================================================================
-   COMPANY AT A GLANCE (Reworked — split layout, tinted bg, scattered shapes)
+   RESPONSIVE
    ========================================================================== */
-.glance-section {
+@media (max-width: 991px) {
+    .au-hero {
+        min-height: 560px;
+    }
+
+    .au-hero-content h1 {
+        font-size: 36px;
+    }
+
+    .au-hero-content p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .au-hero {
+        min-height: 480px;
+    }
+
+    .au-hero-content {
+        padding: 0 20px 50px;
+    }
+
+    .au-hero-content h1 {
+        font-size: 26px;
+    }
+
+    .au-hero-content p {
+        font-size: 14px;
+    }
+}
+
+/* ==========================================================================
+   ABOUT US — BUILT TO SUPPORT SECTION
+   ========================================================================== */
+.au-built-section {
     position: relative;
     width: 100%;
-    padding: 90px 24px;
-    background-color: #fdf1f1;
+    padding: 100px 24px;
+    background-color: #ffffff;
     overflow: hidden;
 }
 
-.glance-bg-decor {
+.au-bg-decor {
     position: absolute;
     top: 0;
     width: 220px;
     height: 100%;
-    color: rgba(180, 7, 7, 0.12);
+    color: rgba(180, 7, 7, 0.14);
     pointer-events: none;
     z-index: 0;
 }
 
-.glance-bg-decor svg {
+.au-bg-decor svg {
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.glance-bg-decor-left {
+.au-bg-decor-left {
     left: 0;
 }
 
-.glance-bg-decor-right {
+.au-bg-decor-right {
     right: 0;
 }
 
-.glance-inner {
+.au-built-inner {
     position: relative;
     z-index: 1;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 60px;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 80px;
     align-items: center;
 }
 
-.glance-eyebrow {
+/* ===== Overlapping dual images ===== */
+.au-built-images {
+    position: relative;
+    width: 100%;
+    padding-bottom: 60px;
+    padding-right: 40px;
+}
+
+.au-img-primary {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.au-img-secondary {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 55%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 6px solid #fff;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== Content ===== */
+.au-eyebrow {
     display: inline-block;
     font-size: 13px;
     font-weight: 700;
@@ -112,579 +173,523 @@
     margin-bottom: 20px;
 }
 
-.glance-left h2 {
-    font-size: 36px;
-    font-weight: 600;
+.au-built-content h2 {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.25;
     color: #1a1a1a;
-    margin: 0 0 22px;
+    margin: 0 0 28px;
 }
 
-.glance-left p {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #555;
-    margin: 0 0 24px;
+.au-built-text {
+    margin-left: 24px;
+    border-left: 2px solid #eee;
+    padding-left: 24px;
 }
 
-.glance-location {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #b40707;
-}
-
-.glance-location svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-}
-
-.glance-right {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.glance-stat-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(180, 7, 7, 0.15);
-    border-radius: 10px;
-    padding: 28px 20px;
-    text-align: center;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-}
-
-.glance-stat-number {
-    display: block;
-    font-size: 34px;
-    font-weight: 800;
-    color: #b40707;
-    margin-bottom: 8px;
-}
-
-.glance-stat-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
+.au-built-text p {
+    font-size: 16px;
+    line-height: 1.75;
     color: #444;
-    line-height: 1.4;
+    margin: 0 0 16px;
 }
 
-/* ==========================================================================
-   QUALITY ADVANTAGE / CERTIFICATIONS
-   ========================================================================== */
-.quality-section {
-    width: 100%;
-    padding: 70px 24px;
-    background-color: #b40707;
-    text-align: center;
-}
-
-.quality-inner {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.quality-eyebrow {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #ffffff;
-    margin-bottom: 12px;
-}
-
-.quality-inner h2 {
-    font-size: 32px;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0 0 12px;
-}
-
-.quality-inner>p {
-    font-size: 15px;
-    color: #ffffff;
-    margin: 0 0 44px;
-}
-
-.quality-grid {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 48px;
-}
-
-.quality-item img {
-    height: 90px;
-    width: auto;
-    max-width: 220px;
-    object-fit: contain;
-}
-
-/* ==========================================================================
-   FOUNDATION — CORE VALUES & HSE
-   ========================================================================== */
-.foundation-section {
-    position: relative;
-    width: 100%;
-    padding: 90px 24px;
-    background-color: #f7f7f7;
-    overflow: hidden;
-}
-
-.foundation-bg-decor {
-    position: absolute;
-    top: 0;
-    width: 220px;
-    height: 100%;
-    color: rgba(180, 7, 7, 0.10);
-    pointer-events: none;
-    z-index: 0;
-}
-
-.foundation-bg-decor svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.foundation-bg-decor-left {
-    left: 0;
-}
-
-.foundation-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.foundation-eyebrow {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #b40707;
-    margin-bottom: 12px;
-}
-
-.foundation-inner h2 {
-    font-size: 34px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin: 0 0 14px;
-}
-
-.foundation-sub {
-    font-size: 15px;
-    color: #666;
-    max-width: 620px;
-    margin: 0 auto 56px;
-    line-height: 1.7;
-}
-
-.foundation-grid {
-    display: grid;
-    grid-template-columns: 1.35fr auto 0.85fr;
-    gap: 32px;
-    text-align: left;
-    align-items: stretch;
-}
-
-.foundation-col h3 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 24px;
-    text-align: center;
-}
-
-/* ===== Divider between columns ===== */
-.foundation-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.foundation-divider::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 2px;
-    background: repeating-linear-gradient(to bottom,
-            rgba(180, 7, 7, 0.25) 0,
-            rgba(180, 7, 7, 0.25) 6px,
-            transparent 6px,
-            transparent 14px);
-    transform: translateX(-50%);
-}
-
-.foundation-divider-icon {
-    position: relative;
-    z-index: 1;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: #b40707;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    box-shadow: 0 8px 18px rgba(180, 7, 7, 0.3);
-}
-
-.foundation-divider-icon svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* ===== Core Value Cards ===== */
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.value-card {
-    position: relative;
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 30px 18px 24px;
-    text-align: center;
-    overflow: hidden;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.value-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #b40707, #e02020);
-}
-
-.value-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(180, 7, 7, 0.16);
-}
-
-.value-num {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    font-size: 26px;
-    font-weight: 800;
-    color: #f1f1f1;
-    line-height: 1;
-}
-
-.value-icon {
-    width: 58px;
-    height: 58px;
-    margin: 8px auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(150deg, #fdf1f1, #fbe0e0);
-    border-radius: 50%;
-    color: #b40707;
-    transition: background 0.25s ease, transform 0.25s ease;
-}
-
-.value-card:hover .value-icon {
-    background: linear-gradient(150deg, #b40707, #8f0505);
-    color: #fff;
-    transform: scale(1.08);
-}
-
-.value-icon svg {
-    width: 26px;
-    height: 26px;
-}
-
-.value-title {
-    display: block;
-    font-size: 15px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 8px;
-}
-
-.value-desc {
-    display: block;
-    font-size: 12.5px;
-    line-height: 1.5;
-    color: #777;
-}
-
-/* ===== HSE Commitment Panel ===== */
-.hse-col {
-    display: flex;
-    flex-direction: column;
-}
-
-.hse-box {
-    position: relative;
-    background: linear-gradient(155deg, #c40808 0%, #7a0505 100%);
-    border-radius: 14px;
-    padding: 40px 32px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    color: #fff;
-    box-shadow: 0 20px 40px rgba(180, 7, 7, 0.25);
-    overflow: hidden;
-}
-
-.hse-pattern {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 200px;
-    height: 200px;
-    border: 40px solid rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.hse-icon {
-    position: relative;
-    z-index: 1;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    margin-bottom: 18px;
-}
-
-.hse-icon svg {
-    width: 28px;
-    height: 28px;
-    color: #fff;
-}
-
-.hse-badge {
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #ffd7d7;
-    background-color: rgba(255, 255, 255, 0.12);
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-bottom: 14px;
-}
-
-.hse-headline {
-    position: relative;
-    z-index: 1;
-    display: block;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 14px;
-}
-
-.hse-lead {
-    position: relative;
-    z-index: 1;
-    font-size: 14px;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 24px;
-}
-
-.hse-list {
-    position: relative;
-    z-index: 1;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-.hse-list li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: #fff;
-    padding: 10px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.hse-list li:first-child {
-    border-top: none;
-}
-
-.hse-list li svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    color: #ffd7d7;
-}
-
-/* ==========================================================================
-   BEHIND THE SCENES / TECHNICAL INFRASTRUCTURE
-   ========================================================================== */
-.infra-section {
-    width: 100%;
-    padding: 70px 24px;
-    background-color: #fdf1f1;
-}
-
-.infra-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.infra-eyebrow {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #b40707;
-    margin-bottom: 12px;
-}
-
-.infra-inner h2 {
-    font-size: 32px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin: 0 0 44px;
-}
-
-.infra-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-}
-
-.infra-item img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-    margin-bottom: 14px;
-}
-
-.infra-item span {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
+.au-built-text p:last-child {
+    margin-bottom: 0;
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 @media (max-width: 991px) {
-    .page-hero {
-        min-height: 300px;
-    }
-
-    .page-hero-content h1 {
-        font-size: 32px;
-    }
-
-    .glance-inner {
+    .au-built-inner {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 60px;
     }
 
-    .glance-left h2 {
-        font-size: 28px;
+    .au-built-images {
+        padding-bottom: 50px;
+        padding-right: 30px;
+        max-width: 480px;
+        margin: 0 auto;
     }
 
-    .glance-bg-decor {
-        display: none;
+    .au-img-primary {
+        height: 340px;
     }
 
-    .quality-grid {
-        gap: 32px;
+    .au-img-secondary {
+        height: 200px;
     }
 
-    .quality-item img {
-        height: 70px;
+    .au-built-content h2 {
+        font-size: 30px;
     }
 
-    .foundation-grid {
-        grid-template-columns: 1fr;
-        gap: 32px;
-    }
-
-    .foundation-divider {
-        display: none;
-    }
-
-    .values-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .hse-box {
-        padding: 32px 24px;
-    }
-
-    .foundation-bg-decor {
+    .au-bg-decor {
         display: none;
     }
 }
 
 @media (max-width: 576px) {
-    .page-hero-content h1 {
+    .au-built-section {
+        padding: 60px 20px;
+    }
+
+    .au-built-images {
+        padding-bottom: 40px;
+        padding-right: 20px;
+    }
+
+    .au-img-primary {
+        height: 260px;
+        border-radius: 10px;
+    }
+
+    .au-img-secondary {
+        height: 150px;
+        border-radius: 10px;
+        border-width: 4px;
+    }
+
+    .au-built-content h2 {
+        font-size: 24px;
+    }
+
+    .au-built-text {
+        margin-left: 0;
+        padding-left: 16px;
+    }
+}
+
+/* ==========================================================================
+   ABOUT US — MISSION & VISION SECTION
+   ========================================================================== */
+.au-mv-section {
+    position: relative;
+    width: 100%;
+    padding: 60px 24px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.au-bg-decor {
+    position: absolute;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    color: rgba(180, 7, 7, 0.12);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.au-bg-decor svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.au-bg-decor-left {
+    left: 0;
+}
+
+.au-bg-decor-right {
+    right: 0;
+}
+
+.au-mv-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.au-mv-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+/* Reverse column order for the Vision row on desktop only */
+.au-mv-row-reverse .au-mv-content {
+    order: 2;
+}
+
+.au-mv-row-reverse .au-mv-image {
+    order: 1;
+}
+
+.au-mv-content h2 {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+}
+
+.au-mv-content p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #444;
+    margin: 0;
+    max-width: 460px;
+}
+
+.au-mv-image img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   RESPONSIVE — image on top, content below, on mobile
+   ========================================================================== */
+@media (max-width: 991px) {
+    .au-bg-decor {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .au-mv-section {
+        padding: 40px 20px;
+    }
+
+    .au-mv-inner {
+        gap: 40px;
+    }
+
+    .au-mv-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Force image first, content second on ALL rows regardless of desktop reverse */
+    .au-mv-row .au-mv-image,
+    .au-mv-row-reverse .au-mv-image {
+        order: 1;
+    }
+
+    .au-mv-row .au-mv-content,
+    .au-mv-row-reverse .au-mv-content {
+        order: 2;
+    }
+
+    .au-mv-content h2 {
+        font-size: 22px;
+    }
+
+    .au-mv-content p {
+        font-size: 14px;
+        max-width: 100%;
+    }
+
+    .au-mv-image img {
+        height: 200px;
+    }
+}
+
+/* ==========================================================================
+   ABOUT US — OUR FOUNDATION SECTION
+   ========================================================================== */
+.au-foundation-section {
+    position: relative;
+    width: 100%;
+    padding: 80px 24px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.au-bg-decor {
+    position: absolute;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    color: rgba(180, 7, 7, 0.12);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.au-bg-decor svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.au-bg-decor-left {
+    left: 0;
+}
+
+.au-bg-decor-right {
+    right: 0;
+}
+
+.au-foundation-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.au-foundation-inner h2 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+}
+
+.au-foundation-sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #555;
+    max-width: 480px;
+    margin: 0 0 40px;
+}
+
+.au-foundation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.au-foundation-card {
+    position: relative;
+    height: 440px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+}
+
+.au-foundation-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.45) 35%,
+        rgba(0, 0, 0, 0.1) 65%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    transition: background 0.35s ease;
+}
+
+.au-foundation-content {
+    position: relative;
+    z-index: 1;
+    padding: 28px;
+    color: #fff;
+}
+
+.au-foundation-content h3 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+    transition: margin 0.35s ease;
+}
+
+.au-foundation-content p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 10px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.35s ease;
+}
+
+/* ===== Hover reveal ===== */
+.au-foundation-card:hover .au-foundation-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(0, 0, 0, 0.65) 55%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
+}
+
+.au-foundation-card:hover .au-foundation-content p {
+    max-height: 160px;
+    opacity: 1;
+    margin-top: 10px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 991px) {
+    .au-bg-decor {
+        display: none;
+    }
+
+    .au-foundation-inner h2 {
         font-size: 26px;
     }
 
-    .glance-section,
-    .quality-section,
-    .foundation-section,
-    .infra-section {
-        padding: 44px 20px;
+    .au-foundation-card {
+        height: 360px;
+    }
+}
+
+@media (max-width: 767px) {
+    .au-foundation-section {
+        padding: 50px 20px;
     }
 
-    .glance-right {
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
+    .au-foundation-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .glance-stat-number {
-        font-size: 26px;
+    .au-foundation-card {
+        height: 280px;
     }
 
-    .quality-grid {
-        flex-direction: column;
-        gap: 24px;
+    .au-foundation-content h3 {
+        font-size: 22px;
     }
 
-    .values-grid {
+    /* On touch devices, hover doesn't apply — show description by default */
+    .au-foundation-content p {
+        max-height: 160px;
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   ABOUT US — BEHIND THE SCENES SECTION
+   ========================================================================== */
+.au-infra-section {
+    width: 100%;
+    padding: 80px 24px;
+    background-color: #f7f7f7;
+}
+
+.au-infra-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.au-infra-inner h2 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+}
+
+.au-infra-sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #555;
+    max-width: 560px;
+    margin: 0 0 40px;
+}
+
+.au-infra-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.au-infra-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.au-infra-item img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin-bottom: 18px;
+}
+
+.au-infra-item h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+}
+
+.au-infra-item p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.au-infra-arrow {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background-color: #b40707;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.au-infra-arrow:hover {
+    background-color: #8f0505;
+}
+
+.au-infra-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 991px) {
+    .au-infra-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
     }
 
-    .value-card {
-        padding: 24px 14px 20px;
+    .au-infra-inner h2 {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 767px) {
+    .au-infra-section {
+        padding: 50px 20px;
     }
 
-    .hse-headline {
-        font-size: 20px;
+    .au-infra-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .au-infra-item img {
+        height: 200px;
+    }
+
+    .au-infra-carousel {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .au-infra-arrow {
+        position: static;
     }
 }
