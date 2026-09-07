@@ -67,32 +67,26 @@ class BannerRequest extends FormRequest
     }
 
     /**
-     * Custom conditional validation:
-     * Requires AT LEAST ONE media source (Either an image or a video).
-     * Works for both creation and editing.
+     * Ensures at least one media source remains after taking image/video exclusivity into account.
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
             $banner = Banner::first();
 
-            // Check for newly uploaded images or existing saved images
+            $hasNewVideo = $this->hasFile('video');
             $hasNewImage = collect(['image_1', 'image_2', 'image_3'])
                 ->contains(fn ($field) => $this->hasFile($field));
 
-            $hasExistingImage = $banner && collect(['image_1', 'image_2', 'image_3'])
-                ->contains(fn ($field) => !empty($banner->{$field}));
+            // If new video uploaded, images will be wiped out
+            $hasVideoAfterSave = $hasNewVideo || (! $hasNewImage && $banner && ! empty($banner->video));
 
-            $hasImage = $hasNewImage || $hasExistingImage;
+            // If new image uploaded, video will be wiped out
+            $hasImageAfterSave = $hasNewImage || (! $hasNewVideo && $banner && (
+                ! empty($banner->image_1) || ! empty($banner->image_2) || ! empty($banner->image_3)
+            ));
 
-            // Check for newly uploaded video or existing saved video
-            $hasNewVideo = $this->hasFile('video');
-            $hasExistingVideo = $banner && !empty($banner->video);
-
-            $hasVideo = $hasNewVideo || $hasExistingVideo;
-
-            // Validation Rule: If NO image AND NO video exist, show validation errors
-            if (!$hasImage && !$hasVideo) {
+            if (! $hasVideoAfterSave && ! $hasImageAfterSave) {
                 $validator->errors()->add('image_1', 'Please upload at least one image or a video for the banner.');
                 $validator->errors()->add('video', 'Please upload a video or at least one image for the banner.');
             }

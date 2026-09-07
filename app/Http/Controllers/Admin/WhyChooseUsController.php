@@ -80,24 +80,23 @@ class WhyChooseUsController extends Controller
     //     return $filename;
     // }
 
-    private function processAndStoreImage($file): string
+     private function processAndStoreImage($file): string
     {
         $filename = 'why-choose-us/' . Str::random(20) . '.webp';
 
-        // 1. Correct instantiation in Intervention v4
+        // Initialize ImageManager with GD Driver
         $manager = new ImageManager(new Driver());
-        // OR: $manager = ImageManager::usingDriver(Driver::class);
 
-        // 2. Decode the uploaded file path using decodePath()
-        $image = $manager->decodePath($file->getPathname());
+        // Read image path
+        $image = $manager->read($file->getPathname());
 
-        // 3. Process image dimensions
+        // Resize/Crop
         $image->cover($this->imageWidth, $this->imageHeight);
 
-        // 4. Encode to WEBP
-        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $this->compressQuality);
+        // Encode to WebP
+        $encoded = $image->toWebp($this->compressQuality ?? 80);
 
-        // 5. Save to disk
+        // Save to storage disk
         Storage::disk('public')->put($filename, (string) $encoded);
 
         return $filename;
