@@ -4,12 +4,13 @@
 .ct-hero {
     position: relative;
     width: 100%;
-    min-height: 380px;
+    min-height: 100vh;
+    max-height: 900px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     overflow: hidden;
 }
 
@@ -30,7 +31,7 @@
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 24px 110px;
     color: #fff;
 }
 
@@ -54,8 +55,9 @@
 
 .ct-hero-content p {
     font-size: 16px;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.9);
-    max-width: 560px;
+    max-width: 640px;
     margin: 0;
 }
 
@@ -305,7 +307,7 @@
    ========================================================================== */
 @media (max-width: 991px) {
     .ct-hero {
-        min-height: 300px;
+        min-height: 70vh;
     }
 
     .ct-hero-content h1 {

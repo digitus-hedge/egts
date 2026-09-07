@@ -16,12 +16,12 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="ct-hero" style="background-image: url('{{ asset('images/contact-hero.webp') }}');">
+        <section class="ct-hero" @if($contactBanner?->image) style="background-image: url('{{ asset('storage/' . $contactBanner->image) }}');" @endif>
             <div class="ct-hero-overlay"></div>
             <div class="ct-hero-content">
                 <span class="ct-hero-eyebrow">CONTACT US</span>
-                <h1>Let's Talk About Your Project</h1>
-                <p>Reach out to our technical team for machining, threading, repair, and inspection inquiries.</p>
+                <h1>{{ $contactBanner->title ?? '' }}</h1>
+                <p>{{ $contactBanner->description ?? '' }}</p>
             </div>
         </section>
         {{-- ===== End Page Hero Section ===== --}}

@@ -227,8 +227,7 @@
             <li><a href="{{ route('admin.home.services') }}"
                     class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}">Services</a>
             </li>
-            <li><a href="{{ route('admin.contacts') }}"
-                    class="{{ request()->routeIs('admin.contacts') ? 'active' : '' }}">Contacts</a></li>
+             <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
         </ul>
     </div>
 

@@ -3,12 +3,14 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ClientSectionController;
+use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceDetailController;
 use App\Http\Controllers\ServicesListController;
@@ -27,9 +29,7 @@ Route::get('/facility_capabilities', function () {
     return view('web.facility_capabilities');
 });
 
-Route::get('/contact', function () {
-    return view('web.contact_us');
-});
+Route::get('/contact', [ContactUsController::class, 'index']);
 
 Route::post('/contact/submit', function () {
     // handle form submission — validate, send email, save to DB, etc.
@@ -78,7 +78,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('about', [DashboardController::class, 'about'])->name('about');
         Route::get('services', [DashboardController::class, 'services'])->name('services');
-        Route::get('contacts', [DashboardController::class, 'contacts'])->name('contacts');
+
+        Route::get('home/contact-banner', [ContactBannerController::class, 'index'])->name('home.contact-banner');
+        Route::post('home/contact-banner', [ContactBannerController::class, 'store'])->name('home.contact-banner.store');
+
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
