@@ -67,9 +67,61 @@
                 </div>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="form-card">
-                    <label class="section-label"><i class="bi bi-image"></i> Banner Image</label>
+                    <div class="form-group">
+                        <label><i class="bi bi-geo-alt"></i> Address</label>
+                        <input type="text" name="address" value="{{ old('address', $contactBanner->address) }}"
+                               class="{{ $errors->has('address') ? 'input-error' : '' }}"
+                               placeholder="e.g. Ankawa Industrial Area, Erbil, Kurdistan Region, Iraq">
+                        @error('address')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label><i class="bi bi-telephone"></i> Phone</label>
+                        <input type="text" name="phone" value="{{ old('phone', $contactBanner->phone) }}"
+                               class="{{ $errors->has('phone') ? 'input-error' : '' }}"
+                               placeholder="e.g. +964 750 467 8530">
+                        @error('phone')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label><i class="bi bi-envelope"></i> Email</label>
+                        <input type="email" name="email" value="{{ old('email', $contactBanner->email) }}"
+                               class="{{ $errors->has('email') ? 'input-error' : '' }}"
+                               placeholder="e.g. info@egts-iq.com">
+                        @error('email')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label><i class="bi bi-clock"></i> Working Hours</label>
+                        <input type="text" name="working_hours" value="{{ old('working_hours', $contactBanner->working_hours) }}"
+                               class="{{ $errors->has('working_hours') ? 'input-error' : '' }}"
+                               placeholder="e.g. Sat – Thu: 8:00 AM – 5:00 PM">
+                        @error('working_hours')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
                     <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong></p>
 
                     <div class="image-upload-box">

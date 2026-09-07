@@ -77,7 +77,7 @@
                             </div>
                             <div>
                                 <span class="ct-info-label">Address</span>
-                                <span class="ct-info-value">Ankawa Industrial Area, Erbil, Kurdistan Region, Iraq</span>
+                                <span class="ct-info-value">{{ $contactBanner->address }}</span>
                             </div>
                         </div>
 
@@ -89,7 +89,7 @@
                             </div>
                             <div>
                                 <span class="ct-info-label">Phone</span>
-                                <span class="ct-info-value">+964 750 467 8530</span>
+                                <span class="ct-info-value">{{ $contactBanner->phone }}</span>
                             </div>
                         </div>
 
@@ -101,7 +101,7 @@
                             </div>
                             <div>
                                 <span class="ct-info-label">Email</span>
-                                <span class="ct-info-value">info@egts-iq.com</span>
+                                <span class="ct-info-value">{{ $contactBanner->email }}</span>
                             </div>
                         </div>
 
@@ -114,7 +114,7 @@
                             </div>
                             <div>
                                 <span class="ct-info-label">Working Hours</span>
-                                <span class="ct-info-value">Sat – Thu: 8:00 AM – 5:00 PM</span>
+                                <span class="ct-info-value">{{ $contactBanner->working_hours }}</span>
                             </div>
                         </div>
                     </div>

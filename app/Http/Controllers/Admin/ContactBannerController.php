@@ -35,6 +35,10 @@ class ContactBannerController extends Controller
         $contactBanner = ContactBanner::first() ?? new ContactBanner();
         $contactBanner->title = $data['title'];
         $contactBanner->description = $data['description'] ?? null;
+        $contactBanner->address = $data['address'] ?? null;
+        $contactBanner->phone = $data['phone'] ?? null;
+        $contactBanner->email = $data['email'] ?? null;
+        $contactBanner->working_hours = $data['working_hours'] ?? null;
 
         if ($request->hasFile('image')) {
             if ($contactBanner->image) {

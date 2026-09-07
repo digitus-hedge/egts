@@ -14,9 +14,13 @@ class ContactBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'title'         => 'required|string|max:255',
+            'description'   => 'nullable|string|max:1000',
+            'image'         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'address'       => 'nullable|string|max:255',
+            'phone'         => 'nullable|string|max:50',
+            'email'         => 'nullable|email|max:255',
+            'working_hours' => 'nullable|string|max:255',
         ];
     }
 

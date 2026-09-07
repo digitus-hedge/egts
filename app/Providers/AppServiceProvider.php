@@ -4,22 +4,22 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use App\Models\ContactBanner;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-         Schema::defaultStringLength(191);
+        Schema::defaultStringLength(191);
+
+        View::composer(['web.layout.header', 'web.layout.footer'], function ($view) {
+            $view->with('contactBanner', ContactBanner::first());
+        });
     }
 }

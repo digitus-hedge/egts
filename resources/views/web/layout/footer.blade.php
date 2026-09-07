@@ -40,10 +40,9 @@
             <div class="footer-col">
                 <h4>Contact</h4>
                 <ul>
-                    <li>Ankawa Industrial Area</li>
-                    <li>Kurdistan Region, Iraq</li>
-                    <li>Phone: +964 750 467 8530</li>
-                    <li>Email: info@egts-iq.com</li>
+                    <li>{{ $contactBanner->address }}</li>
+                    <li>Phone: {{ $contactBanner->phone }}</li>
+                    <li>Email: {{ $contactBanner->email }}</li>
                 </ul>
             </div>
         </div>
