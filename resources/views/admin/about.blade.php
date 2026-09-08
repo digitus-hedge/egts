@@ -241,6 +241,33 @@
     @enderror
 </div>
 
+
+{{-- Commitment Image --}}
+        <div class="form-group" style="margin-top:12px;">
+            <label>Commitment Image</label>
+            <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p>
+            <div class="image-upload-box">
+                <div class="preview-wrap">
+                    @if ($why->commitment_image)
+                        <img src="{{ Storage::url($why->commitment_image) }}" class="preview-img" id="preview-commitment">
+                    @else
+                        <div class="preview-placeholder" id="preview-commitment">
+                            <i class="bi bi-image"></i>
+                        </div>
+                    @endif
+                </div>
+                <label class="upload-btn">
+                    <i class="bi bi-upload"></i> Choose file
+                    <input type="file" name="commitment_image" accept="image/*"
+                           onchange="previewImage(this, 'preview-commitment')" hidden>
+                </label>
+                @error('commitment_image')
+                    <span class="field-error d-block mt-2"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        
+
 </div>
 </div>
 {{-- OUR FOUNDATION --}}

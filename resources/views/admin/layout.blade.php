@@ -174,7 +174,6 @@
             margin: 0;
             color: #fff;
         }
-
     </style>
 </head>
 
@@ -224,10 +223,24 @@
 
             <li><a href="{{ route('admin.about') }}"
                     class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">About</a></li>
-            <li><a href="{{ route('admin.home.services') }}"
-                    class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}">Services</a>
+
+            <li class="has-submenu {{ request()->routeIs('admin.home.services') || request()->routeIs('admin.home.services.*') ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Services
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+
+                    <li><a href="{{ route('admin.home.services') }}"
+                            class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.behind-the-scenes*')) ? 'active' : '' }}">Master Service</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.services.behind-the-scenes') }}"
+                            class="{{ request()->routeIs('admin.home.services.behind-the-scenes*') ? 'active' : '' }}">Behind The Scenes</a>
+                    </li>
+                </ul>
             </li>
-             <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
+
+            <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
         </ul>
     </div>
 
@@ -257,7 +270,6 @@
             const parentLi = el.closest('.has-submenu');
             parentLi.classList.toggle('open');
         }
-
     </script>
 
 </body>

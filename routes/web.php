@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
+use App\Http\Controllers\Admin\BehindTheSceneController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\ContactUsController;
@@ -77,7 +78,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/why-choose-us', [WhyChooseUsController::class, 'index'])->name('home.why-choose-us');
         Route::post('home/why-choose-us', [WhyChooseUsController::class, 'store'])->name('home.why-choose-us.store');
 
-   
+
+        // routes/web.php (inside your admin route group with 'admin.' name prefix)
+
+        Route::get('home/services/behind-the-scenes', [BehindTheSceneController::class, 'index'])->name('home.services.behind-the-scenes');
+        Route::get('home/services/behind-the-scenes/create', [BehindTheSceneController::class, 'create'])->name('home.services.behind-the-scenes.create');
+        Route::post('home/services/behind-the-scenes', [BehindTheSceneController::class, 'store'])->name('home.services.behind-the-scenes.store');
+        Route::get('home/services/behind-the-scenes/{behind_the_scene}/edit', [BehindTheSceneController::class, 'edit'])->name('home.services.behind-the-scenes.edit');
+        Route::put('home/services/behind-the-scenes/{behind_the_scene}', [BehindTheSceneController::class, 'update'])->name('home.services.behind-the-scenes.update');
+        Route::delete('home/services/behind-the-scenes/{behind_the_scene}', [BehindTheSceneController::class, 'destroy'])->name('home.services.behind-the-scenes.destroy');
+
+
 
         Route::get('about', [AboutController::class, 'index'])->name('about');       // Shows form directly (pre-filled if exists)
         Route::post('about', [AboutController::class, 'store'])->name('about.store'); // Creates or updates

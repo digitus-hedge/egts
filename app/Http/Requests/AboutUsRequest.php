@@ -43,6 +43,7 @@ class AboutUsRequest extends FormRequest
             'commitment_title'             => 'required|string|max:255',
             'commitment_description'       => 'required|string|max:2000',
             'commitment_description_rich'  => 'required|string',
+            'commitment_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'foundation_heading'     => 'required|string|max:255',
             'foundation_description' => 'required|string',
@@ -71,6 +72,7 @@ class AboutUsRequest extends FormRequest
                 'mission_image',
                 'vision_image',
                 'values_image',
+                'commitment_image'
             ];
 
             foreach ($imageFields as $field) {

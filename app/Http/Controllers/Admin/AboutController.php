@@ -64,6 +64,7 @@ class AboutController extends Controller
             'mission_image',
             'vision_image',
             'values_image',
+            'commitment_image', // Added here
         ];
 
         foreach ($imageFields as $field) {
