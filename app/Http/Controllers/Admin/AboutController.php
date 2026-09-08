@@ -31,6 +31,9 @@ class AboutController extends Controller
         $about = AboutUs::first() ?? new AboutUs();
 
         $about->fill([
+            'meta_title'       => $data['meta_title'] ?? null,
+            'meta_description' => $data['meta_description'] ?? null,
+
             'banner_heading'     => $data['banner_heading'],
             'banner_description' => $data['banner_description'],
 
@@ -53,6 +56,7 @@ class AboutController extends Controller
             'commitment_description'      => $data['commitment_description'],
             'commitment_description_rich' => $data['commitment_description_rich'],
 
+
             'foundation_heading'     => $data['foundation_heading'],
             'foundation_description' => $data['foundation_description'],
         ]);
@@ -64,7 +68,7 @@ class AboutController extends Controller
             'mission_image',
             'vision_image',
             'values_image',
-            'commitment_image', // Added here
+            'commitment_image',
         ];
 
         foreach ($imageFields as $field) {
