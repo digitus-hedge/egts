@@ -350,7 +350,7 @@
                 <textarea name="inspection_process[__INDEX__][description]" rows="3" placeholder="Describe this inspection step..."></textarea>
             </div>
             <div class="form-group">
-                <label>Step Image</label>
+                <label>Image</label>
                 <div class="image-upload-box">
                     <div class="preview-wrap">
                         <div class="preview-placeholder inspection-preview">
@@ -371,7 +371,15 @@
     </div>
 </template>
 
-
+@php
+    $inspectionForJs = collect(old('inspection_process', $service->inspection_process ?? []))
+        ->map(function ($row) {
+            if (!empty($row['image'])) {
+                $row['image_url'] = Storage::url($row['image']); // e.g. /storage/services/xxx.webp
+            }
+            return $row;
+        });
+@endphp
 <script>
     // ===== Technical Scope (simple list) =====
     const existingScope = @json(old('technical_scope', $service->technical_scope ?? []));
@@ -547,7 +555,8 @@ document.addEventListener('DOMContentLoaded', updateGalleryCount);
 
 
     // ===== Inspection Process (heading + description + image rows) =====
-const existingInspection = @json(old('inspection_process', $service->inspection_process ?? []));
+    const existingInspection = @json($inspectionForJs);
+
 const inspectionContainer = document.getElementById('inspectionRows');
 const inspectionTemplate = document.getElementById('inspectionRowTemplate');
 let inspectionIndex = 0;
@@ -1009,11 +1018,24 @@ function previewInspectionImage(input) {
 /* ===== Remove button aligned to top-right of the row, not floating oddly ===== */
 .inspection-row .btn-remove-row {
     position: absolute;
-    top: 14px;
+    top: 40px;
     right: 14px;
     width: 34px;
     height: 34px;
     flex-shrink: 0;
+
+     /* centering fix */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.inspection-row .btn-remove-row i {
+    display: block;
+    font-size: 15px;
+    line-height: 1;
 }
 
 /* add right padding to row so trash icon doesn't overlap the image column */

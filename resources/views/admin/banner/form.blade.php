@@ -75,10 +75,28 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-images"></i> Images (1 to 3 required)</label>
-                   <p class="hint-text">
+                   <!-- <p class="hint-text">
         Accepted: JPG, PNG, WEBP — Max size: <strong>10MB</strong> per image
         — Recommended size: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
-    </p>
+    </p> -->
+
+    <div class="upload-guidelines">
+    <span class="guideline-item">
+        <i class="bi bi-file-earmark-image"></i>
+        Accepted: <strong>JPG, PNG, WEBP</strong>
+    </span>
+    <span class="guideline-divider"></span>
+    <span class="guideline-item">
+        <i class="bi bi-hdd"></i>
+        Max size: <strong>10MB</strong> per image
+    </span>
+    <span class="guideline-divider"></span>
+    <span class="guideline-item">
+        <i class="bi bi-aspect-ratio"></i>
+        Recommended: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
+    </span>
+</div>
+
 
                     @error('image_1')
                         @if (str_contains($message, 'at least 1 image'))
@@ -558,6 +576,57 @@
     border-radius: 6px;
     font-size: 12.5px;
     margin-bottom: 14px;
+}
+
+
+.upload-guidelines {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 9px 14px;
+    background: #f4f6f9;
+    border: 1px solid #e8eaee;
+    border-radius: 6px;
+     margin-bottom: 15px;
+}
+
+.guideline-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.guideline-item i {
+    font-size: 13px;
+    color: #8b93a1;
+}
+
+.guideline-item strong {
+    color: #3b3b58;
+    font-weight: 600;
+}
+
+.guideline-divider {
+    width: 1px;
+    height: 14px;
+    background: #d8dce2;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .upload-guidelines {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .guideline-divider {
+        display: none;
+    }
 }
 
     </style>

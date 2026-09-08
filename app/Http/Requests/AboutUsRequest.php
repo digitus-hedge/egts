@@ -18,32 +18,32 @@ class AboutUsRequest extends FormRequest
         return [
             'banner_heading'     => 'required|string|max:255',
             'banner_description' => 'required|string',
-            'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'about_heading'     => 'required|string|max:255',
             'about_description' => 'required|string',
-            'section_two_image_one'   => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
-            'section_two_image_two'   => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'section_two_image_one'   => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'section_two_image_two'   => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'mission_title'            => 'required|string|max:255',
             'mission_description'      => 'required|string|max:2000',
             'mission_description_rich' => 'required|string',
-            'mission_image'            => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'mission_image'            => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'vision_title'             => 'required|string|max:255',
             'vision_description'       => 'required|string|max:2000',
             'vision_description_rich'  => 'required|string',
-            'vision_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'vision_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'values_title'             => 'required|string|max:255',
             'values_description'       => 'required|string|max:2000',
             'values_description_rich'  => 'required|string',
-            'values_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'values_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'commitment_title'             => 'required|string|max:255',
             'commitment_description'       => 'required|string|max:2000',
             'commitment_description_rich'  => 'required|string',
-            'commitment_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'commitment_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
 
             'meta_title'       => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',

@@ -11,33 +11,6 @@ class ServiceRequest extends FormRequest
         return true;
     }
 
-    // public function rules(): array
-    // {
-    //     return [
-    //         'title'                     => 'required|string|max:255',
-    //         'description'               => 'required|string|max:500',
-    //         'process_description'       => 'required|string',
-    //         'technical_scope'           => 'required|array',
-    //         'technical_scope.*'         => 'required|string|max:255',
-    //         'specifications'            => 'required|array',
-    //         'specifications.*.specification' => 'required|string|max:255',
-    //         'specifications.*.details'       => 'required|string|max:255',
-    //         'specifications.*.compliance'    => 'required|string|max:100',
-    //         'image'                         => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
-    //         'banner_image'                  => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
-    //         'meta_title'                    => 'nullable|string|max:70',
-    //         'meta_description'              => 'nullable|string|max:500',
-    //         'gallery'                   => 'required|array|max:6',
-    //         'gallery.*'                 => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
-    //         'remove_gallery'            => 'nullable|array',
-    //         'remove_gallery.*'          => 'string',
-    //         'sort_order'                => 'nullable|integer|min:0',
-    //         'status'                    => 'nullable|boolean',
-    //     ];
-    // }
-
-
-
     public function rules(): array
     {
         $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
@@ -55,8 +28,6 @@ class ServiceRequest extends FormRequest
             'specifications.*.details'       => 'required|string|max:255',
             'specifications.*.compliance'    => 'required|string|max:100',
 
-            // no longer conditionally required here — enforced in withValidator() instead,
-            // so mime/size rules still apply whenever a file IS submitted
             'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'banner_image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
 
@@ -69,21 +40,24 @@ class ServiceRequest extends FormRequest
             'remove_gallery'   => 'nullable|array',
             'remove_gallery.*' => 'string',
 
+            // ===== Inspection Process: heading + description mandatory per row =====
+            // Image mandatory too, but enforced in withValidator() below since it
+            // must accept EITHER a new upload OR an existing saved image (on update).
+            'inspection_process'                 => 'required|array|min:1',
+            'inspection_process.*.heading'       => 'required|string|max:255',
+            'inspection_process.*.description'   => 'required|string',
+            'inspection_process.*.image'         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'inspection_process.*.existing_image' => 'nullable|string',
+
             'sort_order'       => 'nullable|integer|min:0',
             'status'           => 'nullable|boolean',
         ];
     }
 
-    /**
-     * Additional validation: make sure the FINAL gallery count
-     * (existing images minus removed ones, plus newly uploaded ones)
-     * never exceeds 6 — the plain `max:6` rule above only limits
-     * the newly uploaded files, not the combined total.
-     */
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $service = $this->route('service'); // null on create, Service model on update
+            $service = $this->route('service');
 
             // ===== Gallery: combined total check =====
             $existingGalleryCount = $service ? count($service->gallery ?? []) : 0;
@@ -114,6 +88,22 @@ class ServiceRequest extends FormRequest
 
             if (!$hasExistingBanner && !$hasNewBannerUpload) {
                 $validator->errors()->add('banner_image', 'The banner image field is required.');
+            }
+
+            // ===== Inspection Process: each row's image must exist (new upload OR existing kept) =====
+            $inspectionRows = $this->input('inspection_process', []);
+            $inspectionFiles = $this->file('inspection_process', []);
+
+            foreach ($inspectionRows as $index => $row) {
+                $hasNewImage = isset($inspectionFiles[$index]['image']) && $inspectionFiles[$index]['image'] !== null;
+                $hasExistingImage = !empty($row['existing_image']);
+
+                if (!$hasNewImage && !$hasExistingImage) {
+                    $validator->errors()->add(
+                        "inspection_process.$index.image",
+                        'An image is required for each inspection process step (row ' . ($index + 1) . ').'
+                    );
+                }
             }
         });
     }
