@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>EGTS Admin Panel - @yield('title')</title>
+
+       {{-- Favicon --}}
+    <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         * {

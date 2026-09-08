@@ -50,10 +50,9 @@
         <div class="row">
 
             {{-- 1. BANNER SECTION --}}
-            <div class="col-md-12">
-                <div class="form-card">
 
-                    <div class="col-md-12">
+
+            <div class="col-md-12">
                         <div class="form-card">
                             <label class="section-label"><i class="bi bi-search"></i> SEO Meta</label>
 
@@ -80,6 +79,13 @@
                             </div>
                         </div>
                     </div>
+
+
+                    
+            <div class="col-md-12">
+                <div class="form-card">
+
+                    
 
                     <label class="section-label"><i class="bi bi-image"></i> Banner Section</label>
 
