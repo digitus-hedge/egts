@@ -12,7 +12,7 @@ class ServiceDetailController extends Controller
 
         $relatedServices = Service::where('status', 1)
             ->where('id', '!=', $service->id)
-            ->limit(3)
+            ->latest()
             ->get();
 
         return view('web.service_details', compact('service', 'relatedServices'));
