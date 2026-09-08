@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\BehindTheScene;
 use App\Models\ClientSection;
 use App\Models\HomeAbout;
 use App\Models\Service;
@@ -28,7 +29,8 @@ class HomeController extends Controller
     public function about()
     {
         $whyChooseUs = WhyChooseUs::first();
+        $bts = BehindTheScene::latest()->get();
 
-        return view('web.about_us', compact('whyChooseUs'));
+        return view('web.about_us', compact('whyChooseUs', 'bts'));
     }
 }

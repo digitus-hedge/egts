@@ -53,7 +53,7 @@
                 <th>Service</th>
                 <th>Title</th>
                 <th>Description</th>
-  
+
                 <th class="text-right">Actions</th>
             </tr>
         </thead>
@@ -64,9 +64,11 @@
                     @if ($item->image)
                         <img src="{{ Storage::url($item->image) }}" class="thumb">
                     @elseif ($item->video)
-                        <span class="no-media" title="Uploaded video"><i class="bi bi-camera-video"></i></span>
+                        <video src="{{ Storage::url($item->video) }}" class="thumb thumb-video" muted preload="metadata"></video>
                     @elseif ($item->video_url)
-                        <span class="no-media" title="Video URL"><i class="bi bi-link-45deg"></i></span>
+                        <span class="no-media youtube-thumb" title="{{ $item->video_url }}">
+                            <i class="bi bi-youtube"></i>
+                        </span>
                     @else
                         <span class="no-media"><i class="bi bi-image"></i></span>
                     @endif
@@ -74,7 +76,7 @@
                 <td>{{ $item->service->title ?? '—' }}</td>
                 <td class="title-cell">{{ $item->title }}</td>
                 <td class="desc-cell">{{ Str::limit($item->description, 70) ?: '—' }}</td>
-              
+
                 <td class="text-right">
                     <div class="action-icons">
                         <a href="{{ route('admin.home.services.behind-the-scenes.edit', $item->id) }}" class="icon-btn icon-edit" title="Edit">
@@ -155,6 +157,15 @@
     .empty-row i { font-size: 36px; display: block; margin-bottom: 10px; }
     .pagination-wrapper { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .pagination-info { font-size: 13px; color: #888; }
+    .thumb-video {
+    object-fit: cover;
+    background: #000;
+}
+
+.youtube-thumb {
+    color: #ff0000;
+    font-size: 20px;
+}
 </style>
 
 <script>

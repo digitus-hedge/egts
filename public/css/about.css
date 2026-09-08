@@ -825,3 +825,48 @@
         text-align: center;
     }
 }
+
+.au-infra-media {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin-bottom: 18px;
+    background-color: #000;
+}
+
+.au-infra-video-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    background-color: #000;
+}
+
+.au-infra-video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+}
+
+.au-infra-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.au-infra-link h3 {
+    transition: color 0.2s ease;
+}
+
+.au-infra-link:hover h3 {
+    color: #b40707;
+}
+
+.au-infra-link p {
+    color: inherit;
+}

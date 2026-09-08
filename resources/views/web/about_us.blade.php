@@ -363,42 +363,40 @@
 
             <div class="au-infra-viewport">
                 <div class="au-infra-track" id="infraTrack">
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-1.webp') }}" alt="CNC Lathes">
-                        <h3>CNC Lathes</h3>
-                        <p>Modern CNC machining capability for accurate, repeatable component production.</p>
-                    </div>
+                    @foreach ($bts as $item)
+                        <div class="au-infra-item">
 
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-2.webp') }}" alt="Make-up & Break-out Equipment">
-                        <h3>Make-up & Break-out Equipment</h3>
-                        <p>Controlled connection handling for critical oilfield threading applications.</p>
-                    </div>
+                            @if ($item->image)
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}">
 
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-3.webp') }}" alt="Inspection & Measuring">
-                        <h3>Inspection & Measuring</h3>
-                        <p>Precision measuring and thread inspection equipment supporting quality assurance.</p>
-                    </div>
+                            @elseif ($item->video)
+                                <video class="au-infra-media" controls muted playsinline>
+                                    <source src="{{ asset('storage/' . $item->video) }}" type="video/mp4">
+                                </video>
 
-                    {{-- TEMP: placeholder duplicates for testing slider, replace with real dynamic items later --}}
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-4.webp') }}" alt="CNC Lathes">
-                        <h3>CNC Lathes</h3>
-                        <p>Modern CNC machining capability for accurate, repeatable component production.</p>
-                    </div>
+                            @elseif ($item->video_url && $item->embed_url)
+                                <div class="au-infra-video-wrap">
+                                    <iframe
+                                        src="{{ $item->embed_url }}"
+                                        title="{{ $item->title }}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            @endif
 
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-5.webp') }}" alt="Make-up & Break-out Equipment">
-                        <h3>Make-up & Break-out Equipment</h3>
-                        <p>Controlled connection handling for critical oilfield threading applications.</p>
-                    </div>
-
-                    <div class="au-infra-item">
-                        <img src="{{ asset('images/service-6.webp') }}" alt="Inspection & Measuring">
-                        <h3>Inspection & Measuring</h3>
-                        <p>Precision measuring and thread inspection equipment supporting quality assurance.</p>
-                    </div>
+                            @if ($item->service)
+                                <a href="{{ url('/services/' . $item->service->slug) }}" class="au-infra-link">
+                                    <h3>{{ $item->title }}</h3>
+                                    <p>{{ $item->description }}</p>
+                                </a>
+                            @else
+                                <h3>{{ $item->title }}</h3>
+                                <p>{{ $item->description }}</p>
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
             </div>
 

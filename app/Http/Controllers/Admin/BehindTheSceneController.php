@@ -26,7 +26,6 @@ class BehindTheSceneController extends Controller
         ->when($search, function ($query, $search) {
             $query->where('title', 'like', "%{$search}%");
         })
-        ->orderBy('sort_order')
         ->latest()
         ->paginate($perPage)
         ->withQueryString();
@@ -78,7 +77,7 @@ class BehindTheSceneController extends Controller
 
         BehindTheScene::create($data);
 
-        return redirect()->route('home.services.behind-the-scenes')
+        return redirect()->route('admin.home.services.behind-the-scenes')
             ->with('success', 'Behind The Scenes item created successfully.');
     }
 
@@ -101,7 +100,7 @@ class BehindTheSceneController extends Controller
     public function update(BehindTheSceneRequest $request, BehindTheScene $behind_the_scene)
     {
         $data = $request->only(['service_id', 'title', 'description']);
-      
+
         // Delete old files for media types that are no longer selected
         if ($behind_the_scene->video && $request->media_type !== 'video') {
             Storage::disk('public')->delete($behind_the_scene->video);
