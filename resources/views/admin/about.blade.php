@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('title', 'About Us Section')
+@section('title', 'About Us Page')
 @section('content')
 
 
@@ -39,7 +39,7 @@
 <div class="form-header">
     <h4>
         <i class="bi bi-star"></i>
-        About Us Section
+        About Us Page
     </h4>
 </div>
 
