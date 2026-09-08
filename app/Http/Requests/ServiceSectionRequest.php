@@ -18,6 +18,8 @@ class ServiceSectionRequest extends FormRequest
             'label'       => 'nullable|string|max:0',
             'heading'     => 'required|string|max:60',
             'description' => 'required|string|max:600',
+            'meta_title'       => 'nullable|string|max:60',
+            'meta_description' => 'nullable|string|max:160'
         ];
     }
 }

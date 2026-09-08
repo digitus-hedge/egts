@@ -13,6 +13,6 @@ class ServiceSection extends Model
     protected $fillable = [
         'label',
         'heading',
-        'description',
+        'description', 'meta_title', 'meta_description',
     ];
 }

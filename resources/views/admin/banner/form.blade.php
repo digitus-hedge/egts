@@ -76,7 +76,7 @@
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-images"></i> Images (1 to 3 required)</label>
                    <p class="hint-text">
-        Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong> per image
+        Accepted: JPG, PNG, WEBP — Max size: <strong>10MB</strong> per image
         — Recommended size: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
     </p>
 
@@ -102,7 +102,7 @@
                                 <label class="upload-btn {{ $errors->has($field) ? 'upload-btn-error' : '' }}">
                                     <i class="bi bi-upload"></i> Choose file
                                     <input type="file" name="{{ $field }}" accept="image/*"
-                                           data-max-size="5"
+                                           data-max-size="10"
                                            onchange="previewImage(this, 'preview-{{ $field }}'); showFileSize(this, 'size-{{ $field }}')" hidden>
                                 </label>
                                 <span class="file-size-info" id="size-{{ $field }}"></span>
@@ -121,7 +121,7 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-camera-video"></i> Video</label>
-                    <p class="hint-text">Accepted: MP4, MOV, AVI, WMV — Max size: <strong>5MB</strong></p>
+                    <p class="hint-text">Accepted: MP4, MOV, AVI, WMV — Max size: <strong>20MB</strong></p>
 
                     <div class="video-upload-box">
                         @if ($banner->video)
@@ -134,7 +134,7 @@
                         <label class="upload-btn {{ $errors->has('video') ? 'upload-btn-error' : '' }}">
                             <i class="bi bi-upload"></i> Choose video
                             <input type="file" name="video" accept="video/*" hidden
-                                   data-max-size="50"
+                                   data-max-size="200"
                                    onchange="showFileSize(this, 'size-video'); this.parentElement.nextElementSibling.textContent = this.files[0]?.name || ''">
                         </label>
                         <span class="file-name"></span>
