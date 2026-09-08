@@ -10,8 +10,7 @@ class ServiceDetailController extends Controller
     {
         $service = Service::where('slug', $slug)->firstOrFail();
 
-        $relatedServices = Service::where('status', 1)
-            ->where('id', '!=', $service->id)
+        $relatedServices = Service::where('id', '!=', $service->id)
             ->latest()
             ->get();
 
