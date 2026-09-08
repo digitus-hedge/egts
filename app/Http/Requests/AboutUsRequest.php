@@ -45,6 +45,9 @@ class AboutUsRequest extends FormRequest
             'commitment_description_rich'  => 'required|string',
             'commitment_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
+            'meta_title'       => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+
             'foundation_heading'     => 'required|string|max:255',
             'foundation_description' => 'required|string',
         ];

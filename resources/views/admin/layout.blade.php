@@ -24,6 +24,10 @@
             background: #1e1e2d;
             color: #fff;
             padding: 20px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
         }
 
         .sidebar h2 {
