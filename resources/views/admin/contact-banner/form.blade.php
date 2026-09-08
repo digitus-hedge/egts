@@ -42,6 +42,16 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <div class="form-group">
+                        <label><i class="bi bi-building"></i> Company Name</label>
+                        <input type="text" name="company_name" value="{{ old('company_name', $contactBanner->company_name) }}"
+                               class="{{ $errors->has('company_name') ? 'input-error' : '' }}"
+                               placeholder="e.g. Erbil Gate for Technical Services Ltd.">
+                        @error('company_name')
+                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group" style="margin-top:16px;">
                         <label><i class="bi bi-type"></i> Title</label>
                         <input type="text" name="title" value="{{ old('title', $contactBanner->title) }}"
                                class="{{ $errors->has('title') ? 'input-error' : '' }}"
@@ -147,8 +157,47 @@
             </div>
 
             <div class="col-md-12">
-                <div class="form-actions">
-                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel">Cancel</a>
+                <div class="form-card">
+                    <label class="section-label"><i class="bi bi-diagram-3"></i> Department Contacts</label>
+
+                    @php
+                        $departments = [
+                            'admin' => 'Admin',
+                            'qaqc' => 'QA/QC',
+                            'operations' => 'Operations',
+                            'sales' => 'Sales',
+                        ];
+                    @endphp
+
+                    <div class="dept-grid">
+                        @foreach ($departments as $key => $label)
+                            <div class="dept-card">
+                                <h5>{{ $label }}</h5>
+
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" name="{{ $key }}_phone" value="{{ old($key.'_phone', $contactBanner->{$key.'_phone'}) }}"
+                                           class="{{ $errors->has($key.'_phone') ? 'input-error' : '' }}"
+                                           placeholder="e.g. +964 751 015 7184">
+                                    @error($key.'_phone')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group" style="margin-top:12px;">
+                                    <label>Email</label>
+                                    <input type="email" name="{{ $key }}_email" value="{{ old($key.'_email', $contactBanner->{$key.'_email'}) }}"
+                                           class="{{ $errors->has($key.'_email') ? 'input-error' : '' }}"
+                                           placeholder="e.g. name@egts-iq.com">
+                                    @error($key.'_email')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
                     <button type="submit" class="btn-submit">
                         <i class="bi bi-check-lg"></i>
                         Save
@@ -189,7 +238,7 @@
     .banner-form { width: 100%; }
     .form-card { background: #fff; padding: 22px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 18px; }
     .form-group label { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; font-weight: 600; font-size: 14px; color: #333; }
-    .form-group input[type="text"], .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none; font-family: inherit; resize: vertical; }
+    .form-group input[type="text"], .form-group input[type="email"], .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none; font-family: inherit; resize: vertical; }
     .form-group input:focus, .form-group textarea:focus { border-color: #3b3b58; }
     .section-label { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px; }
     .hint-text { font-size: 12.5px; color: #888; margin-bottom: 14px; }
@@ -206,6 +255,41 @@
     .btn-cancel:hover { background: #f4f6f9; }
     .btn-submit { display: flex; align-items: center; gap: 7px; background: #3b3b58; color: #fff; border: none; padding: 11px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
     .btn-submit:hover { background: #2b2b42; }
+
+    .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.dept-card {
+    background: #f9f9fb;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.dept-card h5 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e1e2d;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 991px) {
+    .dept-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .dept-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 
 @endsection
