@@ -106,7 +106,7 @@
                 );
             @endphp
 
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-collection-play"></i> Media Source</label>
                     <p class="hint-text">Choose exactly <strong>one</strong> — Upload Video, Video URL, or Upload Image. Switching type will clear the previously saved media.</p>
@@ -183,7 +183,126 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+
+
+            <div class="col-md-12">
+    <div class="form-card">
+        <label class="section-label"><i class="bi bi-collection-play"></i> Media Source</label>
+        <p class="hint-text">Choose exactly <strong>one</strong> — Upload Video, Video URL, or Upload Image. Switching type will clear the previously saved media.</p>
+
+        <div class="form-group">
+            <select name="media_type" id="media_type" class="{{ $errors->has('media_type') ? 'input-error' : '' }}">
+                <option value="">-- Select Media Type --</option>
+                <option value="video" {{ $currentType == 'video' ? 'selected' : '' }}>Upload Video</option>
+                <option value="video_url" {{ $currentType == 'video_url' ? 'selected' : '' }}>Video URL</option>
+                <option value="image" {{ $currentType == 'image' ? 'selected' : '' }}>Upload Image</option>
+            </select>
+            @error('media_type')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+        {{-- Video Upload --}}
+        <div class="media-field" id="field-video" style="display:none; margin-top:16px;">
+            <div class="image-upload-box">
+                <div class="preview-wrap">
+                    @if ($behindTheScene->video)
+                        <video src="{{ Storage::url($behindTheScene->video) }}" class="preview-img" controls></video>
+                    @else
+                        <div class="preview-placeholder">
+                            <i class="bi bi-camera-video"></i>
+                        </div>
+                    @endif
+                </div>
+                <label class="upload-btn {{ $errors->has('video') ? 'upload-btn-error' : '' }}">
+                    <i class="bi bi-upload"></i> Choose video file
+                    <input type="file" name="video" accept="video/*" hidden
+                           onchange="this.closest('.media-field').querySelector('.file-name').textContent = this.files[0]?.name ?? ''">
+                </label>
+                <span class="file-name"></span>
+
+                <div class="upload-guidelines">
+                    <span class="guideline-item">
+                        <i class="bi bi-file-earmark-play"></i>
+                        <strong>MP4, MOV, AVI</strong>
+                    </span>
+                    <span class="guideline-divider"></span>
+                    <span class="guideline-item">
+                        <i class="bi bi-hdd"></i>
+                        Max <strong>20MB</strong>
+                    </span>
+                </div>
+
+                @error('video')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
             </div>
+        </div>
+
+        {{-- Video URL --}}
+        <div class="media-field" id="field-video_url" style="display:none; margin-top:16px;">
+            <div class="form-group">
+                <label><i class="bi bi-link-45deg"></i> Video URL</label>
+                <input type="url" name="video_url" value="{{ old('video_url', $behindTheScene->video_url) }}"
+                       class="{{ $errors->has('video_url') ? 'input-error' : '' }}"
+                       placeholder="https://www.youtube.com/watch?v=...">
+
+                <div class="upload-guidelines">
+                    <span class="guideline-item">
+                        <i class="bi bi-youtube"></i>
+                        <strong>YouTube, Vimeo</strong>, or direct video links
+                    </span>
+                </div>
+
+                @error('video_url')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        {{-- Image Upload --}}
+        <div class="media-field" id="field-image" style="display:none; margin-top:16px;">
+            <div class="image-upload-box">
+                <div class="preview-wrap">
+                    @if ($behindTheScene->image)
+                        <img src="{{ Storage::url($behindTheScene->image) }}" class="preview-img" id="preview-image">
+                    @else
+                        <div class="preview-placeholder" id="preview-image">
+                            <i class="bi bi-image"></i>
+                        </div>
+                    @endif
+                </div>
+                <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
+                    <i class="bi bi-upload"></i> Choose image
+                    <input type="file" name="image" accept="image/*"
+                           onchange="previewImage(this, 'preview-image')" hidden>
+                </label>
+
+                <div class="upload-guidelines">
+                    <span class="guideline-item">
+                        <i class="bi bi-file-earmark-image"></i>
+                        <strong>JPG, PNG, WEBP</strong>
+                    </span>
+                    <span class="guideline-divider"></span>
+                    <span class="guideline-item">
+                        <i class="bi bi-hdd"></i>
+                        Max <strong>10MB</strong>
+                    </span>
+                    <span class="guideline-divider"></span>
+                    <span class="guideline-item">
+                        <i class="bi bi-aspect-ratio"></i>
+                        <strong>{{ $imageWidth ?? 380 }} × {{ $imageHeight ?? 260 }}px</strong>
+                    </span>
+                </div>
+
+                @error('image')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
+</div>
 
             {{-- Sort Order + Status --}}
           
@@ -254,7 +373,7 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #3b3b58; }
     .section-label { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px; }
     .hint-text { font-size: 12.5px; color: #888; margin-bottom: 12px; }
-    .image-upload-box { display: flex; flex-direction: column; align-items: flex-start; width: 100%; max-width: 300px; }
+    .image-upload-box { display: flex; flex-direction: column; align-items: flex-start; width: 100%; max-width:500px; }
     .preview-wrap { width: 100%; }
     .preview-img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; margin-bottom: 10px; }
     .preview-placeholder { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; background: #f4f6f9; border-radius: 6px; border: 1px dashed #ddd; color: #bbb; font-size: 28px; margin-bottom: 10px; }
@@ -270,6 +389,59 @@
     .btn-cancel:hover { background: #f4f6f9; }
     .btn-submit { display: flex; align-items: center; gap: 7px; background: #3b3b58; color: #fff; border: none; padding: 11px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
     .btn-submit:hover { background: #2b2b42; }
+
+
+    .upload-guidelines {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 9px 14px;
+    background: #f4f6f9;
+    border: 1px solid #e8eaee;
+    border-radius: 6px;
+     margin-bottom: 15px;
+}
+
+.guideline-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.guideline-item i {
+    font-size: 13px;
+    color: #8b93a1;
+}
+
+.guideline-item strong {
+    color: #3b3b58;
+    font-weight: 600;
+}
+
+.guideline-divider {
+    width: 1px;
+    height: 14px;
+    background: #d8dce2;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .upload-guidelines {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .guideline-divider {
+        display: none;
+    }
+}
+
+
 </style>
 
 @endsection

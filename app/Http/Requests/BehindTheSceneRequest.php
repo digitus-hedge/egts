@@ -29,13 +29,13 @@ class BehindTheSceneRequest extends FormRequest
                 break;
 
             case 'video_url':
-                $rules['video_url'] = 'required|url|max:500';
+                $rules['video_url'] = 'required|url|max:600';
                 break;
 
             case 'image':
                 $rules['image'] = $this->isMethod('post') && !$this->route('behind_the_scene')
-                    ? 'required|image|mimes:jpg,jpeg,png,webp|max:2048'
-                    : 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048';
+                    ? 'required|image|mimes:jpg,jpeg,png,webp|max:20480'
+                    : 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480';
                 break;
         }
 

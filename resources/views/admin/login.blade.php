@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Login</title>
+    <title>EGTS - Admin Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         * {
@@ -13,25 +13,88 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e2d, #3b3b58);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background-color: #1e1e2d;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(59, 59, 88, 0.55) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(91, 91, 138, 0.45) 0%, transparent 50%),
+                linear-gradient(135deg, #1e1e2d 0%, #262640 45%, #3b3b58 100%);
+        }
+
+        /* Subtle diagonal grid pattern overlay */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 42px 42px;
+            pointer-events: none;
+        }
+
+        /* Soft glowing accent blob */
+        body::after {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .login-box {
+            position: relative;
+            z-index: 1;
             background: #fff;
             padding: 40px 35px;
-            border-radius: 10px;
-            width: 340px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border-radius: 14px;
+            width: 360px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        }
+
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .brand-header img {
+            width: 50%;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .brand-header .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e1e2d;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-header .brand-tagline {
+            font-size: 11.5px;
+            color: #999;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
         .login-box h2 {
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #1e1e2d;
+            font-size: 19px;
         }
 
         .login-box p.subtitle {
@@ -49,6 +112,9 @@
             border-radius: 6px;
             margin-bottom: 18px;
             border: 1px solid #f5c6cb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .form-group {
@@ -83,14 +149,14 @@
             border-radius: 6px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .input-wrapper input:focus {
             border-color: #3b3b58;
+            box-shadow: 0 0 0 3px rgba(59, 59, 88, 0.12);
         }
 
-        /* Extra right padding only for password field to make room for eye icon */
         .input-wrapper input#password {
             padding-right: 38px;
         }
@@ -119,21 +185,39 @@
             font-size: 15px;
             font-weight: 600;
             margin-top: 8px;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, transform 0.1s ease;
         }
 
         .login-box button:hover {
             background: #2b2b42;
         }
+
+        .login-box button:active {
+            transform: translateY(1px);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11.5px;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
     <div class="login-box">
-        <h2>Admin Login</h2>
+
+        <div class="brand-header">
+            <img src="http://127.0.0.1:8000/images/logo.webp" alt="EGTS Logo">
+            <div class="brand-name">EGTS Admin</div>
+            <!-- <div class="brand-tagline">Control Panel</div> -->
+        </div>
+
+        <!-- <h2>Welcome Back</h2> -->
         <p class="subtitle">Sign in to access your dashboard</p>
 
         @if ($errors->any())
-            <div class="error">{{ $errors->first() }}</div>
+            <div class="error"><i class="bi bi-exclamation-circle"></i> {{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('admin.login.submit') }}">
@@ -172,6 +256,8 @@
 
             <button type="submit">Login</button>
         </form>
+
+        <!-- <p class="login-footer">&copy; {{ date('Y') }} EGTS. All rights reserved.</p> -->
     </div>
 
     <script>

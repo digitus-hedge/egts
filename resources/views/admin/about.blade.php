@@ -157,33 +157,51 @@
                         @error('about_description')<span class="field-error">{{ $message }}</span>@enderror
                     </div>
 
-                    <div class="row" style="margin-top:14px;">
-                        @foreach (['image_one' => 'Image One', 'image_two' => 'Image Two'] as $suffix => $label)
-                        @php $field = 'section_two_' . $suffix; @endphp
-                        <div class="col-md-6">
-                            <label>{{ $label }}</label>
-                            <div class="image-upload-box">
-                                <div class="preview-wrap">
-                                    @if ($why->{$field})
-                                    <img src="{{ Storage::url($why->{$field}) }}" class="preview-img"
-                                        id="preview-{{ $field }}">
-                                    @else
-                                    <div class="preview-placeholder" id="preview-{{ $field }}"><i
-                                            class="bi bi-image"></i></div>
-                                    @endif
-                                </div>
-                                <label class="upload-btn">
-                                    <i class="bi bi-upload"></i> Choose file
-                                    <input type="file" name="{{ $field }}" accept="image/*"
-                                        onchange="previewImage(this,'preview-{{ $field }}')" hidden>
-                                </label>
-                                @error($field)<span class="field-error d-block mt-2">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-                        </div>
-                        
-                        @endforeach
-                    </div>
+                 <div class="row" style="margin-top:14px;">
+    @foreach (['image_one' => 'Image One', 'image_two' => 'Image Two'] as $suffix => $label)
+        @php $field = 'section_two_' . $suffix; @endphp
+        <div class="col-md-6">
+            <label>{{ $label }}</label>
+            <div class="image-upload-box">
+                <div class="preview-wrap">
+                    @if ($why->{$field})
+                        <img src="{{ Storage::url($why->{$field}) }}" class="preview-img"
+                            id="preview-{{ $field }}">
+                    @else
+                        <div class="preview-placeholder" id="preview-{{ $field }}"><i class="bi bi-image"></i></div>
+                    @endif
+                </div>
+
+                <label class="upload-btn">
+                    <i class="bi bi-upload"></i> Choose file
+                    <input type="file" name="{{ $field }}" accept="image/*"
+                        onchange="previewImage(this,'preview-{{ $field }}')" hidden>
+                </label>
+
+                <div class="upload-guidelines">
+                    <span class="guideline-item">
+                        <i class="bi bi-file-earmark-image"></i>
+                        <strong>JPG, PNG, WEBP</strong>
+                    </span>
+                    <span class="guideline-divider"></span>
+                    <span class="guideline-item">
+                        <i class="bi bi-hdd"></i>
+                        Max <strong>10MB</strong>
+                    </span>
+                    <span class="guideline-divider"></span>
+                    <span class="guideline-item">
+                        <i class="bi bi-aspect-ratio"></i>
+                        <strong>{{ $imageWidth ?? 600 }} × {{ $imageHeight ?? 400 }}px</strong>
+                    </span>
+                </div>
+
+                @error($field)
+                    <span class="field-error d-block mt-2"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    @endforeach
+</div>
                     
                 </div>
             </div>
@@ -237,7 +255,25 @@
                     {{-- Block Image --}}
                     <div class="form-group" style="margin-top:12px;">
                         <label>Background Image <span class="text-danger">*</span></label>
-                        <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p>
+                        <!-- <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p> -->
+
+
+                         <div class="upload-guidelines">
+                        <span class="guideline-item">
+                            <i class="bi bi-file-earmark-image"></i>
+                            Accepted: <strong>JPG, PNG, WEBP</strong>
+                        </span>
+                        <span class="guideline-divider"></span>
+                        <span class="guideline-item">
+                            <i class="bi bi-hdd"></i>
+                            Max size: <strong>10MB</strong> per image
+                        </span>
+                        <span class="guideline-divider"></span>
+                        <span class="guideline-item">
+                            <i class="bi bi-aspect-ratio"></i>
+                            Recommended: <strong>{{ $imageWidth ?? 580 }} × {{ $imageHeight ?? 300 }}px</strong>
+                        </span>
+                    </div>
 
                         <div class="image-upload-box">
                             <div class="preview-wrap">
@@ -305,7 +341,23 @@
                     {{-- Commitment Image --}}
                     <div class="form-group" style="margin-top:12px;">
                         <label>Commitment Image</label>
-                        <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p>
+                        <!-- <p class="hint-text">Max <strong>2MB</strong> — JPG, PNG, WEBP</p> -->
+                          <div class="upload-guidelines">
+                        <span class="guideline-item">
+                            <i class="bi bi-file-earmark-image"></i>
+                            Accepted: <strong>JPG, PNG, WEBP</strong>
+                        </span>
+                        <span class="guideline-divider"></span>
+                        <span class="guideline-item">
+                            <i class="bi bi-hdd"></i>
+                            Max size: <strong>10MB</strong> per image
+                        </span>
+                        <span class="guideline-divider"></span>
+                        <span class="guideline-item">
+                            <i class="bi bi-aspect-ratio"></i>
+                            Recommended: <strong>{{ $imageWidth ?? 1000 }} × {{ $imageHeight ?? 700 }}px</strong>
+                        </span>
+                    </div>
                         <div class="image-upload-box">
                             <div class="preview-wrap">
                                 @if ($why->commitment_image)
