@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/about', function () {
-    return view('web.about_us');
-});
+Route::get('/about', [HomeController::class,'about']);
 
 Route::get('/services', [ServicesListController::class, 'index']);
 Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);

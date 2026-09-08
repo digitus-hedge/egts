@@ -130,3 +130,33 @@ main {
         text-align: left;
     }
 }
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social a:hover {
+    background-color: #fff;
+    color: #b40707;
+    transform: translateY(-2px);
+}
+
+.footer-social svg {
+    width: 16px;
+    height: 16px;
+}

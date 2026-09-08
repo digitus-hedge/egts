@@ -15,7 +15,6 @@ return new class extends Migration
             $table->text('description');
             $table->longText('content')->nullable(); // full detail page content
             $table->string('image')->nullable();
-            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

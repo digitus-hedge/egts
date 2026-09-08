@@ -10,9 +10,8 @@ class ServiceDetailController extends Controller
     {
         $service = Service::where('slug', $slug)->firstOrFail();
 
-        $relatedServices = Service::where('status', 1)
-            ->where('id', '!=', $service->id)
-            ->limit(3)
+        $relatedServices = Service::where('id', '!=', $service->id)
+            ->latest()
             ->get();
 
         return view('web.service_details', compact('service', 'relatedServices'));
