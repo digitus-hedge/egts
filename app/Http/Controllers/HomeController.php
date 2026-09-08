@@ -24,4 +24,11 @@ class HomeController extends Controller
 
         return view('web.home', compact('banner', 'about', 'stat', 'serviceSection', 'services', 'clientSection', 'whyChooseUs'));
     }
+
+    public function about()
+    {
+        $whyChooseUs = WhyChooseUs::first();
+
+        return view('web.about_us', compact('whyChooseUs'));
+    }
 }

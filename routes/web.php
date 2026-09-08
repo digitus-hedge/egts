@@ -19,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/about', function () {
-    return view('web.about_us');
-});
+Route::get('/about', [HomeController::class,'about']);
 
 Route::get('/services', [ServicesListController::class, 'index']);
 Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
@@ -77,7 +75,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/why-choose-us', [WhyChooseUsController::class, 'index'])->name('home.why-choose-us');
         Route::post('home/why-choose-us', [WhyChooseUsController::class, 'store'])->name('home.why-choose-us.store');
 
-   
+
 
         Route::get('about', [AboutController::class, 'index'])->name('about');       // Shows form directly (pre-filled if exists)
         Route::post('about', [AboutController::class, 'store'])->name('about.store'); // Creates or updates

@@ -21,8 +21,8 @@
         <section class="au-hero" style="background-image: url('{{ asset('images/about hero.jpeg') }}');">
             <div class="au-hero-overlay"></div>
             <div class="au-hero-content">
-                <h1>Precision, integrity and safety<br>at the heart of everything we do.</h1>
-                <p>Erbil Gate Technical Services Ltd. is a specialized oilfield machine shop delivering precision machining, premium threading, repair, remanufacturing and inspection solutions.</p>
+                <h1>{{ $whyChooseUs->banner_heading}}</h1>
+                <p>{{ $whyChooseUs->banner_description }}</p>
             </div>
         </section>
         {{-- ===== End About Us Hero Banner ===== --}}
@@ -105,18 +105,16 @@
 
     <div class="au-built-inner">
         <div class="au-built-images">
-            <img src="{{ asset('images/about 1.jpeg') }}" alt="Offshore Platform" class="au-img-primary">
-            <img src="{{ asset('images/about2.jpeg') }}" alt="Field Technician" class="au-img-secondary">
+            <img src="{{ asset('storage/' . $whyChooseUs->section_two_image_one) }}" alt="Offshore Platform" class="au-img-primary">
+            <img src="{{ asset('storage/' . $whyChooseUs->section_two_image_two) }}" alt="Field Technician" class="au-img-secondary">
         </div>
 
         <div class="au-built-content">
             <span class="au-eyebrow">ABOUT EGTS</span>
-            <h2>Built to support the demands of the oilfield and energy industry</h2>
+            <h2>{{ $whyChooseUs->about_heading }}</h2>
 
             <div class="au-built-text">
-                <p>Established in 2019 in Erbil, Kurdistan Region of Iraq, EGTS operates a modern facility designed to provide high-quality machining and technical services for oilfield and energy companies.</p>
-                <p>We support drilling contractors, oilfield service companies and energy operators with precision machining, premium thread connections, equipment repair, remanufacturing and inspection services.</p>
-                <p>Our commitment is to combine technical expertise, modern equipment and controlled quality processes to deliver reliable results that meet demanding industry requirements.</p>
+                {!! $whyChooseUs->about_description !!}
             </div>
         </div>
     </div>
@@ -205,11 +203,11 @@
         <div class="au-mv-row">
             <div class="au-mv-content">
                 <span class="au-eyebrow">MISSION</span>
-                <h2>Delivering Quality.<br>Driving Progress</h2>
-                <p>Our mission is to deliver high-quality machining, threading, repair, remanufacturing, and inspection services that meet the needs of the oilfield and energy industries. We continuously improve our processes while prioritizing precision, safety, customer satisfaction, and international industry standards.</p>
+                <h2>{{ $whyChooseUs->mission_title }}</h2>
+                <p>{!! $whyChooseUs->mission_description_rich !!}</p>
             </div>
             <div class="au-mv-image">
-                <img src="{{ asset('images/about 3.jpeg') }}" alt="Mission - EGTS Technician">
+                <img src="{{ asset('storage/' . $whyChooseUs->mission_image) }}" alt="Mission - EGTS Technician">
             </div>
         </div>
 
@@ -217,11 +215,11 @@
         <div class="au-mv-row au-mv-row-reverse">
             <div class="au-mv-content">
                 <span class="au-eyebrow">VISION</span>
-                <h2>Building the Future of Oilfield Services</h2>
-                <p>Our vision is to become a preferred oilfield machine shop and premium threading service provider in the Kurdistan Region and the wider Middle East. We aim to achieve this through advanced technology, skilled professionals, dependable service, innovative solutions, and long-term partnerships built on trust and consistent performance.</p>
+                <h2>{{ $whyChooseUs->vision_title }}</h2>
+                <p>{!! $whyChooseUs->vision_description_rich !!}</p>
             </div>
             <div class="au-mv-image">
-                <img src="{{ asset('images/about 4.jpeg') }}" alt="Vision - Oilfield Facility">
+                <img src="{{ asset('storage/' . $whyChooseUs->vision_image) }}" alt="Vision - Oilfield Facility">
             </div>
         </div>
 
@@ -323,24 +321,24 @@
 
     <div class="au-foundation-inner">
         <span class="au-eyebrow">OUR FOUNDATION</span>
-        <h2>Safety, values & Environment (HSE)</h2>
-        <p class="au-foundation-sub">We prioritize safety, strong values, and environmental responsibility in every operation.</p>
+        <h2>{{ $whyChooseUs->foundation_heading }}</h2>
+        <p class="au-foundation-sub">{{ $whyChooseUs->foundation_description }}</p>
 
         <div class="au-foundation-grid">
 
-            <div class="au-foundation-card" style="background-image: url('{{ asset('images/about 5.jpeg') }}');">
+            <div class="au-foundation-card" style="background-image: url('{{ asset('storage/' . $whyChooseUs->values_image) }}');">
                 <div class="au-foundation-overlay"></div>
                 <div class="au-foundation-content">
-                    <h3>Core Values</h3>
-                    <p>Integrity, safety, precision and accountability guide every project we undertake, ensuring consistent quality and trust with every client we serve.</p>
+                    <h3>{{ $whyChooseUs->values_title }}</h3>
+                    <p>{!! $whyChooseUs->vision_description_rich !!}</p>
                 </div>
             </div>
 
-            <div class="au-foundation-card" style="background-image: url('{{ asset('images/about 6.jpeg') }}');">
+            <div class="au-foundation-card" style="background-image: url('{{ asset('storage/' . $whyChooseUs->commitment_image) }}');">
                 <div class="au-foundation-overlay"></div>
                 <div class="au-foundation-content">
-                    <h3>HSE Commitment</h3>
-                    <p>We enforce strict health, safety and environmental protocols across all operations, protecting our people, our clients and the communities we work in.</p>
+                    <h3>{{ $whyChooseUs->commitment_title }}</h3>
+                    <p>{!! $whyChooseUs->commitment_description_rich !!}</p>
                 </div>
             </div>
 

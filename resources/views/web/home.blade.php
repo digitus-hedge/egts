@@ -552,7 +552,7 @@
                     <div class="why-card" @if($whyChooseUs?->mission_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->mission_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>{{ $whyChooseUs->mission_title ?? '' }}</h3>
+                            <h3>Mission</h3>
                             <p>{{ $whyChooseUs->mission_description ?? '' }}</p>
                         </div>
                     </div>
@@ -560,7 +560,7 @@
                     <div class="why-card" @if($whyChooseUs?->vision_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->vision_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>{{ $whyChooseUs->vision_title ?? '' }}</h3>
+                            <h3>Vision</h3>
                             <p>{{ $whyChooseUs->vision_description ?? '' }}</p>
                         </div>
                     </div>
@@ -568,13 +568,13 @@
                     <div class="why-card" @if($whyChooseUs?->values_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->values_image) }}');" @endif>
                         <div class="why-card-overlay"></div>
                         <div class="why-card-content">
-                            <h3>{{ $whyChooseUs->values_title ?? '' }}</h3>
+                            <h3>Values</h3>
                             <p>{{ $whyChooseUs->values_description ?? '' }}</p>
                         </div>
                     </div>
 
                     <div class="why-card why-card-commitment">
-                        <h3>{{ $whyChooseUs->commitment_title ?? '' }}</h3>
+                        <h3>Commitment</h3>
                         <p>{{ $whyChooseUs->commitment_description ?? '' }}</p>
                     </div>
 
