@@ -1,15 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BehindTheSceneController;
+use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ClientSectionController;
 use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\HomeAboutController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
-use App\Http\Controllers\Admin\BehindTheSceneController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\ContactUsController;
@@ -95,6 +97,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('home/contact-banner', [ContactBannerController::class, 'index'])->name('home.contact-banner');
         Route::post('home/contact-banner', [ContactBannerController::class, 'store'])->name('home.contact-banner.store');
+
+        Route::get('home/certificates', [CertificateController::class, 'index'])->name('home.certificates');
+        Route::get('home/certificates/create', [CertificateController::class, 'create'])->name('home.certificates.create');
+        Route::post('home/certificates', [CertificateController::class, 'store'])->name('home.certificates.store');
+        Route::get('home/certificates/{certificate}/edit', [CertificateController::class, 'edit'])->name('home.certificates.edit');
+        Route::put('home/certificates/{certificate}', [CertificateController::class, 'update'])->name('home.certificates.update');
+        Route::delete('home/certificates/{certificate}', [CertificateController::class, 'destroy'])->name('home.certificates.destroy');
+
+        Route::get('home/projects', [ProjectController::class, 'index'])->name('home.projects');
+        Route::get('home/projects/create', [ProjectController::class, 'create'])->name('home.projects.create');
+        Route::post('home/projects', [ProjectController::class, 'store'])->name('home.projects.store');
+        Route::get('home/projects/{project}/edit', [ProjectController::class, 'edit'])->name('home.projects.edit');
+        Route::put('home/projects/{project}', [ProjectController::class, 'update'])->name('home.projects.update');
+        Route::delete('home/projects/{project}', [ProjectController::class, 'destroy'])->name('home.projects.destroy');
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });

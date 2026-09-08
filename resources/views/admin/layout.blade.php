@@ -243,7 +243,8 @@
                     </li>
                 </ul>
             </li>
-
+            <li><a href="{{ route('admin.home.projects') }}" class="{{ request()->routeIs('admin.home.projects*') ? 'active' : '' }}">Projects &amp; Clients</a></li>
+            <li><a href="{{ route('admin.home.certificates') }}" class="{{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}">Certificates</a></li>
             <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
         </ul>
     </div>
