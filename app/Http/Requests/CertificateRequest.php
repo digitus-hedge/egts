@@ -17,6 +17,9 @@ class CertificateRequest extends FormRequest
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+
+            'meta_title'       => 'nullable|string|max:60',
+            'meta_description' => 'nullable|string|max:160',
         ];
     }
 

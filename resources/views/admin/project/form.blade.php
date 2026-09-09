@@ -98,6 +98,39 @@
                 </div>
             </div>
 
+
+                        {{-- Meta Title --}}
+<div class="col-md-8">
+    <div class="form-card">
+        <div class="form-group">
+            <label><i class="bi bi-tag"></i> Meta Title</label>
+            <input type="text" name="meta_title" value="{{ old('meta_title', $project->meta_title) }}"
+                   class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
+                   placeholder="SEO title for search engines">
+            @error('meta_title')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
+
+{{-- Meta Description --}}
+<div class="col-md-12">
+    <div class="form-card">
+        <div class="form-group">
+            <label><i class="bi bi-card-text"></i> Meta Description</label>
+            <textarea name="meta_description" rows="3"
+                      class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
+                      placeholder="SEO description shown in search results">{{ old('meta_description', $project->meta_description) }}</textarea>
+            @error('meta_description')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
+
+
+
             <div class="col-md-12">
                 <div class="form-actions">
                     <a href="{{ route('admin.home.projects') }}" class="btn-cancel">Cancel</a>

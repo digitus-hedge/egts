@@ -49,6 +49,8 @@ class ProjectController extends Controller
         $project->title = $data['title'];
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
+        $project->meta_title = $data['meta_title'] ?? null;
+        $project->meta_description = $data['meta_description'] ?? null;
 
         if ($request->hasFile('image')) {
             $project->image = $this->processAndStoreImage($request->file('image'));
@@ -73,6 +75,8 @@ class ProjectController extends Controller
         $project->title = $data['title'];
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
+        $project->meta_title = $data['meta_title'] ?? null;
+        $project->meta_description = $data['meta_description'] ?? null;
 
         if ($request->hasFile('image')) {
             if ($project->image) {

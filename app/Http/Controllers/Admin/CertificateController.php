@@ -47,6 +47,8 @@ class CertificateController extends Controller
         $certificate = new Certificate();
         $certificate->title = $data['title'];
         $certificate->description = $data['description'] ?? null;
+        $certificate->meta_title = $data['meta_title'] ?? null;
+        $certificate->meta_description = $data['meta_description'] ?? null;
 
         if ($request->hasFile('image')) {
             $certificate->image = $this->processAndStoreImage($request->file('image'));
