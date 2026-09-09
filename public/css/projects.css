@@ -1,0 +1,315 @@
+/* ==========================================================================
+   PAGE HERO
+   ========================================================================== */
+.pj-hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.pj-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.35) 45%,
+        rgba(0, 0, 0, 0.15) 100%
+    );
+}
+
+.pj-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px 90px;
+    color: #fff;
+}
+
+.pj-hero-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #fff;
+    border-bottom: 3px solid #fff;
+    padding-bottom: 6px;
+    margin-bottom: 18px;
+}
+
+.pj-hero-content h1 {
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* ==========================================================================
+   KEY PROJECTS & CLIENTS SECTION
+   ========================================================================== */
+.pj-section {
+    position: relative;
+    width: 100%;
+    padding: 90px 24px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.pj-bg-decor {
+    position: absolute;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    color: rgba(180, 7, 7, 0.12);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.pj-bg-decor svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.pj-bg-decor-left {
+    left: 0;
+}
+
+.pj-bg-decor-right {
+    right: 0;
+}
+
+.pj-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.pj-eyebrow {
+    display: inline-block;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #b40707;
+    margin-bottom: 12px;
+}
+
+.pj-inner h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 20px;
+}
+
+.pj-narrative {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #555;
+    max-width: 760px;
+    margin: 0 auto 50px;
+}
+
+.pj-empty {
+    font-size: 15px;
+    color: #888;
+    padding: 40px 0;
+}
+
+/* ===== Logo Grid — 5 per row ===== */
+.pj-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.pj-logo-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 110px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pj-logo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    border-color: #b40707;
+}
+
+.pj-logo-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   PROJECT DETAIL MODAL
+   ========================================================================== */
+.pj-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.pj-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pj-modal {
+    position: relative;
+    background: #ffffff;
+    border-radius: 14px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    transition: transform 0.25s ease;
+}
+
+.pj-modal-overlay.active .pj-modal {
+    transform: translateY(0);
+}
+
+.pj-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pj-modal-close:hover {
+    background: #b40707;
+}
+
+.pj-modal-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.pj-modal-image img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px 14px 0 0;
+}
+
+.pj-modal-body {
+    padding: 28px 32px 32px;
+}
+
+.pj-modal-client {
+    display: inline-block;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #b40707;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.pj-modal-body h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+}
+
+.pj-modal-body p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #555;
+    margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 991px) {
+    .pj-hero {
+        min-height: 70vh;
+    }
+
+    .pj-hero-content h1 {
+        font-size: 28px;
+    }
+
+    .pj-bg-decor {
+        display: none;
+    }
+
+    .pj-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .pj-hero {
+        min-height: 60vh;
+    }
+
+    .pj-hero-content {
+        padding: 0 20px 50px;
+    }
+    .pj-section {
+        padding: 50px 20px;
+    }
+
+    .pj-inner h2 {
+        font-size: 26px;
+    }
+
+    .pj-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .pj-logo-card {
+        height: 90px;
+        padding: 14px;
+    }
+
+    .pj-modal-body {
+        padding: 24px 20px 28px;
+    }
+
+    .pj-modal-body h3 {
+        font-size: 20px;
+    }
+}

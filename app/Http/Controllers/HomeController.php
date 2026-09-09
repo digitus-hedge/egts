@@ -8,6 +8,8 @@ use App\Models\ClientSection;
 use App\Models\FacilityBanner;
 use App\Models\HomeAbout;
 use App\Models\Machine;
+use App\Models\Project;
+use App\Models\ProjectsClientsBanner;
 use App\Models\Service;
 use App\Models\ServiceSection;
 use App\Models\Stat;
@@ -44,5 +46,13 @@ class HomeController extends Controller
         $tools = Tool::latest()->get();
 
         return view('web.facility_capabilities', compact('facilityBanner', 'machines', 'tools'));
+    }
+
+    public function projectsClients()
+    {
+        $banner = ProjectsClientsBanner::first();
+        $projects = Project::latest()->get();
+
+        return view('web.projects_clients', compact('banner', 'projects'));
     }
 }

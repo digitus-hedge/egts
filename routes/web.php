@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\FacilityBannerController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\MachineController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\ProjectsClientsBannerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
@@ -33,6 +34,8 @@ Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
 Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 
 Route::get('/contact', [ContactUsController::class, 'index']);
+
+Route::get('/projects_clients', [HomeController::class, 'projectsClients']);
 
 Route::post('/contact/submit', function () {
     // handle form submission — validate, send email, save to DB, etc.
@@ -112,6 +115,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/projects/{project}/edit', [ProjectController::class, 'edit'])->name('home.projects.edit');
         Route::put('home/projects/{project}', [ProjectController::class, 'update'])->name('home.projects.update');
         Route::delete('home/projects/{project}', [ProjectController::class, 'destroy'])->name('home.projects.destroy');
+
+        Route::get('home/projects-clients/banner', [ProjectsClientsBannerController::class, 'index'])->name('home.projects-clients.banner');
+        Route::post('home/projects-clients/banner', [ProjectsClientsBannerController::class, 'store'])->name('home.projects-clients.banner.store');
 
         Route::get('home/facility/banner', [FacilityBannerController::class, 'index'])->name('home.facility.banner');
         Route::post('home/facility/banner', [FacilityBannerController::class, 'store'])->name('home.facility.banner.store');

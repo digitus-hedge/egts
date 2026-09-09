@@ -270,7 +270,16 @@
             <li><a href="{{ route('admin.home.facility.tools') }}" class="{{ request()->routeIs('admin.home.facility.tools*') ? 'active' : '' }}">Tools</a></li>
         </ul>
     </li>
-    <li><a href="{{ route('admin.home.projects') }}" class="{{ request()->routeIs('admin.home.projects*') ? 'active' : '' }}">Projects &amp; Clients</a></li>
+    <li class="has-submenu {{ request()->routeIs('admin.home.projects-clients*') || request()->routeIs('admin.home.projects*') ? 'open' : '' }}">
+        <a onclick="toggleSubmenu(this)">
+            Projects &amp; Clients
+            <i class="bi bi-chevron-right chevron"></i>
+        </a>
+        <ul class="submenu">
+            <li><a href="{{ route('admin.home.projects-clients.banner') }}" class="{{ request()->routeIs('admin.home.projects-clients.banner*') ? 'active' : '' }}">Banner</a></li>
+            <li><a href="{{ route('admin.home.projects') }}" class="{{ request()->routeIs('admin.home.projects*') ? 'active' : '' }}">Projects &amp; Clients List</a></li>
+        </ul>
+    </li>
     <li><a href="{{ route('admin.home.certificates') }}" class="{{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}">Certificates</a></li>
     <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
 </ul>
