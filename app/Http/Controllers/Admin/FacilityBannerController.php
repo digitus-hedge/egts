@@ -34,6 +34,9 @@ class FacilityBannerController extends Controller
         $facilityBanner->infrastructure_title = $data['infrastructure_title'] ?? null;
         $facilityBanner->infrastructure_description = $data['infrastructure_description'] ?? null;
 
+        $facilityBanner->meta_title = $data['meta_title'] ?? null;
+        $facilityBanner->meta_description = $data['meta_description'] ?? null;
+
         if ($request->hasFile('banner_image')) {
             if ($facilityBanner->banner_image) {
                 Storage::disk('public')->delete($facilityBanner->banner_image);

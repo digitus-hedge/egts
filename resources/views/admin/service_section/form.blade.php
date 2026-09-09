@@ -73,41 +73,7 @@
             </div>
 
 
-              {{-- Meta Title --}}
-            <div class="col-md-8">
-                <div class="form-card">
-                    <div class="form-group">
-                        <label><i class="bi bi-tag"></i> Meta Title</label>
-                        <input type="text" name="meta_title" id="meta_title" maxlength="60"
-                               value="{{ old('meta_title', $serviceSection->meta_title) }}"
-                               class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
-                               placeholder="SEO title for search engines"
-                               oninput="document.getElementById('metaTitleCount').textContent = this.value.length">
-                        <p class="hint-text"><span id="metaTitleCount">{{ strlen(old('meta_title', $serviceSection->meta_title ?? '')) }}</span> / 60 characters</p>
-                        @error('meta_title')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            {{-- Meta Description --}}
-            <div class="col-md-12">
-                <div class="form-card">
-                    <div class="form-group">
-                        <label><i class="bi bi-card-text"></i> Meta Description</label>
-                        <textarea name="meta_description" id="meta_description" rows="3" maxlength="160"
-                                  class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
-                                  placeholder="SEO description shown in search results"
-                                  oninput="document.getElementById('metaDescCount').textContent = this.value.length">{{ old('meta_description', $serviceSection->meta_description) }}</textarea>
-                        <p class="hint-text"><span id="metaDescCount">{{ strlen(old('meta_description', $serviceSection->meta_description ?? '')) }}</span> / 160 characters</p>
-                        @error('meta_description')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            
+         
 
             <div class="col-md-12">
                 <div class="form-actions">

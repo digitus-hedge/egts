@@ -25,6 +25,6 @@ class Service extends Model
         'technical_scope' => 'array',
         'specifications'  => 'array',
         'gallery'         => 'array',
-        'inspection_process'  => 'array',
+        'inspection_process' => 'array',
     ];
 }

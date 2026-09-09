@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
+use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceDetailController;
@@ -128,6 +129,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/facility/machines/{machine}/edit', [MachineController::class, 'edit'])->name('home.facility.machines.edit');
         Route::put('home/facility/machines/{machine}', [MachineController::class, 'update'])->name('home.facility.machines.update');
         Route::delete('home/facility/machines/{machine}', [MachineController::class, 'destroy'])->name('home.facility.machines.destroy');
+
+
+        Route::get('service/banner', [ServiceBannerController::class, 'index'])->name('service.banner');       // Shows form directly (pre-filled if exists)
+        Route::post('service/banner', [ServiceBannerController::class, 'store'])->name('service.banner.store'); // Creates or updates
 
         Route::get('home/facility/tools', [ToolController::class, 'index'])->name('home.facility.tools');
         Route::get('home/facility/tools/create', [ToolController::class, 'create'])->name('home.facility.tools.create');

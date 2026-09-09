@@ -703,7 +703,7 @@ function previewInspectionImage(input) {
         color: #1e1e2d;
     }
 
-    .btn-back {
+    /* .btn-back {
         display: flex;
         align-items: center;
         gap: 6px;
@@ -714,7 +714,45 @@ function previewInspectionImage(input) {
 
     .btn-back:hover {
         text-decoration: underline;
-    }
+    } */
+
+        /* Back to list button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    background-color: #f5f5f5;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-back i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.btn-back:hover {
+    background-color: #e9852c; /* matches orange theme */
+    border-color: #e9852c;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-back:active {
+    background-color: #d67320;
+    border-color: #d67320;
+}
+
+.btn-back:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233, 133, 44, 0.25);
+}
 
     .banner-form {
         width: 100%;

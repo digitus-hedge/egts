@@ -23,6 +23,9 @@ class FacilityBannerRequest extends FormRequest
 
             'infrastructure_title'       => 'required|string|max:255',
             'infrastructure_description' => 'required|string',
+
+            'meta_title'       => 'nullable|string|max:60',
+            'meta_description' => 'nullable|string|max:160',
         ];
     }
 }
