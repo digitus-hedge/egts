@@ -297,7 +297,7 @@
         <section class="fc-closing-section">
             <div class="fc-closing-inner">
                 <div class="fc-closing-image">
-                    <img src="{{ asset('images/facility-closing.webp') }}" alt="EGTS Technician">
+                    <img src="{{ asset('images/result.webp') }}" alt="EGTS Technician">
                 </div>
 
                 <div class="fc-closing-content">
