@@ -110,11 +110,11 @@
 .ct-content-inner {
     position: relative;
     z-index: 1;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 56px;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 48px;
     align-items: start;
 }
 
@@ -326,6 +326,14 @@
     .ct-form-card {
         padding: 28px;
     }
+
+    .ct-dept-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ct-info-col-red {
+        padding: 28px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -349,4 +357,111 @@
     .ct-map-section {
         height: 320px;
     }
+
+    .ct-dept-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ct-heading-inner h2 {
+        font-size: 24px;
+    }
+
+    .ct-info-col-red {
+        padding: 22px;
+    }
+}
+
+/* ==========================================================================
+   GET IN TOUCH HEADING
+   ========================================================================== */
+.ct-heading-section {
+    width: 100%;
+    padding: 70px 24px 0;
+    background-color: #ffffff;
+}
+
+.ct-heading-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.ct-heading-inner h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+}
+
+.ct-heading-inner p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #555;
+    margin: 0;
+}
+
+/* ==========================================================================
+   RED INFO COLUMN
+   ========================================================================== */
+.ct-info-col-red {
+    background: linear-gradient(155deg, #c40808 0%, #7a0505 100%);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 20px 44px rgba(180, 7, 7, 0.2);
+}
+
+.ct-info-col-red .ct-info-icon {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.ct-info-col-red .ct-info-label {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.ct-info-col-red .ct-info-value {
+    color: #ffffff;
+}
+
+.ct-info-col-red .ct-social a {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.ct-info-col-red .ct-social a:hover {
+    background-color: #fff;
+    color: #b40707;
+}
+
+/* ===== Department Contact Cards ===== */
+.ct-dept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.ct-dept-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ct-dept-card h4 {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #ffd7d7;
+    margin: 0 0 6px;
+}
+
+.ct-dept-card span {
+    font-size: 13px;
+    color: #fff;
+    line-height: 1.5;
+    word-break: break-word;
 }

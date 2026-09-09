@@ -26,6 +26,16 @@
         </section>
         {{-- ===== End Page Hero Section ===== --}}
 
+        {{-- ===== Get In Touch Heading ===== --}}
+        <section class="ct-heading-section">
+            <div class="ct-heading-inner">
+                <span class="ct-section-eyebrow">GET IN TOUCH</span>
+                <h2>We'd Love to Hear From You</h2>
+                <p>Whether you need a quote, technical consultation, or want to discuss a project, our team is ready to help. Reach out using the details below or send us a message directly.</p>
+            </div>
+        </section>
+        {{-- ===== End Get In Touch Heading ===== --}}
+
         {{-- ===== Contact Content: Info + Form ===== --}}
         <section class="ct-content-section">
             <div class="ct-bg-decor ct-bg-decor-left">
@@ -62,11 +72,7 @@
             <div class="ct-content-inner">
 
                 {{-- Left: Info --}}
-                <div class="ct-info-col">
-                    <span class="ct-section-eyebrow">GET IN TOUCH</span>
-                    <h2>We'd Love to Hear From You</h2>
-                    <p class="ct-info-lead">Whether you need a quote, technical consultation, or want to discuss a project, our team is ready to help. Reach out using the details below or send us a message directly.</p>
-
+                <div class="ct-info-col ct-info-col-red">
                     <div class="ct-info-list">
                         <div class="ct-info-item">
                             <div class="ct-info-icon">
@@ -116,6 +122,24 @@
                                 <span class="ct-info-label">Working Hours</span>
                                 <span class="ct-info-value">{{ $contactBanner->working_hours }}</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="ct-dept-grid">
+                        <div class="ct-dept-card">
+                            <h4>QA / QC</h4>
+                            <span>{{ $contactBanner->qaqc_phone }}</span>
+                            <span>{{ $contactBanner->qaqc_email }}</span>
+                        </div>
+                        <div class="ct-dept-card">
+                            <h4>Operations</h4>
+                            <span>{{ $contactBanner->operations_phone }}</span>
+                            <span>{{ $contactBanner->operations_email }}</span>
+                        </div>
+                        <div class="ct-dept-card">
+                            <h4>Sales</h4>
+                            <span>{{ $contactBanner->sales_phone }}</span>
+                            <span>{{ $contactBanner->sales_email }}</span>
                         </div>
                     </div>
 
