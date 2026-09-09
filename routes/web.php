@@ -8,11 +8,14 @@ use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ClientSectionController;
 use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FacilityBannerController;
 use App\Http\Controllers\Admin\HomeAboutController;
+use App\Http\Controllers\Admin\MachineController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
+use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\HomeController;
@@ -27,9 +30,7 @@ Route::get('/about', [HomeController::class,'about']);
 Route::get('/services', [ServicesListController::class, 'index']);
 Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
 
-Route::get('/facility_capabilities', function () {
-    return view('web.facility_capabilities');
-});
+Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 
 Route::get('/contact', [ContactUsController::class, 'index']);
 
@@ -111,6 +112,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/projects/{project}/edit', [ProjectController::class, 'edit'])->name('home.projects.edit');
         Route::put('home/projects/{project}', [ProjectController::class, 'update'])->name('home.projects.update');
         Route::delete('home/projects/{project}', [ProjectController::class, 'destroy'])->name('home.projects.destroy');
+
+        Route::get('home/facility/banner', [FacilityBannerController::class, 'index'])->name('home.facility.banner');
+        Route::post('home/facility/banner', [FacilityBannerController::class, 'store'])->name('home.facility.banner.store');
+
+        Route::get('home/facility/machines', [MachineController::class, 'index'])->name('home.facility.machines');
+        Route::get('home/facility/machines/create', [MachineController::class, 'create'])->name('home.facility.machines.create');
+        Route::post('home/facility/machines', [MachineController::class, 'store'])->name('home.facility.machines.store');
+        Route::get('home/facility/machines/{machine}/edit', [MachineController::class, 'edit'])->name('home.facility.machines.edit');
+        Route::put('home/facility/machines/{machine}', [MachineController::class, 'update'])->name('home.facility.machines.update');
+        Route::delete('home/facility/machines/{machine}', [MachineController::class, 'destroy'])->name('home.facility.machines.destroy');
+
+        Route::get('home/facility/tools', [ToolController::class, 'index'])->name('home.facility.tools');
+        Route::get('home/facility/tools/create', [ToolController::class, 'create'])->name('home.facility.tools.create');
+        Route::post('home/facility/tools', [ToolController::class, 'store'])->name('home.facility.tools.store');
+        Route::get('home/facility/tools/{tool}/edit', [ToolController::class, 'edit'])->name('home.facility.tools.edit');
+        Route::put('home/facility/tools/{tool}', [ToolController::class, 'update'])->name('home.facility.tools.update');
+        Route::delete('home/facility/tools/{tool}', [ToolController::class, 'destroy'])->name('home.facility.tools.destroy');
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });

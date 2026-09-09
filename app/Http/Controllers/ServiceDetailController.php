@@ -12,6 +12,7 @@ class ServiceDetailController extends Controller
 
         $relatedServices = Service::where('id', '!=', $service->id)
             ->latest()
+            ->limit(4)
             ->get();
 
         return view('web.service_details', compact('service', 'relatedServices'));

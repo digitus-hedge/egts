@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\BehindTheScene;
 use App\Models\ClientSection;
+use App\Models\FacilityBanner;
 use App\Models\HomeAbout;
+use App\Models\Machine;
 use App\Models\Service;
 use App\Models\ServiceSection;
 use App\Models\Stat;
+use App\Models\Tool;
 use App\Models\WhyChooseUs;
 
 class HomeController extends Controller
@@ -32,5 +35,14 @@ class HomeController extends Controller
         $bts = BehindTheScene::latest()->get();
 
         return view('web.about_us', compact('whyChooseUs', 'bts'));
+    }
+
+    public function facility()
+    {
+        $facilityBanner = FacilityBanner::first();
+        $machines = Machine::latest()->get();
+        $tools = Tool::latest()->get();
+
+        return view('web.facility_capabilities', compact('facilityBanner', 'machines', 'tools'));
     }
 }

@@ -9,7 +9,7 @@
     <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         * {
@@ -203,7 +203,7 @@
         </a>
     </li>
 
- <li class="has-submenu {{ 
+ <li class="has-submenu {{
     request()->routeIs('admin.home.banner') ||
     request()->routeIs('admin.home.banner.*') ||
     request()->routeIs('admin.home.about') ||
@@ -259,7 +259,17 @@
             </li>
         </ul>
     </li>
-
+    <li class="has-submenu {{ request()->routeIs('admin.home.facility*') ? 'open' : '' }}">
+        <a onclick="toggleSubmenu(this)">
+            Facility &amp; Capabilities
+            <i class="bi bi-chevron-right chevron"></i>
+        </a>
+        <ul class="submenu">
+            <li><a href="{{ route('admin.home.facility.banner') }}" class="{{ request()->routeIs('admin.home.facility.banner*') ? 'active' : '' }}">Banner</a></li>
+            <li><a href="{{ route('admin.home.facility.machines') }}" class="{{ request()->routeIs('admin.home.facility.machines*') ? 'active' : '' }}">Machines</a></li>
+            <li><a href="{{ route('admin.home.facility.tools') }}" class="{{ request()->routeIs('admin.home.facility.tools*') ? 'active' : '' }}">Tools</a></li>
+        </ul>
+    </li>
     <li><a href="{{ route('admin.home.projects') }}" class="{{ request()->routeIs('admin.home.projects*') ? 'active' : '' }}">Projects &amp; Clients</a></li>
     <li><a href="{{ route('admin.home.certificates') }}" class="{{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}">Certificates</a></li>
     <li><a href="{{ route('admin.home.contact-banner') }}" class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>

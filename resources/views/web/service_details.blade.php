@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/services.css') }}">
 </head>
+
 <body>
 
     @include('web.layout.header')
@@ -16,10 +18,10 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="sd-hero" @if($service->image) style="background-image: url('{{ asset('storage/' . $service->image) }}');" @endif>
+        <section class="sd-hero" @if($service->banner_image) style="background-image:
+            url('{{ asset('storage/' . $service->banner_image) }}');" @endif>
             <div class="sd-hero-overlay"></div>
             <div class="sd-hero-content">
-                <span class="sd-hero-eyebrow">SERVICE DETAIL</span>
                 <h1>{{ $service->title }}:<br>Detailed Specifications</h1>
             </div>
         </section>
@@ -90,7 +92,7 @@
             </div>
 
             <div class="sd-overview-inner">
-                <span class="sd-section-eyebrow">SERVICE OVERVIEW &amp; TECHNICAL PROCESS</span>
+                <span class="sd-section-eyebrow">SERVICE OVERVIEW & TECHNICAL PROCESS</span>
 
                 <div class="sd-overview-grid">
                     <div class="sd-overview-col">
@@ -101,7 +103,7 @@
                     @if (!empty($service->technical_scope))
                     <div class="sd-overview-col">
                         <h3>Technical Scope &amp; Capabilities</h3>
-                        <ul class="sd-scope-list">
+                        <ul class="sd-scope-list-full">
                             @foreach ($service->technical_scope as $point)
                                 <li>{{ $point }}</li>
                             @endforeach
@@ -110,21 +112,79 @@
                     @endif
                 </div>
 
-                @if ($service->image)
-                <div class="sd-visual-box">
-                    <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }} Process Visual">
-                </div>
-                @endif
             </div>
         </section>
         {{-- ===== End Overview & Technical Process ===== --}}
+
+        {{-- ===== Our Inspection Process Section ===== --}}
+        @if (!empty($service->inspection_process))
+        <section class="sd-process-section">
+            <div class="sd-process-inner">
+                <h2>Our Inspection process</h2>
+
+                <div class="sd-process-grid">
+
+                    <div class="sd-process-image-wrap">
+                        @foreach ($service->inspection_process as $index => $step)
+                        <img src="{{ asset('storage/' . $step['image']) }}" alt="{{ $step['heading'] }}"
+                            class="sd-process-image {{ $index === 0 ? 'active' : '' }}" id="process-image-{{ $index }}">
+                        @endforeach
+                    </div>
+
+                    <div class="sd-process-content">
+                        <div class="sd-process-tabs">
+                            @foreach ($service->inspection_process as $index => $step)
+                            <button type="button" class="sd-process-tab {{ $index === 0 ? 'active' : '' }}"
+                                data-index="{{ $index }}">
+                                {{ strtoupper($step['heading']) }}
+                            </button>
+                            @endforeach
+                        </div>
+
+                        @foreach ($service->inspection_process as $index => $step)
+                        <div class="sd-process-panel {{ $index === 0 ? 'active' : '' }}"
+                            id="process-panel-{{ $index }}">
+                            <h3>{{ $step['heading'] }}</h3>
+                            <p>{{ $step['description'] }}</p>
+                        </div>
+                        @endforeach
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <script>
+            (function () {
+                const tabs = document.querySelectorAll('.sd-process-tab');
+                const images = document.querySelectorAll('.sd-process-image');
+                const panels = document.querySelectorAll('.sd-process-panel');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function () {
+                        const index = this.dataset.index;
+
+                        tabs.forEach(t => t.classList.remove('active'));
+                        images.forEach(i => i.classList.remove('active'));
+                        panels.forEach(p => p.classList.remove('active'));
+
+                        this.classList.add('active');
+                        document.getElementById('process-image-' + index).classList.add('active');
+                        document.getElementById('process-panel-' + index).classList.add('active');
+                    });
+                });
+            })();
+
+        </script>
+        @endif
+        {{-- ===== End Our Inspection Process Section ===== --}}
+
 
         {{-- ===== Technical Specifications & Features ===== --}}
         @if (!empty($service->specifications))
         <section class="sd-specs-section">
             <div class="sd-specs-inner">
                 <span class="sd-section-eyebrow">TECHNICAL SPECIFICATIONS &amp; FEATURES</span>
-                <h2>Specifications Table</h2>
 
                 <div class="sd-specs-table-wrap">
                     <table class="sd-specs-table">
@@ -137,11 +197,11 @@
                         </thead>
                         <tbody>
                             @foreach ($service->specifications as $row)
-                                <tr>
-                                    <td>{{ $row['specification'] ?? '' }}</td>
-                                    <td>{{ $row['details'] ?? '' }}</td>
-                                    <td>{{ $row['compliance'] ?? '' }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ $row['specification'] ?? '' }}</td>
+                                <td>{{ $row['details'] ?? '' }}</td>
+                                <td>{{ $row['compliance'] ?? '' }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -217,9 +277,9 @@
 
                     <div class="sd-gallery-grid">
                         @foreach ($service->gallery as $img)
-                            <div class="sd-gallery-item">
-                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $service->title }} Gallery">
-                            </div>
+                        <div class="sd-gallery-item">
+                            <img src="{{ asset('storage/' . $img) }}" alt="{{ $service->title }} Gallery">
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -232,12 +292,17 @@
 
                     <div class="sd-related-grid">
                         @foreach ($relatedServices as $related)
-                            <a href="{{ url('/services/' . $related->slug) }}" class="sd-related-item">
+                            <div class="sd-related-card">
                                 @if ($related->image)
                                     <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->title }}">
                                 @endif
-                                <span>{{ $related->title }}</span>
-                            </a>
+                                <h3>{{ $related->title }}</h3>
+                                {{-- <p>{{ $related->description }}</p> --}}
+                                <a href="{{ url('/services/' . $related->slug) }}" class="sd-related-link">
+                                    Learn More
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -253,7 +318,8 @@
                 <div class="sd-consult-left">
                     <span class="sd-section-eyebrow">GET IN TOUCH</span>
                     <h2>Request a Consultation</h2>
-                    <p>Talk to our technical team about {{ Str::lower($service->title) }} specifications, lead times, and capacity for your next project.</p>
+                    <p>Talk to our technical team about {{ Str::lower($service->title) }} specifications, lead times,
+                        and capacity for your next project.</p>
                 </div>
 
                 <form class="sd-consult-form" action="{{ url('/contact/submit') }}" method="POST">
@@ -261,11 +327,13 @@
                     <div class="sd-form-row">
                         <div class="sd-form-group">
                             <label for="contact_name">Contact Name</label>
-                            <input type="text" id="contact_name" name="contact_name" placeholder="Your full name" required>
+                            <input type="text" id="contact_name" name="contact_name" placeholder="Your full name"
+                                required>
                         </div>
                         <div class="sd-form-group">
                             <label for="contact_inquiry">Contact Inquiry</label>
-                            <input type="text" id="contact_inquiry" name="contact_inquiry" placeholder="Briefly describe your requirement" required>
+                            <input type="text" id="contact_inquiry" name="contact_inquiry"
+                                placeholder="Briefly describe your requirement" required>
                         </div>
                     </div>
                     <button type="submit" class="sd-consult-btn">Request Consultation</button>
@@ -279,4 +347,5 @@
     @include('web.layout.footer')
 
 </body>
+
 </html>
