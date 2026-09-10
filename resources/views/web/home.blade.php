@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $banner->meta_title }}</title>
+    <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
 </head>
 
 <body>
