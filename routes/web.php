@@ -19,22 +19,19 @@ use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\Admin\ServiceBannerController;
-use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ServiceDetailController;
-use App\Http\Controllers\ServicesListController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/about', [HomeController::class,'about']);
 
-Route::get('/services', [ServicesListController::class, 'index']);
-Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
+Route::get('/services', [HomeController::class, 'services']);
+Route::get('/services/{slug}', [HomeController::class, 'serviceDetails']);
 
 Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 
-Route::get('/contact', [ContactUsController::class, 'index']);
+Route::get('/contact', [HomeController::class, 'contact']);
 
 Route::get('/projects_clients', [HomeController::class, 'projectsClients']);
 

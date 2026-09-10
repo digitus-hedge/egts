@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/projects.css') }}">
+    <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
 </head>
 <body>
 

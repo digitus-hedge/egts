@@ -18,10 +18,9 @@
             <div class="footer-col">
                 <h4>Services</h4>
                 <ul>
-                    <li><a href="{{ url('/services') }}">API Threading</a></li>
-                    <li><a href="{{ url('/services') }}">Premium Connections</a></li>
-                    <li><a href="{{ url('/services') }}">Repair &amp; Remanufacturing</a></li>
-                    <li><a href="{{ url('/services') }}">Inspection &amp; QC</a></li>
+                    @foreach ($footerServices as $service)
+                        <li><a href="{{ url('/services/' . $service->slug) }}">{{ $service->title }}</a></li>
+                    @endforeach
                 </ul>
             </div>
 
