@@ -55,4 +55,23 @@ class HomeController extends Controller
 
         return view('web.projects_clients', compact('banner', 'projects'));
     }
+
+    public function services()
+    {
+        $services = Service::get();
+
+        return view('web.services', compact('services'));
+    }
+
+     public function serviceDetails($slug)
+    {
+        $service = Service::where('slug', $slug)->firstOrFail();
+
+        $relatedServices = Service::where('id', '!=', $service->id)
+            ->latest()
+            ->limit(4)
+            ->get();
+
+        return view('web.service_details', compact('service', 'relatedServices'));
+    }
 }

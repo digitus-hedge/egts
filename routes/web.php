@@ -29,8 +29,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/about', [HomeController::class,'about']);
 
-Route::get('/services', [ServicesListController::class, 'index']);
-Route::get('/services/{slug}', [ServiceDetailController::class, 'show']);
+Route::get('/services', [HomeController::class, 'services']);
+Route::get('/services/{slug}', [HomeController::class, 'serviceDetails']);
 
 Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 
