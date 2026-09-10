@@ -146,7 +146,7 @@ class BehindTheSceneController extends Controller
 
         $behind_the_scene->update($data);
 
-        return redirect()->route('home.services.behind-the-scenes')
+        return redirect()->route('admin.home.services.behind-the-scenes')
             ->with('success', 'Behind The Scenes item updated successfully.');
     }
 

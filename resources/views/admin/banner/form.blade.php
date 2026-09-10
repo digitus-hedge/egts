@@ -139,7 +139,7 @@
             <div class="col-md-12">
                 <div class="form-card">
                     <label class="section-label"><i class="bi bi-camera-video"></i> Video</label>
-                    <p class="hint-text">Accepted: MP4, MOV, AVI, WMV — Max size: <strong>20MB</strong></p>
+                    <p class="hint-text">Accepted: MP4, MOV, AVI, WMV, WEBM — Max size: <strong>20MB</strong></p>
 
                     <div class="video-upload-box">
                         @if ($banner->video)

@@ -24,8 +24,8 @@ class BehindTheSceneRequest extends FormRequest
         switch ($this->input('media_type')) {
             case 'video':
                 $rules['video'] = $this->isMethod('post') && !$this->route('behind_the_scene')
-                    ? 'required|file|mimes:mp4,mov,avi,wmv|max:51200'
-                    : 'nullable|file|mimes:mp4,mov,avi,wmv|max:51200';
+                    ? 'required|file|mimes:mp4,mov,avi,wmv,webm|max:51200'
+                    : 'nullable|file|mimes:mp4,mov,avi,wmv,webm|max:51200';
                 break;
 
             case 'video_url':

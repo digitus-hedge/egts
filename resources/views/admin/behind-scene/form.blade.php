@@ -225,7 +225,7 @@
                 <div class="upload-guidelines">
                     <span class="guideline-item">
                         <i class="bi bi-file-earmark-play"></i>
-                        <strong>MP4, MOV, AVI</strong>
+                        <strong>MP4, MOV, AVI ,WEBM</strong>
                     </span>
                     <span class="guideline-divider"></span>
                     <span class="guideline-item">

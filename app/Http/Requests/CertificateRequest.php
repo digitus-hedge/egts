@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Certificate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class CertificateRequest extends FormRequest
 {
@@ -31,5 +33,24 @@ class CertificateRequest extends FormRequest
             'image.mimes'    => 'Image must be JPG, PNG, or WEBP.',
             'image.max'      => 'Image must not exceed 2MB.',
         ];
+    }
+
+    /**
+     * Require an image only if there's no existing one already saved
+     * for the certificate being edited (or none at all, on create).
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            // Adjust 'certificate' to match your actual route parameter name
+            $existing = $this->route('certificate');
+
+            $hasNewImage = $this->hasFile('image');
+            $hasExistingImage = $existing && ! empty($existing->image);
+
+            if (! $hasNewImage && ! $hasExistingImage) {
+                $validator->errors()->add('image', 'Please upload an image.');
+            }
+        });
     }
 }

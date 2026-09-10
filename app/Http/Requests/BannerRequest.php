@@ -23,7 +23,7 @@ class BannerRequest extends FormRequest
             'image_2' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'image_3' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'video'   => 'nullable|mimes:mp4,mov,avi,wmv|max:20480',
+            'video'   => 'nullable|mimes:mp4,mov,avi,wmv,webm|max:20480',
 
             'meta_title'       => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
