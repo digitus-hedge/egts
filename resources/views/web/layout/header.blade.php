@@ -57,15 +57,22 @@
                 </a>
 
                 <nav class="nav-links">
-                    <a href="{{ url('/') }}">Home</a>
+                    {{-- <a href="{{ url('/') }}">Home</a>
                     <a href="{{ url('/about') }}">About Us</a>
                     <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
                     <a href="{{ url('/services') }}">Services</a>
                     <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
-                    <a href="{{ url('/contact') }}">Contact</a>
+                    <a href="{{ url('/contact') }}">Contact</a> --}}
+                    <a href="{{ url('/') }}">Home</a>
+                    <a href="{{ url('/about') }}">About Us</a>
+                    <a href="#">Facility & Capabilities</a>
+                    <a href="#">Services</a>
+                    <a href="#">Projects & Clients</a>
+                    <a href="#">Contact</a>
                 </nav>
 
-                <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
+                {{-- <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a> --}}
+                <a href="#" class="cta-btn">Request a Consultation</a>
 
                 <button class="mobile-toggle" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,13 +82,20 @@
             </div>
 
             <div id="mobile-menu" class="mobile-menu">
-                <a href="{{ url('/') }}">Home</a>
+                {{-- <a href="{{ url('/') }}">Home</a>
                 <a href="{{ url('/about') }}">About Us</a>
                 <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
                 <a href="{{ url('/services') }}">Services</a>
                 <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
                 <a href="{{ url('/contact') }}">Contact</a>
-                <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
+                <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a> --}}
+                <a href="{{ url('/') }}">Home</a>
+                <a href="{{ url('/about') }}">About Us</a>
+                <a href="#">Facility & Capabilities</a>
+                <a href="#">Services</a>
+                <a href="#">Projects & Clients</a>
+                <a href="#">Contact</a>
+                <a href="#" class="cta-btn">Request a Consultation</a>
             </div>
         </div>
     </header>

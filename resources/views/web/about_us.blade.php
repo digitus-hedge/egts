@@ -528,7 +528,8 @@
         <div class="au-closing-content">
             <h2>Built on quality.<br>Driven by trust.</h2>
             <p>Partner with EGTS for precision machining, premium threading, repair, remanufacturing, and technical inspection services. With advanced capabilities, experienced professionals, and a strong commitment to quality and safety, we deliver reliable, efficient, and industry-focused solutions designed to meet demanding standards and keep your operations performing at their best.</p>
-            <a href="{{ url('/contact') }}" class="au-closing-btn">Contact Our Team</a>
+            {{-- <a href="{{ url('/contact') }}" class="au-closing-btn">Contact Our Team</a> --}}
+            <a href="#" class="au-closing-btn">Contact Our Team</a>
         </div>
     </div>
 </section>
