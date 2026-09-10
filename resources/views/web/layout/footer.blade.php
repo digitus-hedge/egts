@@ -18,10 +18,10 @@
             <div class="footer-col">
                 <h4>Services</h4>
                 <ul>
-                    <li><a href="#">API Threading</a></li>
-                    <li><a href="#">Premium Connections</a></li>
-                    <li><a href="#">Repair &amp; Remanufacturing</a></li>
-                    <li><a href="#">Inspection &amp; QC</a></li>
+                    <li><a href="{{ url('/services') }}">API Threading</a></li>
+                    <li><a href="{{ url('/services') }}">Premium Connections</a></li>
+                    <li><a href="{{ url('/services') }}">Repair &amp; Remanufacturing</a></li>
+                    <li><a href="{{ url('/services') }}">Inspection &amp; QC</a></li>
                 </ul>
             </div>
 
@@ -29,20 +29,13 @@
             <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
-                    {{-- <li><a href="{{ url('/') }}">Home</a></li>
+                    <li><a href="{{ url('/') }}">Home</a></li>
                     <li><a href="{{ url('/about') }}">About Us</a></li>
                     <li><a href="{{ url('/services') }}">Services</a></li>
                     <li><a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a></li>
                     <li><a href="{{ url('/projects_clients') }}">Projects & Clients</a></li>
                     <li><a href="{{ url('/licenses') }}">Licenses</a></li>
-                    <li><a href="{{ url('/contact') }}">Contact</a></li> --}}
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ url('/about') }}">About Us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Facility & Capabilities</a></li>
-                    <li><a href="#">Projects & Clients</a></li>
-                    <li><a href="#">Licenses</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="{{ url('/contact') }}">Contact</a></li>
                 </ul>
             </div>
 

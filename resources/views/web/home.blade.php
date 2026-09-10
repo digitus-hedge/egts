@@ -335,8 +335,7 @@
                                 @endif
                                 <h3>{{ $service->title }}</h3>
                                 <p>{{ $service->description }}</p>
-                                {{-- <a href="{{ url('/services/' . $service->slug) }}" class="service-link"> --}}
-                                <a href="#" class="service-link">
+                                <a href="{{ url('/services/' . $service->slug) }}" class="service-link">
                                     READ MORE
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2">
@@ -701,8 +700,7 @@
                         and high-performance solutions engineered to meet demanding international industry standards.
                         From critical components to specialized oilfield requirements, EGTS is committed to keeping your
                         operations safe, productive, and performing at their best.</p>
-                    {{-- <a href="{{ url('/contact') }}" class="closing-cta-btn">Contact Our Team</a> --}}
-                    <a href="#" class="closing-cta-btn">Contact Our Team</a>
+                    <a href="{{ url('/contact') }}" class="closing-cta-btn">Contact Our Team</a>
                 </div>
             </div>
         </section>

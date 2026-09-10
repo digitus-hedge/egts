@@ -246,7 +246,7 @@
             <li><a href="{{ route('admin.about') }}"
                     class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">About</a></li>
 
-            {{-- <li
+            <li
                 class="has-submenu {{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) || request()->routeIs('admin.service.banner') || request()->routeIs('admin.service.banner.*') ? 'open' : '' }}">
                 <a onclick="toggleSubmenu(this)">
                     Services
@@ -308,7 +308,7 @@
             <li><a href="{{ route('admin.home.certificates') }}"
                     class="{{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}">Certificates</a></li>
             <li><a href="{{ route('admin.home.contact-banner') }}"
-                    class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li> --}}
+                    class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
         </ul>
 
     </div>
