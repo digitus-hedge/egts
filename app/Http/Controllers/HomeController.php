@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\BehindTheScene;
 use App\Models\ClientSection;
+use App\Models\ContactBanner;
 use App\Models\FacilityBanner;
 use App\Models\HomeAbout;
 use App\Models\Machine;
@@ -63,7 +64,7 @@ class HomeController extends Controller
         return view('web.services', compact('services'));
     }
 
-     public function serviceDetails($slug)
+    public function serviceDetails($slug)
     {
         $service = Service::where('slug', $slug)->firstOrFail();
 
@@ -73,5 +74,12 @@ class HomeController extends Controller
             ->get();
 
         return view('web.service_details', compact('service', 'relatedServices'));
+    }
+
+    public function contact()
+    {
+        $contactBanner = ContactBanner::first();
+
+        return view('web.contact_us', compact('contactBanner'));
     }
 }
