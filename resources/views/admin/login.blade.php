@@ -213,7 +213,7 @@
     <div class="login-box">
 
         <div class="brand-header">
-            <img src="http://127.0.0.1:8000/images/logo.webp" alt="EGTS Logo">
+            <img src="{{ asset('images/logo.webp') }}" alt="EGTS Logo">
             <div class="brand-name">EGTS Admin</div>
             <!-- <div class="brand-tagline">Control Panel</div> -->
         </div>
