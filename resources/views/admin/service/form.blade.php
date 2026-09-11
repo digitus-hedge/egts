@@ -695,6 +695,87 @@ function previewInspectionImage(input) {
 }
 </script>
 
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Field names in the order they appear on this form.
+    // For repeatable rows (inspection_process, specifications, technical_scope),
+    // we match on prefix since indices are dynamic.
+    const fieldOrder = [
+        'title',
+        'show_on_home',
+        'description',
+        'banner_image',
+        'image',
+        'process_description',
+        'inspection_process',      // matches inspection_process.0.heading, etc.
+        'technical_scope',
+        'specifications',
+        'meta_title',
+        'meta_description',
+        'gallery',
+        'remove_gallery',
+    ];
+
+    const errorFields = @json(array_keys($errors->getMessages()));
+
+    if (errorFields.length === 0) return;
+
+    // Find the first field (by our defined order) that has a matching error,
+    // using "starts with" so dynamic array indices (e.g. specifications.2.details) still match.
+    let targetPrefix = fieldOrder.find(prefix =>
+        errorFields.some(errKey => errKey === prefix || errKey.startsWith(prefix + '.'))
+    );
+
+    if (!targetPrefix) {
+        targetPrefix = errorFields[0];
+    }
+
+    // The exact errored key that matched (may include an array index, e.g. "specifications.2.details")
+    const exactKey = errorFields.find(errKey => errKey === targetPrefix || errKey.startsWith(targetPrefix + '.')) || targetPrefix;
+
+    // Try the exact field first (works for simple inputs like title, description, image)
+    let field = document.querySelector(`[name="${exactKey}"]`);
+
+    // Dynamic rows use bracket notation in the actual DOM, e.g. name="specifications[2][details]"
+    // Convert dot notation (specifications.2.details) to bracket notation if the dot version isn't found.
+    if (!field) {
+        const bracketName = exactKey.replace(/\.(\d+)\./, '[$1][').replace(/\.([a-z_]+)$/, '[$1]') + (exactKey.match(/\.(\d+)\./) ? ']' : '');
+        field = document.querySelector(`[name="${bracketName}"]`) || document.querySelector(`[name^="${targetPrefix}"]`);
+    }
+
+    // Final fallback: the container div for repeatable sections (inspectionRows, scopeRows, specRows)
+    if (!field) {
+        const containerMap = {
+            'inspection_process': '#inspectionRows',
+            'technical_scope': '#scopeRows',
+            'specifications': '#specRows',
+            'gallery': '#galleryUploadBtn',
+        };
+        field = containerMap[targetPrefix] ? document.querySelector(containerMap[targetPrefix]) : null;
+    }
+
+    const scrollTarget = field
+        ? (field.closest('.form-card') || field)
+        : document.querySelector('.field-error');
+
+    if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        setTimeout(() => {
+            if (field && typeof field.focus === 'function' && field.offsetParent !== null) {
+                field.focus({ preventScroll: true });
+            }
+        }, 400);
+    }
+});
+</script>
+@endif
+
+
+
+
 <style>
     .alert {
         padding: 12px 16px;

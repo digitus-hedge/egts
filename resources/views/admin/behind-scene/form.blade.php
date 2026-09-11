@@ -106,84 +106,7 @@
                 );
             @endphp
 
-            <!-- <div class="col-md-12">
-                <div class="form-card">
-                    <label class="section-label"><i class="bi bi-collection-play"></i> Media Source</label>
-                    <p class="hint-text">Choose exactly <strong>one</strong> — Upload Video, Video URL, or Upload Image. Switching type will clear the previously saved media.</p>
-
-                    <div class="form-group">
-                        <select name="media_type" id="media_type" class="{{ $errors->has('media_type') ? 'input-error' : '' }}">
-                            <option value="">-- Select Media Type --</option>
-                            <option value="video" {{ $currentType == 'video' ? 'selected' : '' }}>Upload Video</option>
-                            <option value="video_url" {{ $currentType == 'video_url' ? 'selected' : '' }}>Video URL</option>
-                            <option value="image" {{ $currentType == 'image' ? 'selected' : '' }}>Upload Image</option>
-                        </select>
-                        @error('media_type')
-                            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    {{-- Video Upload --}}
-                    <div class="media-field" id="field-video" style="display:none; margin-top:16px;">
-                        <div class="image-upload-box">
-                            <div class="preview-wrap">
-                                @if ($behindTheScene->video)
-                                    <video src="{{ Storage::url($behindTheScene->video) }}" class="preview-img" controls></video>
-                                @else
-                                    <div class="preview-placeholder">
-                                        <i class="bi bi-camera-video"></i>
-                                    </div>
-                                @endif
-                            </div>
-                            <label class="upload-btn {{ $errors->has('video') ? 'upload-btn-error' : '' }}">
-                                <i class="bi bi-upload"></i> Choose video file
-                                <input type="file" name="video" accept="video/*" hidden
-                                       onchange="this.closest('.media-field').querySelector('.file-name').textContent = this.files[0]?.name ?? ''">
-                            </label>
-                            <span class="file-name"></span>
-                            @error('video')
-                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    {{-- Video URL --}}
-                    <div class="media-field" id="field-video_url" style="display:none; margin-top:16px;">
-                        <div class="form-group">
-                            <label><i class="bi bi-link-45deg"></i> Video URL</label>
-                            <input type="url" name="video_url" value="{{ old('video_url', $behindTheScene->video_url) }}"
-                                   class="{{ $errors->has('video_url') ? 'input-error' : '' }}"
-                                   placeholder="https://www.youtube.com/watch?v=...">
-                            @error('video_url')
-                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    {{-- Image Upload --}}
-                    <div class="media-field" id="field-image" style="display:none; margin-top:16px;">
-                        <div class="image-upload-box">
-                            <div class="preview-wrap">
-                                @if ($behindTheScene->image)
-                                    <img src="{{ Storage::url($behindTheScene->image) }}" class="preview-img" id="preview-image">
-                                @else
-                                    <div class="preview-placeholder" id="preview-image">
-                                        <i class="bi bi-image"></i>
-                                    </div>
-                                @endif
-                            </div>
-                            <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
-                                <i class="bi bi-upload"></i> Choose image
-                                <input type="file" name="image" accept="image/*"
-                                       onchange="previewImage(this, 'preview-image')" hidden>
-                            </label>
-                            @error('image')
-                                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+         
 
 
             <div class="col-md-12">
@@ -353,6 +276,94 @@
         }
     }
 </script>
+
+
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fieldOrder = [
+        'service_id',
+        'title',
+        'description',
+        'media_type',
+        'video',
+        'video_url',
+        'image',
+    ];
+
+    const errorFields = @json(array_keys($errors->getMessages()));
+
+    if (errorFields.length === 0) return;
+
+    let targetName = fieldOrder.find(name => errorFields.includes(name)) || errorFields[0];
+
+    console.log('[scroll-to-error] target field:', targetName, '| all errors:', errorFields);
+
+    let field = document.querySelector(`[name="${targetName}"]`);
+
+    // The video/video_url/image fields live inside hidden .media-field wrappers
+    // (display:none, controlled by the media_type dropdown). If the field with
+    // the error is currently hidden because a different media_type is selected,
+    // reveal its wrapper so the highlight/scroll is actually visible.
+    const mediaFieldWrapperMap = {
+        video: '#field-video',
+        video_url: '#field-video_url',
+        image: '#field-image',
+    };
+
+    if (mediaFieldWrapperMap[targetName]) {
+        const wrapper = document.querySelector(mediaFieldWrapperMap[targetName]);
+        if (wrapper) {
+            // Hide all media fields, then show only the one with the error,
+            // and sync the dropdown so the form stays visually consistent.
+            document.querySelectorAll('.media-field').forEach(el => el.style.display = 'none');
+            wrapper.style.display = 'block';
+
+            const mediaTypeSelect = document.getElementById('media_type');
+            const typeForField = { video: 'video', video_url: 'video_url', image: 'image' };
+            if (mediaTypeSelect && typeForField[targetName]) {
+                mediaTypeSelect.value = typeForField[targetName];
+            }
+        }
+    }
+
+    if (!field) {
+        console.warn('[scroll-to-error] Could not find element for field:', targetName);
+    }
+
+    const scrollTarget = field
+        ? (field.closest('.form-card') || field.closest('.form-group') || field)
+        : document.querySelector('.field-error');
+
+    if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        scrollTarget.classList.add('scroll-error-highlight');
+        setTimeout(() => scrollTarget.classList.remove('scroll-error-highlight'), 2500);
+
+        setTimeout(() => {
+            if (field && typeof field.focus === 'function' && field.offsetParent !== null) {
+                field.focus({ preventScroll: true });
+            }
+        }, 400);
+    }
+});
+</script>
+
+<style>
+.scroll-error-highlight {
+    /* outline: 3px solid #e74c3c !important;
+    outline-offset: 4px;
+    border-radius: 8px;
+    animation: scrollErrorPulse 0.6s ease-in-out 2; */
+}
+@keyframes scrollErrorPulse {
+    /* 0%, 100% { outline-color: #e74c3c; }
+    50% { outline-color: #ff8a80; } */
+}
+</style>
+@endif
 
 <style>
     .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; display:flex; align-items:center; gap:8px; }

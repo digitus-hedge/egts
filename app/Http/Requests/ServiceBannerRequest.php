@@ -8,54 +8,58 @@ use Illuminate\Contracts\Validation\Validator;
 
 class ServiceBannerRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [
-            // Mandatory fields
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'], // 10MB
+            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
 
-            // Optional (not mandatory) fields
             'meta_title'       => ['nullable', 'string', 'max:60'],
             'meta_description' => ['nullable', 'string', 'max:160'],
         ];
     }
 
-    /**
-     * Custom messages for clarity.
-     */
     public function messages(): array
     {
         return [
-            'title.required'       => 'The title field is required.',
-            'description.required' => 'The short description field is required.',
-            'image.required'       => 'Please upload an image.',
+            'required' => 'The :attribute is required.',
+            'image'    => 'The :attribute must be a valid image (JPG, PNG, or WEBP).',
+            'mimes'    => 'The :attribute must be a file of type: :values.',
+            'max'      => 'The :attribute is too large.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title'             => 'Title',
+            'description'       => 'Short Description',
+            'image'             => 'Image',
+            'meta_title'        => 'Meta Title',
+            'meta_description'  => 'Meta Description',
         ];
     }
 
     /**
-     * Image is only strictly required when creating the banner for the first time.
-     * On update, an existing image is fine if no new file is uploaded.
+     * Image is required only if THIS specific banner record has no image yet —
+     * not merely "does any row exist in the table."
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            $exists = ServiceBanner::query()->exists();
+            $banner = ServiceBanner::first(); // singleton row, adjust if you key by id
 
-            if (!$exists && !$this->hasFile('image')) {
-                $validator->errors()->add('image', 'The image field is required.');
+            $hasNewImage = $this->hasFile('image');
+            $hasExistingImage = $banner && !empty($banner->image);
+
+            if (!$hasNewImage && !$hasExistingImage) {
+                $validator->errors()->add('image', 'Please upload an image.');
             }
         });
     }

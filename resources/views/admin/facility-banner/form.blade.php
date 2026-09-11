@@ -88,6 +88,7 @@
                             @enderror
                         </div>
                     </div>
+                    
                 </div>
             </div>
 
@@ -215,6 +216,80 @@
         }
     }
 </script>
+
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fieldOrder = [
+        'banner_title',
+        'banner_description',
+        'banner_image',
+
+        'operations_heading',
+        'operations_description',
+
+        'infrastructure_title',
+        'infrastructure_description',
+
+        'meta_title',
+        'meta_description',
+    ];
+
+    const errorFields = @json(array_keys($errors->getMessages()));
+
+    if (errorFields.length === 0) return;
+
+    let targetName = fieldOrder.find(name => errorFields.includes(name)) || errorFields[0];
+
+    console.log('[scroll-to-error] target field:', targetName, '| all errors:', errorFields);
+
+    let field = document.querySelector(`[name="${targetName}"]`);
+
+    if (!field) {
+        console.warn('[scroll-to-error] Could not find element for field:', targetName);
+    }
+
+    const scrollTarget = field
+        ? (field.closest('.form-card') || field.closest('.form-group') || field)
+        : document.querySelector('.field-error');
+
+    if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        scrollTarget.classList.add('scroll-error-highlight');
+        setTimeout(() => scrollTarget.classList.remove('scroll-error-highlight'), 2500);
+
+        setTimeout(() => {
+            // infrastructure_description is likely a CKEditor textarea — the raw
+            // textarea is hidden once CKEditor initializes, so skip .focus() on it
+            // and instead focus CKEditor's own editable region if present.
+            if (targetName === 'infrastructure_description' && typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.infrastructure_description) {
+                CKEDITOR.instances.infrastructure_description.focus();
+                return;
+            }
+
+            if (field && typeof field.focus === 'function' && field.offsetParent !== null) {
+                field.focus({ preventScroll: true });
+            }
+        }, 400);
+    }
+});
+</script>
+
+<style>
+.scroll-error-highlight {
+    /* outline: 3px solid #e74c3c !important;
+    outline-offset: 4px;
+    border-radius: 8px;
+    animation: scrollErrorPulse 0.6s ease-in-out 2; */
+}
+@keyframes scrollErrorPulse {
+    /* 0%, 100% { outline-color: #e74c3c; }
+    50% { outline-color: #ff8a80; } */
+}
+</style>
+@endif
 
 <style>
     .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; display:flex; align-items:center; gap:8px; }

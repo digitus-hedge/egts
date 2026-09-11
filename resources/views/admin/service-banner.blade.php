@@ -257,6 +257,51 @@
     }
 </script>
 
+
+
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Fields on this form, in the order they appear top to bottom.
+    const fieldOrder = [
+        'title',
+        'description',
+        'image',
+        'meta_title',
+        'meta_description',
+    ];
+
+    const errorFields = @json(array_keys($errors->getMessages()));
+
+    if (errorFields.length === 0) return;
+
+    // Find the first field (by page order) that actually has an error.
+    let targetName = fieldOrder.find(name => errorFields.includes(name));
+
+    // Fallback: if something errored that isn't in our known list, just use whatever came first.
+    if (!targetName) {
+        targetName = errorFields[0];
+    }
+
+    const field = document.querySelector(`[name="${targetName}"]`);
+    const scrollTarget = field
+        ? (field.closest('.form-card') || field)
+        : document.querySelector('.field-error');
+
+    if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        setTimeout(() => {
+            if (field && typeof field.focus === 'function' && field.offsetParent !== null) {
+                field.focus({ preventScroll: true });
+            }
+        }, 400);
+    }
+});
+</script>
+@endif
+
 <style>
     .alert {
         padding: 12px 16px;
