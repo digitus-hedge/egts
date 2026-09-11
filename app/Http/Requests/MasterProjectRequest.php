@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class MasterProjectRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Please enter a project title.',
+            'image.image'    => 'File must be a valid image.',
+            'image.mimes'    => 'Image must be JPG, PNG, or WEBP.',
+            'image.max'      => 'Image must not exceed 2MB.',
+        ];
+    }
+}

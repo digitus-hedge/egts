@@ -11,14 +11,15 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityBannerController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\MachineController;
+use App\Http\Controllers\Admin\MasterProjectController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectsClientsBannerController;
+use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
-use App\Http\Controllers\Admin\ServiceBannerController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -137,6 +138,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/facility/tools/{tool}/edit', [ToolController::class, 'edit'])->name('home.facility.tools.edit');
         Route::put('home/facility/tools/{tool}', [ToolController::class, 'update'])->name('home.facility.tools.update');
         Route::delete('home/facility/tools/{tool}', [ToolController::class, 'destroy'])->name('home.facility.tools.destroy');
+
+        Route::get('home/masters/projects', [MasterProjectController::class, 'index'])->name('home.masters.projects');
+        Route::get('home/masters/projects/create', [MasterProjectController::class, 'create'])->name('home.masters.projects.create');
+        Route::post('home/masters/projects', [MasterProjectController::class, 'store'])->name('home.masters.projects.store');
+        Route::get('home/masters/projects/{master_project}/edit', [MasterProjectController::class, 'edit'])->name('home.masters.projects.edit');
+        Route::put('home/masters/projects/{master_project}', [MasterProjectController::class, 'update'])->name('home.masters.projects.update');
+        Route::delete('home/masters/projects/{master_project}', [MasterProjectController::class, 'destroy'])->name('home.masters.projects.destroy');
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
