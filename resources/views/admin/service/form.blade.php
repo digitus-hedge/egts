@@ -5,20 +5,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @if ($errors->any())
-<div class="alert alert-error">
-    <i class="bi bi-exclamation-circle"></i>
-    Please fill below fields before submitting
+<div class="notice caution" style="margin-bottom:20px;">
+    <i class="bi bi-exclamation-triangle" style="font-size:15px;flex-shrink:0;margin-top:1px;"></i>
+    <p>Please fix the highlighted fields below before submitting.</p>
 </div>
 @endif
 
 @if (session('success'))
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         Swal.fire({
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#3b3b58',
+            confirmButtonColor: '#EF7B2E',
             timer: 2500,
             timerProgressBar: true
         });
@@ -26,200 +26,180 @@
 </script>
 @endif
 
-<div class="form-header">
-    <h4>
-        <i class="bi bi-{{ $service->exists ? 'pencil-square' : 'plus-circle' }}"></i>
-        {{ $service->exists ? 'Edit Service' : 'Add Service' }}
-    </h4>
-    <a href="{{ route('admin.home.services') }}" class="btn-back">
-        <i class="bi bi-arrow-left"></i> Back to list
-    </a>
-</div>
-
-<form action="{{ $service->exists ? route('admin.home.services.update', $service->id) : route('admin.home.services.store') }}"
-    method="POST" enctype="multipart/form-data" class="banner-form" id="serviceForm">
-    @csrf
-    @if ($service->exists)
-    @method('PUT')
-    @endif
-
-    <div class="container-fluid px-0">
-        <div class="row">
-
-            {{-- Title + Sort Order --}}
-            <div class="col-md-8">
-                <div class="form-card">
-                    <div class="form-group">
-                        <label><i class="bi bi-type"></i> Title</label>
-                        <input type="text" name="title" value="{{ old('title', $service->title) }}"
-                            class="{{ $errors->has('title') ? 'input-error' : '' }}"
-                            placeholder="e.g. API Threading Services">
-                        @error('title')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-
-
-            {{-- Show on Home Page toggle --}}
-<div class="col-md-4">
-    <div class="form-card">
-        <div class="form-group">
-            <label><i class="bi bi-toggle-on"></i> Show on Home Page</label>
-            <p class="hint-text">Enable to display this service on the homepage.</p>
-
-            <label class="switch-toggle">
-                <input type="checkbox" name="show_on_home" value="1"
-                    {{ old('show_on_home', $service->show_on_home) ? 'checked' : '' }}>
-                <span class="switch-slider"></span>
-            </label>
-
-            @error('show_on_home')
-                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
-        </div>
+<div class="wrap">
+    <div class="crumbs">
+        <span onclick="window.location='{{ route('admin.home.services') }}'">Service Cards</span>
+        <span>&rsaquo;</span>
+        <b>{{ $service->exists ? 'Edit Service' : 'Add Service' }}</b>
     </div>
-</div>
 
-            {{-- Short Description --}}
-            <div class="col-md-12">
-                <div class="form-card">
-                    <div class="form-group">
-                        <label><i class="bi bi-card-text"></i> Short Description</label>
-                        <p class="hint-text">Shown on the homepage card and listing page under the title.</p>
-                        <textarea name="description" rows="3"
-                            class="{{ $errors->has('description') ? 'input-error' : '' }}"
-                            placeholder="e.g. API threading and machining solutions for critical oilfield connections.">{{ old('description', $service->description) }}</textarea>
-                        @error('description')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
+    <div class="header">
+        <div>
+            <h1>{{ $service->exists ? 'Edit Service' : 'Add Service' }}</h1>
+            <p>Everything shown for this service card on the homepage and its detail page.</p>
+        </div>
+        <a href="{{ route('admin.home.services') }}" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Back to list
+        </a>
+    </div>
+
+    <form action="{{ $service->exists ? route('admin.home.services.update', $service->id) : route('admin.home.services.store') }}"
+          method="POST" enctype="multipart/form-data" id="serviceForm">
+        @csrf
+        @if ($service->exists)
+            @method('PUT')
+        @endif
+
+        {{-- Title + Show on Home --}}
+        <div class="card">
+            <div class="two-col">
+                <div class="field" style="margin-bottom:0;">
+                    <div class="field-top">
+                        <label class="field-label">Title <span class="req">*</span></label>
                     </div>
+                    <input type="text" name="title" value="{{ old('title', $service->title) }}"
+                           class="{{ $errors->has('title') ? 'input-error' : '' }}"
+                           placeholder="e.g. API Threading Services">
+                    @error('title')
+                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="toggle-field">
+                    <div class="field-top">
+                        <label class="field-label">Show on Home Page</label>
+                    </div>
+                    <label class="switch-toggle">
+                        <input type="checkbox" name="show_on_home" value="1"
+                               {{ old('show_on_home', $service->show_on_home) ? 'checked' : '' }}>
+                        <span class="switch-slider"></span>
+                    </label>
+                    <span class="field-hint" style="display:block; margin-top:6px;">Enable to display this service on the homepage.</span>
+                    @error('show_on_home')
+                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                    @enderror
                 </div>
             </div>
+        </div>
 
+        {{-- Short Description --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-card-text"></i></span> Short Description<span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Shown on the homepage card and listing page under the title.</p>
+            <div class="field" style="margin-bottom:0;">
+                <textarea name="description" rows="3"
+                          class="{{ $errors->has('description') ? 'input-error' : '' }}"
+                          placeholder="e.g. API threading and machining solutions for critical oilfield connections.">{{ old('description', $service->description) }}</textarea>
+                @error('description')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
 
-         <div class="col-md-12">
-    <div class="form-card">
-        <label class="section-label"><i class="bi bi-image"></i> Banner Image</label>
-        <!-- <p class="hint-text">Used on listing cards and the service detail page hero. Max <strong>2MB</strong>.</p> -->
+        {{-- Banner Image --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-image"></i></span> Banner Image<span class="req">*</span></h2>
+            </div>
+            <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
+            </div>
 
-          <div class="upload-guidelines">
-                        <span class="guideline-item">
-                            <i class="bi bi-file-earmark-image"></i>
-                            Accepted: <strong>JPG, PNG, WEBP</strong>
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-hdd"></i>
-                            Max size: <strong>10MB</strong> per image
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-aspect-ratio"></i>
-                            Recommended: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
-                        </span>
-                    </div>
-
-
-        <div class="image-upload-box">
-            <div class="preview-wrap">
-                @if ($service->banner_image)
-                    <img src="{{ Storage::url($service->banner_image) }}" class="preview-img" id="preview-banner-image">
-                @else
-                    <div class="preview-placeholder" id="preview-banner-image">
-                        <i class="bi bi-image"></i>
-                    </div>
+            <div class="image-slot" style="max-width:340px;">
+                <div class="drop img-slot {{ $service->banner_image ? 'filled' : '' }}" data-file-input="file-banner-image" onclick="handleDropClick(this)">
+                    @if ($service->banner_image)
+                        <img src="{{ Storage::url($service->banner_image) }}" id="preview-banner-image" alt="Banner image">
+                        <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'banner_image', 'preview-banner-image')" title="Remove image">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                    @else
+                        <div class="preview-placeholder" id="preview-banner-image">
+                            <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                            <div class="drop-title">Click to upload</div>
+                            <div class="drop-sub">or drag &amp; drop</div>
+                        </div>
+                    @endif
+                </div>
+                <input type="file" id="file-banner-image" name="banner_image" accept="image/*" hidden
+                       onchange="previewImage(this,'preview-banner-image')">
+                <input type="hidden" name="remove_banner_image" id="remove-banner_image" value="0">
+                @if (!$service->banner_image)
+                    <button type="button" class="choose-btn" onclick="document.getElementById('file-banner-image').click()">Choose file</button>
                 @endif
             </div>
-            <label class="upload-btn {{ $errors->has('banner_image') ? 'upload-btn-error' : '' }}">
-                <i class="bi bi-upload"></i> Choose file
-                <input type="file" name="banner_image" accept="image/*"
-                       onchange="previewImage(this, 'preview-banner-image')" hidden>
-            </label>
             @error('banner_image')
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
         </div>
-    </div>
-</div>
 
-
-            {{-- Hero Image --}}
-            <div class="col-md-12">
-                <div class="form-card">
-                    <label class="section-label"><i class="bi bi-image"></i> Hero Image</label>
-                    <p class="hint-text">Used on listing cards and the service detail page hero</p>
-
-                             <div class="upload-guidelines">
-                        <span class="guideline-item">
-                            <i class="bi bi-file-earmark-image"></i>
-                            Accepted: <strong>JPG, PNG, WEBP</strong>
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-hdd"></i>
-                            Max size: <strong>10MB</strong> per image
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-aspect-ratio"></i>
-                            Recommended: <strong>{{ $imageWidth ?? 1100 }} × {{ $imageHeight ?? 340 }}px</strong>
-                        </span>
-                    </div>
-              
-
-                    <div class="image-upload-box">
-                        <div class="preview-wrap">
-                            @if ($service->image)
-                            <img src="{{ Storage::url($service->image) }}" class="preview-img" id="preview-image">
-                            @else
-                            <div class="preview-placeholder" id="preview-image">
-                                <i class="bi bi-image"></i>
-                            </div>
-                            @endif
-                        </div>
-                        <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
-                            <i class="bi bi-upload"></i> Choose file
-                            <input type="file" name="image" accept="image/*"
-                                onchange="previewImage(this, 'preview-image')" hidden>
-                        </label>
-                        @error('image')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
+        {{-- Hero Image --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-image"></i></span> Hero Image <span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Used on listing cards and the service detail page hero.</p>
+            <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 1100 }} &times; {{ $imageHeight ?? 340 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
             </div>
 
-            {{-- Process Description --}}
-          <div class="col-md-12">
-    <div class="form-card">
-        <div class="form-group">
-            <label class="section-label"><i class="bi bi-file-text"></i> Process Description</label>
-            <p class="hint-text">Detail page — "Process Description" column under Service Overview.</p>
-            <textarea name="process_description" rows="5"
-                class="{{ $errors->has('process_description') ? 'input-error' : '' }}"
-                placeholder="Describe the step-by-step process...">{{ old('process_description', $service->process_description) }}</textarea>
-            @error('process_description')
+            <div class="image-slot" style="max-width:340px;">
+                <div class="drop img-slot {{ $service->image ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
+                    @if ($service->image)
+                        <img src="{{ Storage::url($service->image) }}" id="preview-image" alt="Hero image">
+                        <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                    @else
+                        <div class="preview-placeholder" id="preview-image">
+                            <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                            <div class="drop-title">Click to upload</div>
+                            <div class="drop-sub">or drag &amp; drop</div>
+                        </div>
+                    @endif
+                </div>
+                <input type="file" id="file-image" name="image" accept="image/*" hidden
+                       onchange="previewImage(this,'preview-image')">
+                <input type="hidden" name="remove_image" id="remove-image" value="0">
+                @if (!$service->image)
+                    <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+                @endif
+            </div>
+            @error('image')
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
         </div>
-    </div>
-</div>
 
+        {{-- Process Description --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-file-text"></i></span> Process Description<span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Detail page — "Process Description" column under Service Overview.</p>
+            <div class="field" style="margin-bottom:0;">
+                <textarea name="process_description" rows="5"
+                          class="{{ $errors->has('process_description') ? 'input-error' : '' }}"
+                          placeholder="Describe the step-by-step process...">{{ old('process_description', $service->process_description) }}</textarea>
+                @error('process_description')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
 
-
-           {{-- Specifications Table (dynamic rows) --}}
-{{-- Inspection Process (dynamic rows: heading + description + image) --}}
-<div class="col-md-12">
-    <div class="form-card">
-        <div class="form-group">
-            <label class="section-label"><i class="bi bi-clipboard-check"></i> Inspection Process</label>
-            <p class="hint-text">Detail page — step-by-step inspection process with heading, description, and image per step.</p>
+        {{-- Inspection Process --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-clipboard-check"></i></span> Inspection Process<span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Detail page — step-by-step inspection process with heading, description, and image per step.</p>
 
             <div id="inspectionRows"></div>
-            <button type="button" id="addInspectionBtn" class="btn-add-row">
+            <button type="button" id="addInspectionBtn" class="choose-btn inline">
                 <i class="bi bi-plus-circle"></i> Add Row
             </button>
 
@@ -227,24 +207,19 @@
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
             @if ($errors->has('inspection_process.*.heading') || $errors->has('inspection_process.*.description') || $errors->has('inspection_process.*.image'))
-                <span class="field-error">
-                    <i class="bi bi-exclamation-circle"></i> Please fill in all required fields for each inspection step.
-                </span>
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> Please fill in all required fields for each inspection step.</span>
             @endif
         </div>
-    </div>
-</div>
 
-            {{-- Technical Scope (dynamic list) --}}
-          {{-- Technical Scope (dynamic list) --}}
-<div class="col-md-12">
-    <div class="form-card">
-        <div class="form-group">
-            <label class="section-label"><i class="bi bi-list-check"></i> Technical Scope &amp; Capabilities</label>
-            <p class="hint-text">Detail page — bullet list next to Process Description.</p>
+        {{-- Technical Scope --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-list-check"></i></span> Technical Scope &amp; Capabilities<span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Detail page — bullet list next to Process Description.</p>
 
             <div id="scopeRows"></div>
-            <button type="button" id="addScopeBtn" class="btn-add-row">
+            <button type="button" id="addScopeBtn" class="choose-btn inline">
                 <i class="bi bi-plus-circle"></i> Add Point
             </button>
 
@@ -255,17 +230,13 @@
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
         </div>
-    </div>
-</div>
 
-
-            {{-- Specifications Table (dynamic rows) --}}
-           {{-- Specifications Table (dynamic rows) --}}
-<div class="col-md-12">
-    <div class="form-card">
-        <div class="form-group">
-            <label class="section-label"><i class="bi bi-table"></i> Technical Specifications &amp; Features</label>
-            <p class="hint-text">Detail page — Specification / Details / Compliance table.</p>
+        {{-- Specifications --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-table"></i></span> Technical Specifications &amp; Features<span class="req">*</span></h2>
+            </div>
+            <p class="section-sub" style="margin:0 0 16px;">Detail page — Specification / Details / Compliance table.</p>
 
             <div class="specs-table-header">
                 <span>Specification</span>
@@ -274,7 +245,7 @@
                 <span></span>
             </div>
             <div id="specRows"></div>
-            <button type="button" id="addSpecBtn" class="btn-add-row">
+            <button type="button" id="addSpecBtn" class="choose-btn inline">
                 <i class="bi bi-plus-circle"></i> Add Row
             </button>
 
@@ -282,124 +253,112 @@
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
             @if ($errors->has('specifications.*.specification') || $errors->has('specifications.*.details') || $errors->has('specifications.*.compliance'))
-                <span class="field-error">
-                    <i class="bi bi-exclamation-circle"></i> Please fill in all Specification, Details, and Compliance fields for each row.
-                </span>
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> Please fill in all Specification, Details, and Compliance fields for each row.</span>
             @endif
         </div>
-    </div>
-</div>
 
-
-
-            {{-- Meta Title --}}
-<div class="col-md-8">
-    <div class="form-card">
-        <div class="form-group">
-            <label><i class="bi bi-tag"></i> Meta Title</label>
-            <input type="text" name="meta_title" value="{{ old('meta_title', $service->meta_title) }}"
-                   class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
-                   placeholder="SEO title for search engines">
-            @error('meta_title')
-                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-</div>
-
-{{-- Meta Description --}}
-<div class="col-md-12">
-    <div class="form-card">
-        <div class="form-group">
-            <label><i class="bi bi-card-text"></i> Meta Description</label>
-            <textarea name="meta_description" rows="3"
-                      class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
-                      placeholder="SEO description shown in search results">{{ old('meta_description', $service->meta_description) }}</textarea>
-            @error('meta_description')
-                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-</div>
-
-
-
-            {{-- Gallery --}}
-            <div class="col-md-12">
-                <div class="form-card">
-
-                    <label class="section-label"><i class="bi bi-images"></i> Gallery (up to 6 images)</label>
-                    <!-- <p class="hint-text">Detail page — Service Images gallery. Maximum 6 images total.</p> -->
-
-                         <div class="upload-guidelines">
-                        <span class="guideline-item">
-                            <i class="bi bi-file-earmark-image"></i>
-                            Accepted: <strong>JPG, PNG, WEBP</strong>
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-hdd"></i>
-                            Max size: <strong>10MB</strong> per image
-                        </span>
-                        <span class="guideline-divider"></span>
-                        <span class="guideline-item">
-                            <i class="bi bi-aspect-ratio"></i>
-                            Recommended: <strong>{{ $imageWidth ?? 220 }} × {{ $imageHeight ?? 140 }}px</strong>
-                        </span>
-                    </div>
-
-                    {{-- Existing images already saved --}}
-                    <div class="gallery-existing" id="existingGallery">
-                        @foreach ($service->gallery ?? [] as $img)
-                        <div class="gallery-thumb" data-existing="1">
-                            <img src="{{ Storage::url($img) }}">
-                            <label class="gallery-remove">
-                                <input type="checkbox" name="remove_gallery[]" value="{{ $img }}" onchange="updateGalleryCount()">
-                                <i class="bi bi-trash3"></i> Remove
-                            </label>
-                        </div>
-                        @endforeach
-                    </div>
-
-                    {{-- New images selected but not yet uploaded (live preview) --}}
-                    <div class="gallery-new" id="newGalleryPreview"></div>
-
-                    <label class="upload-btn" id="galleryUploadBtn">
-                        <i class="bi bi-upload"></i> Add gallery images
-                        <input type="file" name="gallery[]" id="galleryInput" accept="image/*" multiple hidden>
-                    </label>
-                    <span class="file-name" id="galleryFileCount"></span>
-                    <p class="hint-text" id="galleryLimitMsg" style="color:#e74c3c; display:none;">
-                        You can upload a maximum of 6 images in total.
-                    </p>
-
-                    @error('gallery')
-                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                    @enderror
-                    @error('gallery.*')
-                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                    @enderror
-                </div>
+        {{-- SEO Meta --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-search"></i></span> SEO Meta</h2>
             </div>
 
-            <div class="col-md-12">
-                <div class="form-actions">
+            <div class="field">
+                <div class="field-top">
+                    <label class="field-label">Meta Title</label>
+                </div>
+                <input type="text" name="meta_title" value="{{ old('meta_title', $service->meta_title) }}"
+                       class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
+                       placeholder="SEO title for search engines">
+                @error('meta_title')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+                <div class="field-top">
+                    <label class="field-label">Meta Description</label>
+                </div>
+                <textarea name="meta_description" rows="3"
+                          class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
+                          placeholder="SEO description shown in search results">{{ old('meta_description', $service->meta_description) }}</textarea>
+                @error('meta_description')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        {{-- Gallery --}}
+        <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-images"></i></span> Gallery <span class="req">*</span> <span class="section-sub" style="margin:0;">(up to 6 images)</span></h2>
+            </div>
+            <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 220 }} &times; {{ $imageHeight ?? 140 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
+            </div>
+
+            @if (!empty($service->gallery))
+            <div class="slot-top" style="margin-bottom:8px;">
+                <span class="slot-label">Currently saved</span>
+            </div>
+            <div class="images-row" id="existingGallery" style="margin-bottom:20px;">
+                @foreach ($service->gallery as $img)
+                    <div class="image-slot" style="flex:0 0 120px; min-width:120px;">
+                        <div class="drop filled existing-gallery-item">
+                            <img src="{{ Storage::url($img) }}" alt="Gallery image">
+                            <label class="remove-img-btn" title="Remove this image">
+                                <input type="checkbox" name="remove_gallery[]" value="{{ $img }}" onchange="updateGalleryCount(); toggleGalleryRemoveMark(this)">
+                                <i class="bi bi-x-lg"></i>
+                            </label>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            @endif
+
+            <div class="slot-top" style="margin-bottom:8px;">
+                <span class="slot-label">Add new images</span>
+            </div>
+            <div class="gallery-new" id="newGalleryPreview"></div>
+
+            <label class="choose-btn inline" id="galleryUploadBtn">
+                <i class="bi bi-upload"></i> Add gallery images
+                <input type="file" name="gallery[]" id="galleryInput" accept="image/*" multiple hidden>
+            </label>
+            <span class="field-hint" id="galleryFileCount" style="display:inline-block; margin-left:10px;"></span>
+            <p class="field-error" id="galleryLimitMsg" style="display:none; margin-top:10px;">
+                <i class="bi bi-exclamation-circle"></i> You can upload a maximum of 6 images in total.
+            </p>
+
+            @error('gallery')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+            @error('gallery.*')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="savebar">
+            <div class="savebar-inner">
+                <span class="savebar-status">All changes save to the live Service Cards page</span>
+                <div class="btn-group">
                     <a href="{{ route('admin.home.services') }}" class="btn-cancel">Cancel</a>
-                    <button type="submit" class="btn-submit">
+                    <button type="submit" class="btn-save">
                         <i class="bi bi-check-lg"></i>
                         {{ $service->exists ? 'Update' : 'Save' }}
                     </button>
                 </div>
             </div>
-
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
+{{-- ===== Templates for dynamic rows ===== --}}
 <template id="scopeRowTemplate">
     <div class="scope-row">
         <input type="text" name="technical_scope[]" placeholder="e.g. Thread types: Buttress, LTC, STC">
-        <button type="button" class="btn-remove-row"><i class="bi bi-trash3"></i></button>
+        <button type="button" class="action-btn delete btn-remove-row" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
 
@@ -408,41 +367,33 @@
         <input type="text" name="specifications[__INDEX__][specification]" placeholder="e.g. Thread Form">
         <input type="text" name="specifications[__INDEX__][details]" placeholder="e.g. Buttress thread form">
         <input type="text" name="specifications[__INDEX__][compliance]" placeholder="e.g. API 5B">
-        <button type="button" class="btn-remove-row"><i class="bi bi-trash3"></i></button>
+        <button type="button" class="action-btn delete btn-remove-row" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
-
 
 <template id="inspectionRowTemplate">
     <div class="inspection-row">
         <div class="inspection-row-fields">
-            <div class="form-group">
-                <label>Heading</label>
+            <div class="field">
+                <div class="field-top"><label class="field-label">Heading</label></div>
                 <input type="text" name="inspection_process[__INDEX__][heading]" placeholder="e.g. Visual Inspection">
             </div>
-            <div class="form-group">
-                <label>Description</label>
+            <div class="field">
+                <div class="field-top"><label class="field-label">Description</label></div>
                 <textarea name="inspection_process[__INDEX__][description]" rows="3" placeholder="Describe this inspection step..."></textarea>
             </div>
-            <div class="form-group">
-                <label>Image</label>
-                <div class="image-upload-box">
-                    <div class="preview-wrap">
-                        <div class="preview-placeholder inspection-preview">
-                            <i class="bi bi-image"></i>
-                        </div>
+            <div class="field" style="margin-bottom:0;">
+                <div class="field-top"><label class="field-label">Image</label></div>
+                <div class="drop inspection-drop" onclick="this.nextElementSibling.click()">
+                    <div class="preview-placeholder inspection-preview">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:16px;"></i></div>
                     </div>
-                    <label class="upload-btn">
-                        <i class="bi bi-upload"></i> Choose image
-                        <input type="file" name="inspection_process[__INDEX__][image]" accept="image/*" hidden
-                               onchange="previewInspectionImage(this)">
-                    </label>
-                    {{-- keeps the previously saved image path if admin doesn't re-upload on edit --}}
-                    <input type="hidden" name="inspection_process[__INDEX__][existing_image]" class="existing-image-input" value="">
                 </div>
+                <input type="file" name="inspection_process[__INDEX__][image]" accept="image/*" hidden onchange="previewInspectionImage(this)">
+                <input type="hidden" name="inspection_process[__INDEX__][existing_image]" class="existing-image-input" value="">
             </div>
         </div>
-        <button type="button" class="btn-remove-row inspection-remove"><i class="bi bi-trash3"></i></button>
+        <button type="button" class="action-btn delete inspection-remove" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
 
@@ -450,12 +401,92 @@
     $inspectionForJs = collect(old('inspection_process', $service->inspection_process ?? []))
         ->map(function ($row) {
             if (!empty($row['image'])) {
-                $row['image_url'] = Storage::url($row['image']); // e.g. /storage/services/xxx.webp
+                $row['image_url'] = Storage::url($row['image']);
             }
             return $row;
         });
 @endphp
+
 <script>
+    // ===== Drop-zone click + remove (image slots that support server-side removal) =====
+    function handleDropClick(el) {
+        if (el.classList.contains('filled')) return;
+        const inputId = el.getAttribute('data-file-input');
+        const input = document.getElementById(inputId);
+        if (input) input.click();
+    }
+
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        if (!preview) return;
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.id = previewId;
+                preview.replaceWith(img);
+
+                const drop = img.closest('.drop');
+                if (drop) {
+                    drop.classList.add('filled');
+                    const chooseBtn = drop.parentElement.querySelector('.choose-btn');
+                    if (chooseBtn) chooseBtn.style.display = 'none';
+
+                    const removeInput = drop.parentElement.querySelector('input[type="hidden"][id^="remove-"]');
+                    if (removeInput) removeInput.value = '0';
+
+                    if (!drop.querySelector('.remove-img-btn')) {
+                        const fieldName = removeInput ? removeInput.id.replace('remove-', '') : null;
+                        if (fieldName) {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'remove-img-btn';
+                            btn.title = 'Remove image';
+                            btn.innerHTML = '<i class="bi bi-x-lg"></i>';
+                            btn.onclick = (ev) => removeUploadedImage(ev, btn, fieldName, previewId);
+                            drop.appendChild(btn);
+                        }
+                    }
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeUploadedImage(event, btn, fieldName, previewId) {
+        event.stopPropagation();
+        const drop = btn.closest('.drop');
+        const wrapper = drop.parentElement;
+        const fileInput = wrapper.querySelector('input[type="file"]');
+        const removeInput = document.getElementById(`remove-${fieldName}`);
+
+        if (removeInput) removeInput.value = '1';
+        if (fileInput) fileInput.value = '';
+
+        drop.classList.remove('filled');
+        drop.innerHTML = `
+            <div class="preview-placeholder" id="${previewId}">
+                <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                <div class="drop-title">Click to upload</div>
+                <div class="drop-sub">or drag &amp; drop</div>
+            </div>
+        `;
+
+        let chooseBtn = wrapper.querySelector('.choose-btn');
+        if (!chooseBtn && fileInput) {
+            chooseBtn = document.createElement('button');
+            chooseBtn.type = 'button';
+            chooseBtn.className = 'choose-btn';
+            chooseBtn.textContent = 'Choose file';
+            chooseBtn.onclick = () => fileInput.click();
+            wrapper.appendChild(chooseBtn);
+        } else if (chooseBtn) {
+            chooseBtn.style.display = 'block';
+        }
+    }
+
     // ===== Technical Scope (simple list) =====
     const existingScope = @json(old('technical_scope', $service->technical_scope ?? []));
     const scopeContainer = document.getElementById('scopeRows');
@@ -509,243 +540,181 @@
         addSpecRow();
     }
 
-
+    // ===== Gallery (multi-file with existing-image removal) =====
     const MAX_GALLERY_IMAGES = 6;
-const galleryInput = document.getElementById('galleryInput');
-const newGalleryPreview = document.getElementById('newGalleryPreview');
-const galleryFileCount = document.getElementById('galleryFileCount');
-const galleryLimitMsg = document.getElementById('galleryLimitMsg');
+    const galleryInput = document.getElementById('galleryInput');
+    const newGalleryPreview = document.getElementById('newGalleryPreview');
+    const galleryFileCount = document.getElementById('galleryFileCount');
+    const galleryLimitMsg = document.getElementById('galleryLimitMsg');
 
-let selectedFiles = []; // holds File objects the user picked (persists across multiple selections)
+    let selectedFiles = [];
 
-function countExistingRemaining() {
-    // existing images minus ones checked for removal
-    const existingThumbs = document.querySelectorAll('#existingGallery .gallery-thumb');
-    let remaining = 0;
-    existingThumbs.forEach(thumb => {
-        const checkbox = thumb.querySelector('input[type="checkbox"]');
-        if (!checkbox.checked) remaining++;
-    });
-    return remaining;
-}
-
-function updateGalleryCount() {
-    const remainingExisting = countExistingRemaining();
-    const totalCount = remainingExisting + selectedFiles.length;
-
-    galleryFileCount.textContent = totalCount > 0
-        ? `${totalCount} / ${MAX_GALLERY_IMAGES} image(s) selected`
-        : '';
-
-    galleryLimitMsg.style.display = totalCount > MAX_GALLERY_IMAGES ? 'block' : 'none';
-
-    // disable the upload button once limit is reached
-    document.getElementById('galleryUploadBtn').style.opacity = totalCount >= MAX_GALLERY_IMAGES ? '0.5' : '1';
-    document.getElementById('galleryUploadBtn').style.pointerEvents = totalCount >= MAX_GALLERY_IMAGES ? 'none' : 'auto';
-}
-
-function renderNewPreviews() {
-    newGalleryPreview.innerHTML = '';
-
-    selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const wrap = document.createElement('div');
-            wrap.className = 'gallery-thumb gallery-thumb-new';
-
-            const img = document.createElement('img');
-            img.src = e.target.result;
-
-            const removeLabel = document.createElement('label');
-            removeLabel.className = 'gallery-remove';
-            removeLabel.innerHTML = `<i class="bi bi-x-circle"></i> Cancel`;
-            removeLabel.style.cursor = 'pointer';
-            removeLabel.addEventListener('click', () => {
-                selectedFiles.splice(index, 1);
-                syncFileInput();
-                renderNewPreviews();
-                updateGalleryCount();
-            });
-
-            wrap.appendChild(img);
-            wrap.appendChild(removeLabel);
-            newGalleryPreview.appendChild(wrap);
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-// Rebuilds the actual <input type="file"> FileList from selectedFiles array
-function syncFileInput() {
-    const dataTransfer = new DataTransfer();
-    selectedFiles.forEach(file => dataTransfer.items.add(file));
-    galleryInput.files = dataTransfer.files;
-}
-
-galleryInput.addEventListener('change', function () {
-    const remainingExisting = countExistingRemaining();
-    const newlyPicked = Array.from(galleryInput.files);
-
-    // combine with already-selected files (in case user opens the picker multiple times)
-    let combined = selectedFiles.concat(newlyPicked);
-
-    const allowedNewCount = MAX_GALLERY_IMAGES - remainingExisting;
-
-    if (combined.length > allowedNewCount) {
-        combined = combined.slice(0, Math.max(allowedNewCount, 0));
-        galleryLimitMsg.style.display = 'block';
-    } else {
-        galleryLimitMsg.style.display = 'none';
+    function toggleGalleryRemoveMark(checkbox) {
+        const drop = checkbox.closest('.drop');
+        drop.classList.toggle('marked-remove', checkbox.checked);
     }
 
-    selectedFiles = combined;
-    syncFileInput();
-    renderNewPreviews();
-    updateGalleryCount();
-});
+    function countExistingRemaining() {
+        const existingThumbs = document.querySelectorAll('#existingGallery .existing-gallery-item');
+        let remaining = 0;
+        existingThumbs.forEach(thumb => {
+            const checkbox = thumb.querySelector('input[type="checkbox"]');
+            if (!checkbox.checked) remaining++;
+        });
+        return remaining;
+    }
 
-// Recalculate whenever an existing-image "remove" checkbox is toggled
-document.addEventListener('DOMContentLoaded', updateGalleryCount);
+    function updateGalleryCount() {
+        const remainingExisting = countExistingRemaining();
+        const totalCount = remainingExisting + selectedFiles.length;
 
+        galleryFileCount.textContent = totalCount > 0
+            ? `${totalCount} / ${MAX_GALLERY_IMAGES} image(s) selected`
+            : '';
 
-    // ===== Image preview =====
-    function previewImage(input, previewId) {
-        const preview = document.getElementById(previewId);
+        galleryLimitMsg.style.display = totalCount > MAX_GALLERY_IMAGES ? 'flex' : 'none';
+
+        document.getElementById('galleryUploadBtn').style.opacity = totalCount >= MAX_GALLERY_IMAGES ? '0.5' : '1';
+        document.getElementById('galleryUploadBtn').style.pointerEvents = totalCount >= MAX_GALLERY_IMAGES ? 'none' : 'auto';
+    }
+
+    function renderNewPreviews() {
+        newGalleryPreview.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const slot = document.createElement('div');
+                slot.className = 'image-slot';
+                slot.style.cssText = 'flex:0 0 120px; min-width:120px;';
+
+                slot.innerHTML = `
+                    <div class="drop filled new-gallery-item">
+                        <img src="${e.target.result}" alt="New gallery image">
+                        <button type="button" class="remove-img-btn" title="Cancel">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                `;
+
+                slot.querySelector('.remove-img-btn').addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    selectedFiles.splice(index, 1);
+                    syncFileInput();
+                    renderNewPreviews();
+                    updateGalleryCount();
+                });
+
+                newGalleryPreview.appendChild(slot);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function syncFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        galleryInput.files = dataTransfer.files;
+    }
+
+    galleryInput.addEventListener('change', function () {
+        const remainingExisting = countExistingRemaining();
+        const newlyPicked = Array.from(galleryInput.files);
+        let combined = selectedFiles.concat(newlyPicked);
+        const allowedNewCount = MAX_GALLERY_IMAGES - remainingExisting;
+
+        if (combined.length > allowedNewCount) {
+            combined = combined.slice(0, Math.max(allowedNewCount, 0));
+            galleryLimitMsg.style.display = 'flex';
+        } else {
+            galleryLimitMsg.style.display = 'none';
+        }
+
+        selectedFiles = combined;
+        syncFileInput();
+        renderNewPreviews();
+        updateGalleryCount();
+    });
+
+    document.addEventListener('DOMContentLoaded', updateGalleryCount);
+
+    // ===== Inspection Process (heading + description + image rows) =====
+    const existingInspection = @json($inspectionForJs);
+    const inspectionContainer = document.getElementById('inspectionRows');
+    const inspectionTemplate = document.getElementById('inspectionRowTemplate');
+    let inspectionIndex = 0;
+
+    function addInspectionRow(data = {}) {
+        const clone = inspectionTemplate.content.cloneNode(true);
+        const row = clone.querySelector('.inspection-row');
+
+        row.querySelectorAll('input, textarea').forEach(field => {
+            field.name = field.name.replace('__INDEX__', inspectionIndex);
+        });
+
+        row.querySelector('input[name$="[heading]"]').value = data.heading ?? '';
+        row.querySelector('textarea[name$="[description]"]').value = data.description ?? '';
+
+        if (data.image) {
+            const drop = row.querySelector('.inspection-drop');
+            drop.innerHTML = `<img src="${data.image_url ?? data.image}" class="inspection-preview" alt="Inspection step">`;
+            drop.classList.add('filled');
+            row.querySelector('.existing-image-input').value = data.image;
+        }
+
+        row.querySelector('.inspection-remove').addEventListener('click', () => row.remove());
+
+        inspectionContainer.appendChild(row);
+        inspectionIndex++;
+    }
+
+    document.getElementById('addInspectionBtn').addEventListener('click', () => addInspectionRow());
+
+    if (existingInspection.length > 0) {
+        existingInspection.forEach(row => addInspectionRow(row));
+    } else {
+        addInspectionRow();
+    }
+
+    function previewInspectionImage(input) {
+        const drop = input.previousElementSibling; // the .inspection-drop div
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                if (preview.tagName === 'IMG') {
-                    preview.src = e.target.result;
-                } else {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'preview-img';
-                    img.id = previewId;
-                    preview.replaceWith(img);
-                }
+            reader.onload = function (e) {
+                drop.innerHTML = `<img src="${e.target.result}" class="inspection-preview" alt="Inspection step">`;
+                drop.classList.add('filled');
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
-
-
-    // ===== Inspection Process (heading + description + image rows) =====
-    const existingInspection = @json($inspectionForJs);
-
-const inspectionContainer = document.getElementById('inspectionRows');
-const inspectionTemplate = document.getElementById('inspectionRowTemplate');
-let inspectionIndex = 0;
-
-function addInspectionRow(data = {}) {
-    const clone = inspectionTemplate.content.cloneNode(true);
-    const row = clone.querySelector('.inspection-row');
-
-    // Replace __INDEX__ placeholders in all field names
-    row.querySelectorAll('input, textarea').forEach(field => {
-        field.name = field.name.replace('__INDEX__', inspectionIndex);
-    });
-
-    row.querySelector('input[name$="[heading]"]').value = data.heading ?? '';
-    row.querySelector('textarea[name$="[description]"]').value = data.description ?? '';
-
-    // If editing and this step already has a saved image, show it + store its path
-    if (data.image) {
-        const previewWrap = row.querySelector('.preview-wrap');
-        const img = document.createElement('img');
-        img.src = data.image_url ?? data.image; // pass full URL if available
-        img.className = 'preview-img inspection-preview';
-        previewWrap.querySelector('.inspection-preview').replaceWith(img);
-
-        row.querySelector('.existing-image-input').value = data.image;
-    }
-
-    row.querySelector('.inspection-remove').addEventListener('click', () => row.remove());
-
-    inspectionContainer.appendChild(row);
-    inspectionIndex++;
-}
-
-document.getElementById('addInspectionBtn').addEventListener('click', () => addInspectionRow());
-
-if (existingInspection.length > 0) {
-    existingInspection.forEach(row => addInspectionRow(row));
-} else {
-    addInspectionRow();
-}
-
-// Live preview for a newly selected inspection step image
-function previewInspectionImage(input) {
-    const box = input.closest('.image-upload-box');
-    const preview = box.querySelector('.preview-wrap > *');
-
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            if (preview.tagName === 'IMG') {
-                preview.src = e.target.result;
-            } else {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'preview-img inspection-preview';
-                preview.replaceWith(img);
-            }
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
 </script>
-
 
 @if ($errors->any())
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Field names in the order they appear on this form.
-    // For repeatable rows (inspection_process, specifications, technical_scope),
-    // we match on prefix since indices are dynamic.
     const fieldOrder = [
-        'title',
-        'show_on_home',
-        'description',
-        'banner_image',
-        'image',
-        'process_description',
-        'inspection_process',      // matches inspection_process.0.heading, etc.
-        'technical_scope',
-        'specifications',
-        'meta_title',
-        'meta_description',
-        'gallery',
-        'remove_gallery',
+        'title', 'show_on_home', 'description', 'banner_image', 'image', 'process_description',
+        'inspection_process', 'technical_scope', 'specifications',
+        'meta_title', 'meta_description', 'gallery', 'remove_gallery',
     ];
 
     const errorFields = @json(array_keys($errors->getMessages()));
-
     if (errorFields.length === 0) return;
 
-    // Find the first field (by our defined order) that has a matching error,
-    // using "starts with" so dynamic array indices (e.g. specifications.2.details) still match.
     let targetPrefix = fieldOrder.find(prefix =>
         errorFields.some(errKey => errKey === prefix || errKey.startsWith(prefix + '.'))
     );
+    if (!targetPrefix) targetPrefix = errorFields[0];
 
-    if (!targetPrefix) {
-        targetPrefix = errorFields[0];
-    }
-
-    // The exact errored key that matched (may include an array index, e.g. "specifications.2.details")
     const exactKey = errorFields.find(errKey => errKey === targetPrefix || errKey.startsWith(targetPrefix + '.')) || targetPrefix;
 
-    // Try the exact field first (works for simple inputs like title, description, image)
     let field = document.querySelector(`[name="${exactKey}"]`);
 
-    // Dynamic rows use bracket notation in the actual DOM, e.g. name="specifications[2][details]"
-    // Convert dot notation (specifications.2.details) to bracket notation if the dot version isn't found.
     if (!field) {
         const bracketName = exactKey.replace(/\.(\d+)\./, '[$1][').replace(/\.([a-z_]+)$/, '[$1]') + (exactKey.match(/\.(\d+)\./) ? ']' : '');
         field = document.querySelector(`[name="${bracketName}"]`) || document.querySelector(`[name^="${targetPrefix}"]`);
     }
 
-    // Final fallback: the container div for repeatable sections (inspectionRows, scopeRows, specRows)
     if (!field) {
         const containerMap = {
             'inspection_process': '#inspectionRows',
@@ -756,12 +725,12 @@ document.addEventListener('DOMContentLoaded', function () {
         field = containerMap[targetPrefix] ? document.querySelector(containerMap[targetPrefix]) : null;
     }
 
-    const scrollTarget = field
-        ? (field.closest('.form-card') || field)
-        : document.querySelector('.field-error');
+    const scrollTarget = field ? (field.closest('.card') || field) : document.querySelector('.field-error');
 
     if (scrollTarget) {
         scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        scrollTarget.classList.add('scroll-error-highlight');
+        setTimeout(() => scrollTarget.classList.remove('scroll-error-highlight'), 2500);
 
         setTimeout(() => {
             if (field && typeof field.focus === 'function' && field.offsetParent !== null) {
@@ -773,581 +742,197 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 @endif
 
-
-
-
 <style>
-    .alert {
-        padding: 12px 16px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    .req{ color: var(--orange, #EF7B2E); }
+
+    .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
+    .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
+    .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
+    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
+
+    .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
+    .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
+    .header p{ font-size:13.5px; color: var(--muted,#667085); margin:7px 0 0; max-width:560px; line-height:1.55; }
+
+    .btn-back{
+        display:inline-flex; align-items:center; gap:6px; padding:9px 16px; font-size:13px; font-weight:600;
+        color: var(--muted,#667085); background:#fff; border:1px solid var(--line,#E9EBF2); border-radius:9px;
+        text-decoration:none; transition:all .15s ease; white-space:nowrap;
+    }
+    .btn-back:hover{ background: var(--orange,#EF7B2E); border-color: var(--orange,#EF7B2E); color:#fff; }
+
+    .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
+    .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
+    .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
+    .section-sub{ font-size:12px; font-weight:400; color: var(--faint,#9AA1B2); }
+
+    .two-col{ display:grid; grid-template-columns:1fr 220px; gap:24px; align-items:start; }
+    @media (max-width:700px){ .two-col{ grid-template-columns:1fr; } }
+
+    .field{ margin-bottom:22px; }
+    .field:last-child{ margin-bottom:0; }
+    .field-top{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; }
+    .field-label{ display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color: var(--ink,#171B2C); }
+    .field-hint{ font-size:11.5px; color: var(--faint,#9AA1B2); }
+
+    .toggle-field{ padding-top:2px; }
+
+    input[type=text], textarea{
+        width:100%; border:1px solid var(--input-border,#DBDFEA); border-radius:10px;
+        padding:11px 14px; font-size:14px; font-family:inherit; color: var(--ink,#171B2C);
+        outline:none; transition:box-shadow .15s, border-color .15s; resize:vertical;
+    }
+    input[type=text]:focus, textarea:focus{
+        border-color: var(--orange,#EF7B2E);
+        box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
+    }
+    .input-error{ border-color:#e74c3c !important; background:#fff8f8; }
+    .field-error{ display:flex; align-items:center; gap:5px; color:#e74c3c; font-size:12.5px; margin-top:6px; }
+
+    .notice{ display:flex; align-items:flex-start; gap:8px; background: var(--canvas,#F6F7FB); border-radius:10px; padding:10px 12px; margin-bottom:16px; }
+    .notice p{ font-size:12px; color: var(--muted,#667085); margin:0; }
+    .notice.caution{ background:#FFF8E8; border:1px solid #F5E3B3; }
+    .notice.caution i{ color:#B7791F; }
+    .notice.caution p{ color:#8A6116; }
+    .notice.caution p b{ color:#6B4A0E; font-weight:700; }
+
+    .slot-top{ display:flex; align-items:center; justify-content:space-between; }
+    .slot-label{ font-size:12px; font-weight:600; color: var(--muted,#667085); }
+    .images-row, .gallery-new{ display:flex; gap:14px; flex-wrap:wrap; }
+
+    .drop{
+        position:relative; aspect-ratio:4/3; border-radius:12px;
+        border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+    }
+    .drop:hover{ border-color: var(--orange,#EF7B2E); background: var(--orange-tint,#FFF8F3); }
+    .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
+    .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .ico-circle{ width:40px; height:40px; border-radius:999px; background:#EEF0F6; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+    .drop-title{ font-size:12px; font-weight:500; color: var(--muted,#667085); }
+    .drop-sub{ font-size:11px; color:#B0B5C4; margin-top:2px; }
+    .uploaded-tag{
+        position:absolute; left:0; right:0; bottom:0; padding:8px 12px;
+        background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+        color:rgba(255,255,255,0.9); font-size:11px; display:flex; align-items:center; gap:4px;
+    }
+    .choose-btn{
+        margin-top:8px; font-size:12px; font-weight:600; color: var(--orange,#EF7B2E);
+        background:#fff; border:1px solid var(--orange-border,#F3D8C2); border-radius:8px;
+        padding:7px 16px; cursor:pointer; transition:background .15s; width:100%;
+    }
+    .choose-btn.inline{ display:inline-flex; align-items:center; gap:6px; width:auto; }
+    .choose-btn:hover{ background: var(--orange-tint,#FFF8F3); }
+
+    .remove-img-btn{
+        position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:999px;
+        background:rgba(0,0,0,0.6); border:none; color:#fff; display:flex; align-items:center;
+        justify-content:center; cursor:pointer; transition:background .15s; z-index:3; font-size:11px;
+    }
+    .remove-img-btn:hover{ background:rgba(0,0,0,0.85); }
+    .remove-img-btn input[type="checkbox"]{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+
+    .existing-gallery-item.marked-remove{ opacity:0.35; }
+    .existing-gallery-item.marked-remove::after{
+        content:"Will be removed"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+        background:rgba(231,76,60,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:6px;
     }
 
-    .alert-error {
-        background: #fdecea;
-        color: #c0392b;
+    /* ===== Toggle switch (orange, matching this design system) ===== */
+    .switch-toggle{ position:relative; display:inline-block; width:46px; height:26px; }
+    .switch-toggle input{ opacity:0; width:0; height:0; }
+    .switch-slider{
+        position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+        background:#DBDFEA; border-radius:26px; transition:.25s;
+    }
+    .switch-slider::before{
+        position:absolute; content:""; height:20px; width:20px; left:3px; bottom:3px;
+        background:#fff; border-radius:50%; transition:.25s; box-shadow:0 1px 2px rgba(0,0,0,0.15);
+    }
+    .switch-toggle input:checked + .switch-slider{ background: var(--orange,#EF7B2E); }
+    .switch-toggle input:checked + .switch-slider::before{ transform:translateX(20px); }
+
+    /* ===== Dynamic rows: scope / specs ===== */
+    .scope-row{ display:flex; gap:10px; margin-bottom:10px; }
+    .scope-row input{ flex:1; }
+
+    .specs-table-header{
+        display:grid; grid-template-columns:1fr 1.5fr 1fr 40px; gap:12px;
+        font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+        color: var(--faint,#9AA1B2); padding:0 4px 10px; border-bottom:1px solid var(--line,#E9EBF2); margin-bottom:12px;
+    }
+    .specs-row{ display:grid; grid-template-columns:1fr 1.5fr 1fr 40px; gap:12px; margin-bottom:10px; align-items:center; }
+    @media (max-width:700px){
+        .specs-table-header{ display:none; }
+        .specs-row{ grid-template-columns:1fr; }
     }
 
-    .form-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 22px;
+    .action-btn{
+        width:36px; height:36px; border-radius:8px; border:none;
+        display:inline-flex; align-items:center; justify-content:center;
+        cursor:pointer; font-size:14px; transition:filter .15s; flex-shrink:0;
+    }
+    .action-btn.delete{ background:#fdecea; color:#e74c3c; }
+    .action-btn.delete:hover{ filter:brightness(0.95); }
+
+    /* ===== Inspection rows ===== */
+    .inspection-row{
+        display:flex; gap:14px; align-items:stretch; background: var(--canvas,#F6F7FB);
+        border:1px solid var(--line,#E9EBF2); border-radius:12px; padding:18px; margin-bottom:14px;
+        position:relative; padding-right:56px;
+    }
+    .inspection-row-fields{ flex:1; display:grid; grid-template-columns:1fr 1fr 160px; gap:16px; align-items:start; }
+    .inspection-row-fields textarea{ min-height:100px; }
+    .inspection-drop{ aspect-ratio:1/1; }
+    .inspection-drop .preview-placeholder{ height:100%; margin:0; }
+    .inspection-drop img.inspection-preview{ width:100%; height:100%; object-fit:cover; display:block; }
+    .inspection-row .action-btn{ position:absolute; top:18px; right:14px; }
+
+    @media (max-width:900px){
+        .inspection-row-fields{ grid-template-columns:1fr; }
+        .inspection-row{ padding-right:18px; }
+        .inspection-row .action-btn{ position:static; margin-top:12px; }
     }
 
-    .form-header h4 {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #1e1e2d;
+    .savebar{
+        position:fixed; left:264px; right:0; bottom:0; z-index:20;
+        border-top:1px solid var(--line,#E9EBF2);
+        background:rgba(255,255,255,0.96); backdrop-filter:blur(6px);
+        padding:0 32px;
+        box-shadow:0 -4px 16px -8px rgba(15,21,38,0.06);
+    }
+    .savebar-inner{ padding:16px 0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .savebar-status{ font-size:12px; color: var(--faint,#9AA1B2); }
+    .btn-group{ display:flex; align-items:center; gap:12px; }
+    .btn-cancel{
+        font-size:13px; font-weight:600; color: var(--muted,#667085); background:none; border:none;
+        padding:10px 16px; border-radius:8px; cursor:pointer; text-decoration:none; transition:color .15s, background .15s;
+    }
+    .btn-cancel:hover{ color: var(--ink,#171B2C); background: var(--canvas,#F6F7FB); }
+    .btn-save{
+        display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#fff;
+        background:linear-gradient(135deg, #0F1526, #1D2439); border:none;
+        padding:11px 22px; border-radius:9px; cursor:pointer;
+        box-shadow:0 4px 12px -4px rgba(15,21,38,0.4);
+        transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .btn-save:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -6px rgba(15,21,38,0.5); }
+
+    .wrap{ padding-bottom:90px; }
+
+    @media (max-width:900px){
+        .savebar{ left:0; }
     }
 
-    /* .btn-back {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #3b3b58;
-        text-decoration: none;
-        font-size: 14px;
+    .scroll-error-highlight{
+        outline:3px solid #e74c3c !important; outline-offset:4px; border-radius:12px;
+        animation:scrollErrorPulse 0.6s ease-in-out 2;
     }
-
-    .btn-back:hover {
-        text-decoration: underline;
-    } */
-
-        /* Back to list button */
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333333;
-    background-color: #f5f5f5;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-back i {
-    font-size: 14px;
-    line-height: 1;
-}
-
-.btn-back:hover {
-    background-color: #e9852c; /* matches orange theme */
-    border-color: #e9852c;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.btn-back:active {
-    background-color: #d67320;
-    border-color: #d67320;
-}
-
-.btn-back:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(233, 133, 44, 0.25);
-}
-
-    .banner-form {
-        width: 100%;
+    @keyframes scrollErrorPulse{
+        0%, 100% { outline-color:#e74c3c; }
+        50% { outline-color:#ff8a80; }
     }
-
-    .form-card {
-        background: #fff;
-        padding: 22px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        margin-bottom: 18px;
-    }
-
-    .section-label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 600;
-        font-size: 14px;
-        color: #333;
-        margin-bottom: 8px;
-    }
-
-    .hint-text {
-        font-size: 12.5px;
-        color: #888;
-        margin-bottom: 12px;
-    }
-
-    .image-upload-box {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .preview-wrap {
-        width: 100%;
-    }
-
-    .preview-img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 6px;
-        border: 1px solid #eee;
-        margin-bottom: 10px;
-    }
-
-    .preview-placeholder {
-        width: 100%;
-        height: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f4f6f9;
-        border-radius: 6px;
-        border: 1px dashed #ddd;
-        color: #bbb;
-        font-size: 28px;
-        margin-bottom: 10px;
-    }
-
-    .upload-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #f4f6f9;
-        color: #3b3b58;
-        padding: 7px 14px;
-        border-radius: 6px;
-        font-size: 13px;
-        cursor: pointer;
-        border: 1px solid #ddd;
-    }
-
-    .upload-btn:hover {
-        background: #e9ecf2;
-    }
-
-    .upload-btn-error {
-        border-color: #e74c3c !important;
-    }
-
-    .field-error {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        color: #e74c3c;
-        font-size: 12.5px;
-        margin-top: 6px;
-    }
-
-    .input-error {
-        border-color: #e74c3c !important;
-        background: #fff8f8;
-    }
-
-    .file-name {
-        font-size: 13px;
-        color: #666;
-        margin-left: 10px;
-    }
-
-    .scope-row {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .scope-row input {
-        flex: 1;
-    }
-
-    .specs-table-header {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr 1fr 40px;
-        gap: 12px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #888;
-        padding: 0 4px 10px;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 12px;
-    }
-
-    .specs-row {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr 1fr 40px;
-        gap: 12px;
-        margin-bottom: 10px;
-        align-items: center;
-    }
-
-    .btn-remove-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        border: 1px solid #f0d0d0;
-        background: #fdecea;
-        color: #c0392b;
-        cursor: pointer;
-    }
-
-    .btn-remove-row:hover {
-        background: #c0392b;
-        color: #fff;
-    }
-
-    .btn-add-row {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #f4f6f9;
-        color: #3b3b58;
-        border: 1px solid #ddd;
-        padding: 9px 16px;
-        border-radius: 6px;
-        font-size: 14px;
-        cursor: pointer;
-        margin-top: 4px;
-    }
-
-    .btn-add-row:hover {
-        background: #e9ecf2;
-    }
-
-    .gallery-existing {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
-    }
-
-    .gallery-thumb {
-        width: 120px;
-    }
-
-    .gallery-thumb img {
-        width: 100%;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 6px;
-        border: 1px solid #eee;
-        margin-bottom: 6px;
-    }
-
-    .gallery-remove {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 12px;
-        color: #c0392b;
-        cursor: pointer;
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 6px;
-    }
-
-    .btn-cancel {
-        padding: 11px 22px;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        color: #555;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .btn-cancel:hover {
-        background: #f4f6f9;
-    }
-
-    .btn-submit {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        background: #3b3b58;
-        color: #fff;
-        border: none;
-        padding: 11px 24px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .btn-submit:hover {
-        background: #2b2b42;
-    }
-
-    .form-group {
-        margin-bottom: 0;
-    }
-
-    .form-group label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 7px;
-        font-weight: 600;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="url"],
-    .form-group input[type="number"],
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 14px;
-        outline: none;
-        font-family: inherit;
-        resize: vertical;
-        background: #fff;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-        border-color: #3b3b58;
-    }
-
-    .gallery-new { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
-.gallery-thumb-new { border: 1px dashed #3b3b58; }
-
-
-.inspection-row {
-    display: flex;
-    gap: 14px;
-    align-items: stretch;
-    background: #fafbfc;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 14px;
-    position: relative;
-}
-
-.inspection-row-fields {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr 220px;
-    gap: 16px;
-    align-items: start;
-}
-
-.inspection-row-fields .form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.inspection-row-fields .form-group label {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 7px;
-    color: #333;
-}
-
-.inspection-row-fields input[type="text"],
-.inspection-row-fields textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.inspection-row-fields textarea {
-    min-height: 110px;
-}
-
-/* ===== Compact image upload box just for inspection rows ===== */
-.inspection-row .image-upload-box {
-    width: 100%;
-    max-width: 220px;
-}
-
-.inspection-row .preview-wrap {
-    width: 100%;
-}
-
-.inspection-row .preview-img,
-.inspection-row .preview-placeholder {
-    width: 100%;
-    height: 110px;           /* matches textarea height instead of 300px */
-    margin-bottom: 8px;
-}
-
-.inspection-row .preview-placeholder {
-    font-size: 22px;
-}
-
-.inspection-row .upload-btn {
-    width: 100%;
-    justify-content: center;
-    font-size: 12.5px;
-    padding: 8px 10px;
-}
-
-/* ===== Remove button aligned to top-right of the row, not floating oddly ===== */
-.inspection-row .btn-remove-row {
-    position: absolute;
-    top: 40px;
-    right: 14px;
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
-
-     /* centering fix */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
-}
-
-.inspection-row .btn-remove-row i {
-    display: block;
-    font-size: 15px;
-    line-height: 1;
-}
-
-/* add right padding to row so trash icon doesn't overlap the image column */
-.inspection-row {
-    padding-right: 56px;
-}
-
-@media (max-width: 900px) {
-    .inspection-row-fields {
-        grid-template-columns: 1fr;
-    }
-    .inspection-row .image-upload-box {
-        max-width: 100%;
-    }
-    .inspection-row {
-        padding-right: 18px;
-    }
-    .inspection-row .btn-remove-row {
-        position: static;
-        margin-top: 12px;
-    }
-}
-
-
-  .upload-guidelines {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 15px;
-        padding: 9px 14px;
-        background: #f4f6f9;
-        border: 1px solid #e8eaee;
-        border-radius: 6px;
-        margin-bottom: 15px;
-    }
-
-    .guideline-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12.5px;
-        color: #666;
-        white-space: nowrap;
-    }
-
-    .guideline-item i {
-        font-size: 13px;
-        color: #8b93a1;
-    }
-
-    .guideline-item strong {
-        color: #3b3b58;
-        font-weight: 600;
-    }
-
-    .guideline-divider {
-        width: 1px;
-        height: 14px;
-        background: #d8dce2;
-        flex-shrink: 0;
-    }
-
-    @media (max-width: 600px) {
-        .upload-guidelines {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .guideline-divider {
-            display: none;
-        }
-    }
-
-
-    .switch-toggle {
-    position: relative;
-    display: inline-block;
-    width: 48px;
-    height: 26px;
-}
-
-.switch-toggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc;
-    border-radius: 26px;
-    transition: 0.3s;
-}
-
-.switch-slider::before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    border-radius: 50%;
-    transition: 0.3s;
-}
-
-.switch-toggle input:checked + .switch-slider {
-    background-color: #28a745;
-}
-
-.switch-toggle input:checked + .switch-slider::before {
-    transform: translateX(22px);
-}
-
 </style>
 
 @endsection

@@ -19,7 +19,7 @@ class BehindTheSceneRequest extends FormRequest
         return [
             'service_id'  => 'required|exists:services,id',
             'title'       => 'required|string|max:255',
-            'description' => 'nullable|string|max:2000',
+            'description' => 'required|string|max:2000',
 
             'media_type'  => 'required|in:video,video_url,image',
 

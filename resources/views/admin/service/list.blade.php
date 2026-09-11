@@ -36,35 +36,14 @@
         </a>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-chip">
-            <div class="ico orange"><i class="bi bi-window"></i></div>
-            <div>
-                <div class="num">{{ $services->total() }}</div>
-                <div class="label">Total services</div>
-            </div>
-        </div>
-        <div class="stat-chip">
-            <div class="ico green"><i class="bi bi-check-lg"></i></div>
-            <div>
-                <div class="num">{{ $services->where('show_on_home', true)->count() }}</div>
-                <div class="label">Live on homepage</div>
-            </div>
-        </div>
-        <div class="stat-chip">
-            <div class="ico slate"><i class="bi bi-clock-history"></i></div>
-            <div>
-                <div class="num">{{ optional($services->first())->updated_at?->diffForHumans() ?? '—' }}</div>
-                <div class="label">Since last update</div>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="card">
         <div class="toolbar">
-            <form method="GET" action="{{ route('admin.home.services') }}" class="search-box">
+            <form method="GET" action="{{ route('admin.home.services') }}" class="search-box" id="searchForm">
                 <i class="bi bi-search"></i>
-                <input type="text" name="search" value="{{ $search }}" placeholder="Search by title...">
+                <input type="text" name="search" id="searchInput" value="{{ $search }}" placeholder="Search by title..." autocomplete="off">
+                <input type="hidden" name="per_page" value="{{ $perPage }}">
                 @if ($search)
                     <a href="{{ route('admin.home.services') }}" class="clear-search" title="Clear search">
                         <i class="bi bi-x-circle"></i>
@@ -184,6 +163,34 @@
             }
         });
     });
+
+    // ===== Auto-search: submit the search form automatically as the user types =====
+    // Debounced so it doesn't fire a request on every single keystroke — waits until
+    // typing pauses briefly, which keeps it feeling instant without hammering the server.
+    (function () {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        if (!searchInput || !searchForm) return;
+
+        let debounceTimer;
+        const DEBOUNCE_MS = 450;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                searchForm.requestSubmit ? searchForm.requestSubmit() : searchForm.submit();
+            }, DEBOUNCE_MS);
+        });
+
+        // Pressing Enter should search immediately, not wait for the debounce delay.
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                clearTimeout(debounceTimer);
+                searchForm.requestSubmit ? searchForm.requestSubmit() : searchForm.submit();
+            }
+        });
+    })();
 </script>
 
 <style>
