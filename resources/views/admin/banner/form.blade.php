@@ -80,23 +80,29 @@
         — Recommended size: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
     </p> -->
 
-    <div class="upload-guidelines">
-    <span class="guideline-item">
-        <i class="bi bi-file-earmark-image"></i>
-        Accepted: <strong>JPG, PNG, WEBP</strong>
-    </span>
-    <span class="guideline-divider"></span>
-    <span class="guideline-item">
-        <i class="bi bi-hdd"></i>
-        Max size: <strong>10MB</strong> per image
-    </span>
-    <span class="guideline-divider"></span>
-    <span class="guideline-item">
-        <i class="bi bi-aspect-ratio"></i>
-        Recommended: <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
-    </span>
+   <div class="upload-guidelines">
+    <div class="guideline-item">
+        <span class="guideline-icon"><i class="bi bi-file-earmark-image"></i></span>
+        <div class="guideline-text">
+            <span class="guideline-label">Accepted formats</span>
+            <strong>JPG, PNG, WEBP</strong>
+        </div>
+    </div>
+    <div class="guideline-item">
+        <span class="guideline-icon"><i class="bi bi-hdd"></i></span>
+        <div class="guideline-text">
+            <span class="guideline-label">Max file size</span>
+            <strong>10MB per image</strong>
+        </div>
+    </div>
+    <div class="guideline-item">
+        <span class="guideline-icon"><i class="bi bi-aspect-ratio"></i></span>
+        <div class="guideline-text">
+            <span class="guideline-label">Recommended size</span>
+            <strong>{{ $imageWidth ?? 1200 }} × {{ $imageHeight ?? 600 }}px</strong>
+        </div>
+    </div>
 </div>
-
 
                     @error('image_1')
                         @if (str_contains($message, 'at least 1 image'))
@@ -410,6 +416,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
+            margin-top: 10px;
         }
         .image-upload-box {
             display: flex;
@@ -581,54 +588,79 @@
 
 .upload-guidelines {
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-    padding: 9px 14px;
-    background: #f4f6f9;
-    border: 1px solid #e8eaee;
+    align-items: stretch;
+    background: #fdfaf5;
+    border: 1px solid #e8e0d0;
     border-radius: 6px;
-     margin-bottom: 15px;
+    overflow: hidden;
 }
 
 .guideline-item {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
-    color: #666;
-    white-space: nowrap;
+    gap: 12px;
+    padding: 14px 18px;
+    position: relative;
 }
 
-.guideline-item i {
-    font-size: 13px;
-    color: #8b93a1;
-}
-
-.guideline-item strong {
-    color: #3b3b58;
-    font-weight: 600;
-}
-
-.guideline-divider {
+.guideline-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 14px;
+    bottom: 14px;
     width: 1px;
-    height: 14px;
-    background: #d8dce2;
-    flex-shrink: 0;
+    background: #e8e0d0;
 }
 
-@media (max-width: 600px) {
+.guideline-icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fdf0d9;
+    color: #b8630f;
+    font-size: 15px;
+}
+
+.guideline-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.guideline-label {
+    font-size: 11px;
+    color: #8a8477;
+    line-height: 1.2;
+}
+
+.guideline-text strong {
+    font-size: 13px;
+    color: #2b2822;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
     .upload-guidelines {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
     }
-    .guideline-divider {
+    .guideline-item:not(:last-child)::after {
         display: none;
     }
+    .guideline-item:not(:last-child) {
+        border-bottom: 1px solid #e8e0d0;
+    }
 }
-
     </style>
 
 @endsection

@@ -18,7 +18,8 @@ class Service extends Model
         'specifications',
         'image',
         'gallery',
-        'inspection_process'
+        'inspection_process',
+        'show_on_home'
     ];
 
     protected $casts = [
@@ -26,5 +27,6 @@ class Service extends Model
         'specifications'  => 'array',
         'gallery'         => 'array',
         'inspection_process' => 'array',
+        'show_on_home' => 'boolean',
     ];
 }

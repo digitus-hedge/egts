@@ -158,6 +158,8 @@ class ServiceController extends Controller
         $service->meta_title = $data['meta_title'] ?? null;
         $service->meta_description = $data['meta_description'] ?? null;
 
+           $service->show_on_home = $request->boolean('show_on_home');
+
         $service->technical_scope = collect($data['technical_scope'] ?? [])
             ->filter(fn($v) => trim((string) $v) !== '')
             ->values()

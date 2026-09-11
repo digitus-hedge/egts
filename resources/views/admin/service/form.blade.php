@@ -61,6 +61,28 @@
                 </div>
             </div>
 
+
+
+            {{-- Show on Home Page toggle --}}
+<div class="col-md-4">
+    <div class="form-card">
+        <div class="form-group">
+            <label><i class="bi bi-toggle-on"></i> Show on Home Page</label>
+            <p class="hint-text">Enable to display this service on the homepage.</p>
+
+            <label class="switch-toggle">
+                <input type="checkbox" name="show_on_home" value="1"
+                    {{ old('show_on_home', $service->show_on_home) ? 'checked' : '' }}>
+                <span class="switch-slider"></span>
+            </label>
+
+            @error('show_on_home')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
+
             {{-- Short Description --}}
             <div class="col-md-12">
                 <div class="form-card">
@@ -1201,6 +1223,49 @@ function previewInspectionImage(input) {
             display: none;
         }
     }
+
+
+    .switch-toggle {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+}
+
+.switch-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    border-radius: 26px;
+    transition: 0.3s;
+}
+
+.switch-slider::before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.switch-toggle input:checked + .switch-slider {
+    background-color: #28a745;
+}
+
+.switch-toggle input:checked + .switch-slider::before {
+    transform: translateX(22px);
+}
 
 </style>
 

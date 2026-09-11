@@ -14,8 +14,7 @@ use Intervention\Image\Format;
 
 class ClientSectionController extends Controller
 {
-    protected int $imageWidth = 300;
-    protected int $imageHeight = 200;
+   
     protected int $compressQuality = 70;
 
     /**
@@ -79,26 +78,20 @@ class ClientSectionController extends Controller
 }
 
 
-
-   private function processAndStoreImage($file): string
+  private function processAndStoreImage($file): string
     {
         $filename = 'clients/' . Str::random(20) . '.webp';
-
-        // Initialize ImageManager with GD Driver
+ 
         $manager = new ImageManager(new Driver());
-
-        // Read image path
+ 
         $image = $manager->read($file->getPathname());
-
-        // Resize/Crop
-        $image->cover($this->imageWidth, $this->imageHeight);
-
-        // Encode to WebP
-        $encoded = $image->toWebp($this->compressQuality ?? 80);
-
-        // Save to storage disk
+ 
+        // No cropping  keeps the image's original aspect ratio and dimensions.
+        $encoded = $image->toWebp(quality: $this->compressQuality);
+ 
         Storage::disk('public')->put($filename, (string) $encoded);
-
+ 
         return $filename;
     }
+  
 }
