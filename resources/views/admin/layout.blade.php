@@ -221,179 +221,136 @@
 
     <!-- <div class="nav-label">Homepage</div> -->
 
-    {{-- Home submenu --}}
-    @php
-        $homeOpen = request()->routeIs('admin.home.banner') ||
-            request()->routeIs('admin.home.banner.*') ||
-            request()->routeIs('admin.home.about') ||
-            request()->routeIs('admin.home.about.*') ||
-            request()->routeIs('admin.home.stats') ||
-            request()->routeIs('admin.home.stats.*') ||
-            request()->routeIs('admin.home.services.section') ||
-            request()->routeIs('admin.home.services.section.*') ||
-            request()->routeIs('admin.home.clients') ||
-            request()->routeIs('admin.home.clients.*') ||
-            request()->routeIs('admin.home.why-choose-us') ||
-            request()->routeIs('admin.home.why-choose-us.*');
-    @endphp
-    <div class="nav-group {{ $homeOpen ? 'expanded' : '' }}">
-      <a class="nav-item" onclick="toggleSub(this)">
-        <i class="bi bi-house-door nav-ico"></i>
-        Home
-        <i class="bi bi-chevron-right chev"></i>
-      </a>
-      <ul class="submenu">
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.banner*') ? 'active' : '' }}" href="{{ route('admin.home.banner') }}">
-            <i class="bi bi-image nav-ico"></i> Banner Section
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.about*') ? 'active' : '' }}" href="{{ route('admin.home.about') }}">
-            <i class="bi bi-person nav-ico"></i> About Section
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.stats*') ? 'active' : '' }}" href="{{ route('admin.home.stats') }}">
-            <i class="bi bi-bar-chart nav-ico"></i> Stats Section
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.services.section*') ? 'active' : '' }}" href="{{ route('admin.home.services.section') }}">
-            <i class="bi bi-window nav-ico"></i> Service Section
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.clients*') ? 'active' : '' }}" href="{{ route('admin.home.clients') }}">
-            <i class="bi bi-people nav-ico"></i> Client Section
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.why-choose-us*') ? 'active' : '' }}" href="{{ route('admin.home.why-choose-us') }}">
-            <i class="bi bi-clock-history nav-ico"></i> Why Choose Us
-          </a>
-        </li>
-      </ul>
-    </div>
+            <li class="has-submenu {{
+                    request()->routeIs('admin.home.banner') ||
+                    request()->routeIs('admin.home.banner.*') ||
+                    request()->routeIs('admin.home.about') ||
+                    request()->routeIs('admin.home.about.*') ||
+                    request()->routeIs('admin.home.stats') ||
+                    request()->routeIs('admin.home.stats.*') ||
+                    request()->routeIs('admin.home.services.section') ||
+                    request()->routeIs('admin.home.services.section.*') ||
+                    request()->routeIs('admin.home.clients') ||
+                    request()->routeIs('admin.home.clients.*') ||
+                    request()->routeIs('admin.home.why-choose-us') ||
+                    request()->routeIs('admin.home.why-choose-us.*')
+                    ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Home
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('admin.home.banner') }}"
+                            class="{{ request()->routeIs('admin.home.banner*') ? 'active' : '' }}">Banner Section</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.about') }}"
+                            class="{{ request()->routeIs('admin.home.about*') ? 'active' : '' }}">About Section</a></li>
+                    <li><a href="{{ route('admin.home.stats') }}"
+                            class="{{ request()->routeIs('admin.home.stats*') ? 'active' : '' }}">Stats Section</a></li>
+                    <li><a href="{{ route('admin.home.services.section') }}"
+                            class="{{ request()->routeIs('admin.home.services.section*') ? 'active' : '' }}">Service
+                            Section</a></li>
+                    <li><a href="{{ route('admin.home.clients') }}"
+                            class="{{ request()->routeIs('admin.home.clients*') ? 'active' : '' }}">Client Section</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.why-choose-us') }}"
+                            class="{{ request()->routeIs('admin.home.why-choose-us*') ? 'active' : '' }}">Why Choose
+                            Us</a>
+                    </li>
+                </ul>
+            </li>
 
-    {{-- About --}}
-    <div class="nav-group">
-      <a class="nav-item {{ request()->routeIs('admin.about') ? 'active' : '' }}" href="{{ route('admin.about') }}">
-        <i class="bi bi-info-circle nav-ico"></i>
-        About
-      </a>
-    </div>
+            <li><a href="{{ route('admin.about') }}"
+                    class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">About</a></li>
 
-    <!-- <div class="nav-label">Services</div> -->
+            <li
+                class="has-submenu {{ request()->routeIs('admin.service.banner') || request()->routeIs('admin.service.banner.*') ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Services
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('admin.service.banner') }}"
+                            class="{{ request()->routeIs('admin.service.banner') || request()->routeIs('admin.service.banner.*') ? 'active' : '' }}">Banner</a>
+                    </li>
+                </ul>
+            </li>
 
-    {{-- Services submenu --}}
-    @php
-        $servicesOpen = request()->routeIs('admin.home.services') ||
-            (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ||
-            request()->routeIs('admin.service.banner') ||
-            request()->routeIs('admin.service.banner.*');
-    @endphp
-    <div class="nav-group {{ $servicesOpen ? 'expanded' : '' }}">
-      <a class="nav-item" onclick="toggleSub(this)">
-        <i class="bi bi-tools nav-ico"></i>
-        Services
-        <i class="bi bi-chevron-right chev"></i>
-      </a>
-      <ul class="submenu">
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.service.banner') && !request()->routeIs('admin.service.banner.*') && !request()->routeIs('admin.home.services.behind-the-scenes*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}"
-             href="{{ route('admin.home.services') }}">
-            <i class="bi bi-pencil-square nav-ico"></i> Master Service
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.service.banner') || request()->routeIs('admin.service.banner.*') ? 'active' : '' }}"
-             href="{{ route('admin.service.banner') }}">
-            <i class="bi bi-image nav-ico"></i> Banner
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.services.behind-the-scenes*') ? 'active' : '' }}"
-             href="{{ route('admin.home.services.behind-the-scenes') }}">
-            <i class="bi bi-camera-reels nav-ico"></i> Behind The Scenes
-          </a>
-        </li>
-      </ul>
-    </div>
+            <li
+                class="has-submenu {{ request()->routeIs('admin.home.facility.banner') || request()->routeIs('admin.home.facility.banner.*') ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Facility &amp; Capabilities
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('admin.home.facility.banner') }}"
+                            class="{{ request()->routeIs('admin.home.facility.banner') || request()->routeIs('admin.home.facility.banner.*') ? 'active' : '' }}">Banner</a>
+                    </li>
+                </ul>
+            </li>
 
-    <!-- <div class="nav-label">Facility &amp; Capabilities</div> -->
+            <li
+                class="has-submenu {{ request()->routeIs('admin.home.projects-clients.banner') || request()->routeIs('admin.home.projects-clients.banner.*') ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Projects &amp; Clients
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('admin.home.projects-clients.banner') }}"
+                            class="{{ request()->routeIs('admin.home.projects-clients.banner') || request()->routeIs('admin.home.projects-clients.banner.*') ? 'active' : '' }}">Banner</a>
+                    </li>
+                </ul>
+            </li>
 
-    @php
-        $facilityOpen = request()->routeIs('admin.home.facility') || request()->routeIs('admin.home.facility.*');
-    @endphp
-    <div class="nav-group {{ $facilityOpen ? 'expanded' : '' }}">
-      <a class="nav-item" onclick="toggleSub(this)">
-        <i class="bi bi-building nav-ico"></i>
-        Facility &amp; Capabilities
-        <i class="bi bi-chevron-right chev"></i>
-      </a>
-      <ul class="submenu">
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.facility.banner') || request()->routeIs('admin.home.facility.banner.*') ? 'active' : '' }}"
-             href="{{ route('admin.home.facility.banner') }}">
-            <i class="bi bi-image nav-ico"></i> Banner
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.facility.machines') || request()->routeIs('admin.home.facility.machines.*') ? 'active' : '' }}"
-             href="{{ route('admin.home.facility.machines') }}">
-            <i class="bi bi-cpu nav-ico"></i> Machines
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.facility.tools') || request()->routeIs('admin.home.facility.tools.*') ? 'active' : '' }}"
-             href="{{ route('admin.home.facility.tools') }}">
-            <i class="bi bi-wrench-adjustable nav-ico"></i> Tools
-          </a>
-        </li>
-      </ul>
-    </div>
+            <li><a href="{{ route('admin.home.contact-banner') }}"
+                    class="{{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}">Contact Us</a></li>
 
-    <!-- <div class="nav-label">Projects &amp; Clients</div> -->
+            <li
+                class="has-submenu {{
+                    request()->routeIs('admin.home.services') ||
+                    (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.section*')) ||
+                    request()->routeIs('admin.home.services.behind-the-scenes*') ||
+                    request()->routeIs('admin.home.facility.machines') ||
+                    request()->routeIs('admin.home.facility.machines.*') ||
+                    request()->routeIs('admin.home.facility.tools') ||
+                    request()->routeIs('admin.home.facility.tools.*') ||
+                    request()->routeIs('admin.home.masters.projects') ||
+                    request()->routeIs('admin.home.masters.projects.*') ||
+                    request()->routeIs('admin.home.projects') ||
+                    request()->routeIs('admin.home.projects.*') ||
+                    request()->routeIs('admin.home.certificates*')
+                    ? 'open' : '' }}">
+                <a onclick="toggleSubmenu(this)">
+                    Masters
+                    <i class="bi bi-chevron-right chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('admin.home.services') }}"
+                            class="{{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.behind-the-scenes*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}">Service</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.services.behind-the-scenes') }}"
+                            class="{{ request()->routeIs('admin.home.services.behind-the-scenes*') ? 'active' : '' }}">Behind
+                            The Scene</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.facility.machines') }}"
+                            class="{{ request()->routeIs('admin.home.facility.machines') || request()->routeIs('admin.home.facility.machines.*') ? 'active' : '' }}">Machine</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.facility.tools') }}"
+                            class="{{ request()->routeIs('admin.home.facility.tools') || request()->routeIs('admin.home.facility.tools.*') ? 'active' : '' }}">Tool</a>
+                    </li>
+                    {{-- <li><a href="{{ route('admin.home.masters.projects') }}"
+                            class="{{ request()->routeIs('admin.home.masters.projects') || request()->routeIs('admin.home.masters.projects.*') ? 'active' : '' }}">Project</a> --}}
+                    </li>
+                    <li><a href="{{ route('admin.home.projects') }}"
+                            class="{{ request()->routeIs('admin.home.projects') || request()->routeIs('admin.home.projects.*') ? 'active' : '' }}">Client</a>
+                    </li>
+                    <li><a href="{{ route('admin.home.certificates') }}"
+                            class="{{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}">Certificate</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
 
-    @php
-        $projectsOpen = request()->routeIs('admin.home.projects-clients*') ||
-            request()->routeIs('admin.home.projects') ||
-            request()->routeIs('admin.home.projects.*');
-    @endphp
-    <div class="nav-group {{ $projectsOpen ? 'expanded' : '' }}">
-      <a class="nav-item" onclick="toggleSub(this)">
-        <i class="bi bi-diagram-3 nav-ico"></i>
-        Projects &amp; Clients
-        <i class="bi bi-chevron-right chev"></i>
-      </a>
-      <ul class="submenu">
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.projects-clients.banner') || request()->routeIs('admin.home.projects-clients.banner.*') ? 'active' : '' }}"
-             href="{{ route('admin.home.projects-clients.banner') }}">
-            <i class="bi bi-image nav-ico"></i> Banner
-          </a>
-        </li>
-        <li>
-          <a class="nav-item {{ request()->routeIs('admin.home.projects') || request()->routeIs('admin.home.projects.*') ? 'active' : '' }}"
-             href="{{ route('admin.home.projects') }}">
-            <i class="bi bi-list-check nav-ico"></i> Projects &amp; Clients List
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="nav-group">
-      <a class="nav-item {{ request()->routeIs('admin.home.certificates*') ? 'active' : '' }}" href="{{ route('admin.home.certificates') }}">
-        <i class="bi bi-patch-check nav-ico"></i>
-        Certificates
-      </a>
-    </div>
-    <div class="nav-group">
-      <a class="nav-item {{ request()->routeIs('admin.home.contact-banner*') ? 'active' : '' }}" href="{{ route('admin.home.contact-banner') }}">
-        <i class="bi bi-envelope nav-ico"></i>
-        Contact Us
-      </a>
     </div>
 
   </nav>
