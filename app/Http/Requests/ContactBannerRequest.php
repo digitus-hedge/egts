@@ -17,9 +17,7 @@ class ContactBannerRequest extends FormRequest
             'title'         => 'required|string|max:255',
             'company_name'  => 'required|string|max:255',
             'description'   => 'required|string|max:1000',
-            'image'         => $this->isMethod('post')
-                                    ? 'required|image|mimes:jpeg,jpg,png,webp|max:10240'
-                                    : 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+                  'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'address'       => 'nullable|string|max:255',
             'phone'         => 'nullable|string|max:50',
             'email'         => 'nullable|email|max:255',

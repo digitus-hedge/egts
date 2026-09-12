@@ -17,7 +17,7 @@ class CertificateRequest extends FormRequest
     {
         return [
             'title'       => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'required|string|max:1000',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'meta_title'       => 'nullable|string|max:60',
@@ -29,9 +29,14 @@ class CertificateRequest extends FormRequest
     {
         return [
             'title.required' => 'Please enter a title.',
-            'image.image'    => 'File must be a valid image.',
-            'image.mimes'    => 'Image must be JPG, PNG, or WEBP.',
-            'image.max'      => 'Image must not exceed 10MB.',
+            'title.max'      => 'Title must not exceed 255 characters.',
+
+            'description.required' => 'Please enter a description.',
+            'description.max'      => 'Description must not exceed 1000 characters.',
+
+            'image.image' => 'File must be a valid image.',
+            'image.mimes' => 'Image must be JPG, PNG, or WEBP.',
+            'image.max'   => 'Image must not exceed 10MB.',
         ];
     }
 

@@ -396,14 +396,14 @@ document.addEventListener('DOMContentLoaded', function () {
         .savebar{ left:0; }
     }
 
-    .scroll-error-highlight{
+    /* .scroll-error-highlight{
         outline:3px solid #e74c3c !important; outline-offset:4px; border-radius:12px;
         animation:scrollErrorPulse 0.6s ease-in-out 2;
     }
     @keyframes scrollErrorPulse{
         0%, 100% { outline-color:#e74c3c; }
         50% { outline-color:#ff8a80; }
-    }
+    } */
 
     .req {
     color: var(--orange, #EF7B2E);

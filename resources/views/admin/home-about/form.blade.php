@@ -283,6 +283,24 @@
             display.classList.remove('size-error');
         }
     }
+
+
+         document.addEventListener('DOMContentLoaded', function () {
+    // ===== Scroll to the first validation error on page load =====
+    const firstErrorField = document.querySelector('.input-error, .upload-btn-error');
+    const firstErrorMsg = document.querySelector('.field-error');
+
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Give a brief highlight so the eye lands exactly on the right field
+        firstErrorField.classList.add('error-flash');
+        setTimeout(() => firstErrorField.classList.remove('error-flash'), 1500);
+    } else if (firstErrorMsg) {
+        // Fallback: some errors (like the "at least 1 image" group error) don't
+        // sit on an input directly — scroll to the message itself instead.
+        firstErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
 </script>
 
 <style>

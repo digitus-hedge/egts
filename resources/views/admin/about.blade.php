@@ -586,6 +586,23 @@
         initRichText('.rich-text');
         updateImageBadge();
     });
+
+       document.addEventListener('DOMContentLoaded', function () {
+    // ===== Scroll to the first validation error on page load =====
+    const firstErrorField = document.querySelector('.input-error, .upload-btn-error');
+    const firstErrorMsg = document.querySelector('.field-error');
+
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Give a brief highlight so the eye lands exactly on the right field
+        firstErrorField.classList.add('error-flash');
+        setTimeout(() => firstErrorField.classList.remove('error-flash'), 1500);
+    } else if (firstErrorMsg) {
+        // Fallback: some errors (like the "at least 1 image" group error) don't
+        // sit on an input directly — scroll to the message itself instead.
+        firstErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
 </script>
 
 @if ($errors->any())
@@ -746,14 +763,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     .btn-save:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -6px rgba(15,21,38,0.5); }
 
-    .scroll-error-highlight{
+    /* .scroll-error-highlight{
         outline:3px solid #e74c3c !important; outline-offset:4px; border-radius:12px;
         animation:scrollErrorPulse 0.6s ease-in-out 2;
     }
     @keyframes scrollErrorPulse{
         0%, 100% { outline-color:#e74c3c; }
         50% { outline-color:#ff8a80; }
-    }
+    } */
 </style>
 
 @endsection
