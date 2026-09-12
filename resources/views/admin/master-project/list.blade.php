@@ -36,15 +36,7 @@
         </a>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-chip">
-            <div class="ico orange"><i class="bi bi-diagram-3"></i></div>
-            <div>
-                <div class="num">{{ $masterProjects->total() }}</div>
-                <div class="label">Total projects</div>
-            </div>
-        </div>
-    </div>
+  
 
     <div class="card">
         <div class="toolbar">

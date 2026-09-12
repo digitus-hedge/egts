@@ -125,7 +125,7 @@
 
                     <div class="notice caution">
                         <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                        <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; 16:9 landscape &middot; <b>Suppoted Type and Size:</b>JPG, PNG, WEBP &middot; up to 5MB each.</p>
+                        <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; 16:9 landscape &middot; <b>Suppoted Type and Size:</b>JPG, PNG, WEBP &middot; up to 10MB each.</p>
                     </div>
 
                     <div class="image-slot" style="max-width:340px;">

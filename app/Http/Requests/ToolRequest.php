@@ -16,7 +16,7 @@ class ToolRequest extends FormRequest
         return [
             'title'       => 'required|string|max:255',
             'description' => 'required|string|max:1000',
-            'image'       => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'image'       => 'required|image|mimes:jpeg,jpg,png,webp|max:10240',
         ];
     }
 
@@ -28,7 +28,7 @@ class ToolRequest extends FormRequest
             'image.required' => 'Please upload a tool image.',
             'image.image'    => 'File must be a valid image.',
             'image.mimes'    => 'Image must be JPG, PNG, or WEBP.',
-            'image.max'      => 'Image must not exceed 2MB.',
+            'image.max'      => 'Image must not exceed 10MB.',
         ];
     }
 }

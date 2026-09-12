@@ -51,7 +51,7 @@
 
             <div class="field">
                 <div class="field-top">
-                    <label class="field-label">Title</label>
+                    <label class="field-label">Title<span class="req">*</span></label>
                 </div>
                 <input type="text" name="title" value="{{ old('title', $projectsClientsBanner->title) }}"
                        class="{{ $errors->has('title') ? 'input-error' : '' }}"
@@ -63,7 +63,7 @@
 
             <div class="field">
                 <div class="field-top">
-                    <label class="field-label">Content</label>
+                    <label class="field-label">Content<span class="req">*</span></label>
                 </div>
                 <textarea name="content" rows="3"
                           class="{{ $errors->has('content') ? 'input-error' : '' }}"
@@ -75,12 +75,18 @@
 
             <div class="field" style="margin-bottom:0;">
                 <div class="field-top">
-                    <label class="field-label">Banner Image</label>
+                    <label class="field-label">Banner Image<span class="req">*</span></label>
                 </div>
-                <div class="notice caution">
+
+                <!-- <div class="notice caution">
                     <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
                     <p>JPG, PNG, WEBP &middot; up to 10MB.</p>
-                </div>
+                </div> -->
+
+                   <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 90 }} &times; {{ $imageHeight ?? 60 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
+            </div>
 
                 <div class="image-slot" style="max-width:350px;">
                     <div class="drop img-slot {{ $projectsClientsBanner->image ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
@@ -119,7 +125,7 @@
 
             <div class="field" style="margin-bottom:0;">
                 <div class="field-top">
-                    <label class="field-label">Description</label>
+                    <label class="field-label">Description<span class="req">*</span></label>
                 </div>
                 <textarea name="description" rows="5"
                           class="{{ $errors->has('description') ? 'input-error' : '' }}"
@@ -319,6 +325,8 @@
     @media (max-width:900px){
         .savebar{ left:0; }
     }
+ .req{ color: var(--orange, #EF7B2E); }
+    
 </style>
 
 @endsection

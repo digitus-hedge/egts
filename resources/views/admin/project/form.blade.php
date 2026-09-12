@@ -28,14 +28,14 @@
 
 <div class="wrap">
     <div class="crumbs">
-        <span onclick="window.location='{{ route('admin.home.projects') }}'">Projects &amp; Clients</span>
+        <span onclick="window.location='{{ route('admin.home.projects') }}'">Clients</span>
         <span>&rsaquo;</span>
         <b>{{ $project->exists ? 'Edit' : 'Add New' }}</b>
     </div>
 
     <div class="header">
         <div>
-            <h1>{{ $project->exists ? 'Edit Project' : 'Add Project' }}</h1>
+            <h1>{{ $project->exists ? 'Edit Project' : 'Add Clients' }}</h1>
             <p>A case study or client project shown on your Projects &amp; Clients page.</p>
         </div>
         <a href="{{ route('admin.home.projects') }}" class="btn-back">
@@ -52,22 +52,12 @@
 
         {{-- Title + Client Name --}}
         <div class="card">
-            <div class="two-col">
-                <div class="field" style="margin-bottom:0;">
-                    <div class="field-top">
-                        <label class="field-label">Project Title <span class="req">*</span></label>
-                    </div>
-                    <input type="text" name="title" value="{{ old('title', $project->title) }}"
-                           class="{{ $errors->has('title') ? 'input-error' : '' }}"
-                           placeholder="e.g. Rig Inspection Program - Client X">
-                    @error('title')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                    @enderror
-                </div>
+     
+              
 
                 <div class="field" style="margin-bottom:0;">
                     <div class="field-top">
-                        <label class="field-label">Client Name</label>
+                        <label class="field-label">Client Name<span class="req">*</span></label>
                     </div>
                     <input type="text" name="client_name" value="{{ old('client_name', $project->client_name) }}"
                            class="{{ $errors->has('client_name') ? 'input-error' : '' }}"
@@ -76,13 +66,13 @@
                         <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                     @enderror
                 </div>
-            </div>
+          
         </div>
 
         {{-- Description --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description</h2>
+                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description<span class="req">*</span></h2>
             </div>
             <div class="field" style="margin-bottom:0;">
                 <textarea name="description" rows="4"
@@ -97,12 +87,17 @@
         {{-- Image --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-image"></i></span> Image</h2>
+                <h2><span class="icon"><i class="bi bi-image"></i></span> Image<span class="req">*</span></h2>
             </div>
 
-            <div class="notice caution">
+            <!-- <div class="notice caution">
                 <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
                 <p>JPG, PNG, WEBP &middot; up to 10MB.</p>
+            </div> -->
+
+             <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 92 }} &times; {{ $imageHeight ?? 70 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
             </div>
 
             <div class="image-slot" style="max-width:300px;">

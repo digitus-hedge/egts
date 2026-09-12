@@ -373,6 +373,7 @@
 
 <template id="inspectionRowTemplate">
     <div class="inspection-row">
+        <button type="button" class="action-btn delete inspection-remove" title="Remove"><i class="bi bi-trash3"></i></button>
         <div class="inspection-row-fields">
             <div class="field">
                 <div class="field-top"><label class="field-label">Heading</label></div>
@@ -384,19 +385,23 @@
             </div>
             <div class="field" style="margin-bottom:0;">
                 <div class="field-top"><label class="field-label">Image</label></div>
-                <div class="drop inspection-drop" onclick="this.nextElementSibling.click()">
+                <div class="notice caution notice-compact">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <p>Recommended size: {{ $imageWidth ?? 552 }}&times;{{ $imageHeight ?? 340 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
+                </div>
+                <div class="drop img-slot inspection-drop" onclick="this.nextElementSibling.click()">
                     <div class="preview-placeholder inspection-preview">
                         <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:16px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
                     </div>
                 </div>
                 <input type="file" name="inspection_process[__INDEX__][image]" accept="image/*" hidden onchange="previewInspectionImage(this)">
                 <input type="hidden" name="inspection_process[__INDEX__][existing_image]" class="existing-image-input" value="">
             </div>
         </div>
-        <button type="button" class="action-btn delete inspection-remove" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
-
 @php
     $inspectionForJs = collect(old('inspection_process', $service->inspection_process ?? []))
         ->map(function ($row) {
@@ -645,28 +650,33 @@
     let inspectionIndex = 0;
 
     function addInspectionRow(data = {}) {
-        const clone = inspectionTemplate.content.cloneNode(true);
-        const row = clone.querySelector('.inspection-row');
+    const clone = inspectionTemplate.content.cloneNode(true);
+    const row = clone.querySelector('.inspection-row');
 
-        row.querySelectorAll('input, textarea').forEach(field => {
-            field.name = field.name.replace('__INDEX__', inspectionIndex);
-        });
+    row.querySelectorAll('input, textarea').forEach(field => {
+        field.name = field.name.replace('__INDEX__', inspectionIndex);
+    });
 
-        row.querySelector('input[name$="[heading]"]').value = data.heading ?? '';
-        row.querySelector('textarea[name$="[description]"]').value = data.description ?? '';
+    row.querySelector('input[name$="[heading]"]').value = data.heading ?? '';
+    row.querySelector('textarea[name$="[description]"]').value = data.description ?? '';
 
-        if (data.image) {
-            const drop = row.querySelector('.inspection-drop');
-            drop.innerHTML = `<img src="${data.image_url ?? data.image}" class="inspection-preview" alt="Inspection step">`;
-            drop.classList.add('filled');
-            row.querySelector('.existing-image-input').value = data.image;
-        }
-
-        row.querySelector('.inspection-remove').addEventListener('click', () => row.remove());
-
-        inspectionContainer.appendChild(row);
-        inspectionIndex++;
+    if (data.image) {
+        const drop = row.querySelector('.inspection-drop');
+        drop.innerHTML = `
+            <img src="${data.image_url ?? data.image}" alt="Inspection step" style="width:100%;height:100%;object-fit:cover;">
+            <button type="button" class="remove-img-btn" onclick="removeInspectionImage(event, this)" title="Remove image">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        `;
+        drop.classList.add('filled');
+        row.querySelector('.existing-image-input').value = data.image;
     }
+
+    row.querySelector('.inspection-remove').addEventListener('click', () => row.remove());
+
+    inspectionContainer.appendChild(row);
+    inspectionIndex++;
+}
 
     document.getElementById('addInspectionBtn').addEventListener('click', () => addInspectionRow());
 
@@ -676,17 +686,42 @@
         addInspectionRow();
     }
 
-    function previewInspectionImage(input) {
-        const drop = input.previousElementSibling; // the .inspection-drop div
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                drop.innerHTML = `<img src="${e.target.result}" class="inspection-preview" alt="Inspection step">`;
-                drop.classList.add('filled');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+function previewInspectionImage(input) {
+    const dropEl = input.previousElementSibling; // .inspection-drop
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        dropEl.classList.add('filled');
+        dropEl.innerHTML = `
+            <img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;">
+            <button type="button" class="remove-img-btn" onclick="removeInspectionImage(event, this)" title="Remove image">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        `;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeInspectionImage(event, btn) {
+    event.stopPropagation();
+    const dropEl = btn.closest('.inspection-drop');
+    const row = dropEl.closest('.inspection-row');
+    const fileInput = row.querySelector('input[type="file"]');
+    const existingInput = row.querySelector('.existing-image-input');
+
+    fileInput.value = '';
+    existingInput.value = '';
+    dropEl.classList.remove('filled');
+    dropEl.innerHTML = `
+        <div class="preview-placeholder inspection-preview">
+            <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:16px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
 </script>
 
 @if ($errors->any())
@@ -877,24 +912,108 @@ document.addEventListener('DOMContentLoaded', function () {
     .action-btn.delete:hover{ filter:brightness(0.95); }
 
     /* ===== Inspection rows ===== */
-    .inspection-row{
-        display:flex; gap:14px; align-items:stretch; background: var(--canvas,#F6F7FB);
-        border:1px solid var(--line,#E9EBF2); border-radius:12px; padding:18px; margin-bottom:14px;
-        position:relative; padding-right:56px;
-    }
-    .inspection-row-fields{ flex:1; display:grid; grid-template-columns:1fr 1fr 160px; gap:16px; align-items:start; }
-    .inspection-row-fields textarea{ min-height:100px; }
-    .inspection-drop{ aspect-ratio:1/1; }
-    .inspection-drop .preview-placeholder{ height:100%; margin:0; }
-    .inspection-drop img.inspection-preview{ width:100%; height:100%; object-fit:cover; display:block; }
-    .inspection-row .action-btn{ position:absolute; top:18px; right:14px; }
+ .inspection-row {
+    position: relative;
+    display: block;
+    padding: 20px;
+    padding-top: 44px;      /* room for the trash button pinned top-right */
+    background: #F7F8FA;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
 
-    @media (max-width:900px){
-        .inspection-row-fields{ grid-template-columns:1fr; }
-        .inspection-row{ padding-right:18px; }
-        .inspection-row .action-btn{ position:static; margin-top:12px; }
-    }
+.inspection-row-fields {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(180px, 220px) !important;
+    gap: 24px;
+    align-items: start;
+    width: 100%;
+}
 
+.inspection-row-fields .field {
+    min-width: 0;   /* prevents input/textarea from forcing the column to overflow and wrap */
+    margin-bottom: 0;
+}
+
+.inspection-row-fields .field input,
+.inspection-row-fields .field textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inspection-drop.img-slot {
+    width: 100%;
+    height: 180px;
+    border: 1.5px dashed #D8DCE3;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.inspection-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    padding: 0 12px;
+}
+
+.inspection-preview .ico-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #EEF0F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.inspection-preview .drop-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F2430;
+}
+
+.inspection-preview .drop-sub {
+    font-size: 12px;
+    color: #9AA1AE;
+}
+
+.inspection-row .action-btn.delete {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #FDECEC;
+    color: #E5484D;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.inspection-row .action-btn.delete:hover {
+    background: #FBD5D5;
+}
+
+/* stack on narrow screens instead of squeezing columns */
+@media (max-width: 768px) {
+    .inspection-row-fields {
+        grid-template-columns: 1fr !important;
+    }
+}
     .savebar{
         position:fixed; left:264px; right:0; bottom:0; z-index:20;
         border-top:1px solid var(--line,#E9EBF2);
@@ -925,14 +1044,30 @@ document.addEventListener('DOMContentLoaded', function () {
         .savebar{ left:0; }
     }
 
-    .scroll-error-highlight{
-        outline:3px solid #e74c3c !important; outline-offset:4px; border-radius:12px;
-        animation:scrollErrorPulse 0.6s ease-in-out 2;
-    }
-    @keyframes scrollErrorPulse{
-        0%, 100% { outline-color:#e74c3c; }
-        50% { outline-color:#ff8a80; }
-    }
+    .notice-compact {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    line-height: 1.35;
+    border-radius: 8px;
+}
+
+.notice-compact i {
+    font-size: 12px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.notice-compact p {
+    margin: 0;
+}
+
+.notice-compact b {
+    font-weight: 600;
+}
 </style>
 
 @endsection

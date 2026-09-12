@@ -46,7 +46,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         $project = new Project();
-        $project->title = $data['title'];
+        // $project->title = $data['title'];
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
         $project->meta_title = $data['meta_title'] ?? null;
@@ -72,7 +72,7 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
 
-        $project->title = $data['title'];
+        // $project->title = $data['title'];
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
         $project->meta_title = $data['meta_title'] ?? null;

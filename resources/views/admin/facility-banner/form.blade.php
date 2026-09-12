@@ -3,6 +3,7 @@
 @section('content')
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
 
 @if ($errors->any())
 <div class="notice caution" style="margin-bottom:20px;">
@@ -77,10 +78,18 @@
                 <div class="field-top">
                     <label class="field-label">Banner Image<span class="req">*</span></label>
                 </div>
-                <div class="notice caution">
+
+
+                <!-- <div class="notice caution">
                     <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
                     <p>JPG, PNG, WEBP &middot; up to 10MB.</p>
-                </div>
+                </div> -->
+
+
+                  <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 280 }} &times; {{ $imageHeight ?? 160 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
+            </div>
 
                 <div class="image-slot" style="max-width:350px;">
                     <div class="drop img-slot {{ $facilityBanner->banner_image ? 'filled' : '' }}" data-file-input="file-banner-image" onclick="handleDropClick(this)">
@@ -217,11 +226,38 @@
     </form>
 </div>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
 <script>
-    ClassicEditor
-        .create(document.querySelector('#infrastructure_description'))
-        .catch(error => console.error(error));
+    // ClassicEditor
+    //     .create(document.querySelector('#infrastructure_description'))
+    //     .catch(error => console.error(error));
+
+
+     function initRichText(selector) {
+    tinymce.init({
+        selector: selector,
+        height: 400,
+        menubar: false,
+        plugins: 'advlist autolink lists link image charmap preview anchor ' +
+            'searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+        toolbar: 'undo redo | blocks | bold italic underline forecolor | ' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'bullist numlist outdent indent | link image media table | ' +
+            'code preview fullscreen | removeformat help',
+        block_formats: 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Quote=blockquote',
+        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size:14px }',
+        branding: false,
+        promotion: false,
+        setup: function (editor) {
+            editor.on('change keyup', function () {
+                editor.save();
+            });
+        }
+    });
+}
+
+initRichText('#infrastructure_description');
+    
 
     function handleDropClick(el) {
         if (el.classList.contains('filled')) return;

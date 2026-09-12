@@ -16,7 +16,7 @@ class ProjectsClientsBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'title'        => 'required|string|max:255',
             'content'      => 'required|string|max:1000',
             'description'  => 'required|string|max:2000',
@@ -28,7 +28,7 @@ class ProjectsClientsBannerRequest extends FormRequest
         return [
             'image.image' => 'The file must be a valid image.',
             'image.mimes' => 'The image must be a JPG, PNG, or WEBP file.',
-            'image.max'   => 'The image must not exceed 2MB.',
+            'image.max'   => 'The image must not exceed 10MB.',
         ];
     }
 

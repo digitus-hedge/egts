@@ -131,7 +131,9 @@
             <div class="media-field" id="field-video" style="display:none;">
                 <div class="notice caution">
                     <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                    <p>MP4, MOV, AVI, WEBM &middot; up to 20MB.</p>
+                    <p>Recommended format: MP4, MOV, AVI, WEBM &middot; up to 20MB</p>
+
+                    
                 </div>
 
                 <div class="image-slot" style="max-width:400px;">
@@ -177,7 +179,7 @@
             <div class="media-field" id="field-image" style="display:none;">
                 <div class="notice caution">
                     <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                    <p><b>Recommended size:</b> {{ $imageWidth ?? 380 }} &times; {{ $imageHeight ?? 260 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
+                    <p><b>Recommended size:</b> {{ $imageWidth ?? 380 }} &times; {{ $imageHeight ?? 260 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB</p>
                 </div>
 
                 <div class="image-slot" style="max-width:340px;">

@@ -53,7 +53,7 @@
         {{-- Title --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-type"></i></span> Title</h2>
+                <h2><span class="icon"><i class="bi bi-type"></i></span> Title<span class="req">*</span></h2>
             </div>
             <div class="field" style="margin-bottom:0;">
                 <input type="text" name="title" value="{{ old('title', $masterProject->title) }}"
@@ -68,7 +68,7 @@
         {{-- Description --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description</h2>
+                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description<span class="req">*</span></h2>
             </div>
             <div class="field" style="margin-bottom:0;">
                 <textarea name="description" rows="4"
@@ -83,12 +83,12 @@
         {{-- Image --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-image"></i></span> Image</h2>
+                <h2><span class="icon"><i class="bi bi-image"></i></span> Image<span class="req">*</span></h2>
             </div>
 
-            <div class="notice caution">
+              <div class="notice caution">
                 <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p>JPG, PNG, WEBP &middot; up to 10MB.</p>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 90 }} &times; {{ $imageHeight ?? 60 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
             </div>
 
             <div class="image-slot" style="max-width:300px;">
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
     @media (max-width:900px){
         .savebar{ left:0; }
     }
-
+   .req{ color: var(--orange, #EF7B2E); }
    
 </style>
 

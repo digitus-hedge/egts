@@ -23,28 +23,20 @@
     <div class="crumbs">
         <span onclick="window.location='{{ route('admin.dashboard') }}'">Home</span>
         <span>&rsaquo;</span>
-        <b>Projects &amp; Clients</b>
+        <b>Clients</b>
     </div>
 
     <div class="page-header">
         <div>
-            <h1>Projects &amp; Clients</h1>
+            <h1>Clients</h1>
             <p>Case studies and client work shown on your Projects &amp; Clients page.</p>
         </div>
         <a href="{{ route('admin.home.projects.create') }}" class="btn-primary">
-            <i class="bi bi-plus-lg"></i> Add New Project
+            <i class="bi bi-plus-lg"></i> Add New Clients
         </a>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-chip">
-            <div class="ico orange"><i class="bi bi-diagram-3"></i></div>
-            <div>
-                <div class="num">{{ $projects->total() }}</div>
-                <div class="label">Total projects</div>
-            </div>
-        </div>
-    </div>
+ 
 
     <div class="card">
         <div class="toolbar">
@@ -78,7 +70,7 @@
                 <thead>
                     <tr>
                         <th>Image</th>
-                        <th>Project</th>
+                        <!-- <th>Project</th> -->
                         <th>Client</th>
                         <th>Description</th>
                         <th>Actions</th>
@@ -96,7 +88,7 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="title-cell">{{ $project->title }}</td>
+                        <!-- <td class="title-cell">{{ $project->title }}</td> -->
                         <td>{{ $project->client_name ?: '—' }}</td>
                         <td class="desc-cell">
                             <div class="desc-clamp">{{ Str::limit($project->description, 80) ?: '—' }}</div>

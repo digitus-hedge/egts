@@ -36,16 +36,7 @@
         </a>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-chip">
-            <div class="ico orange"><i class="bi bi-wrench-adjustable"></i></div>
-            <div>
-                <div class="num">{{ $tools->total() }}</div>
-                <div class="label">Total tools</div>
-            </div>
-        </div>
-    </div>
-
+  
     <div class="card">
         <div class="toolbar">
             <form method="GET" action="{{ route('admin.home.facility.tools') }}" class="search-box" id="searchForm">

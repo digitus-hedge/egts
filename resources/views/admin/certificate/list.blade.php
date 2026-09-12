@@ -36,15 +36,7 @@
         </a>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-chip">
-            <div class="ico orange"><i class="bi bi-patch-check"></i></div>
-            <div>
-                <div class="num">{{ $certificates->total() }}</div>
-                <div class="label">Total certificates</div>
-            </div>
-        </div>
-    </div>
+   
 
     <div class="card">
         <div class="toolbar">
