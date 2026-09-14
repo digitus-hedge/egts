@@ -22,10 +22,10 @@
     <main>
 
         {{-- ===== About Us Hero Banner ===== --}}
-        <section class="au-hero" style="background-image: url('{{ asset('images/about hero.jpeg') }}');">
+        <section class="au-hero" @if($whyChooseUs?->banner_image) style="background-image: url('{{ asset('storage/' . $whyChooseUs->banner_image) }}');" @endif>
             <div class="au-hero-overlay"></div>
             <div class="au-hero-content">
-                <h1>{{ $whyChooseUs->banner_heading}}</h1>
+                <h1>{{ $whyChooseUs->banner_heading }}</h1>
                 <p>{{ $whyChooseUs->banner_description }}</p>
             </div>
         </section>
