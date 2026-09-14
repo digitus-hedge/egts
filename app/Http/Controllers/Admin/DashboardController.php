@@ -3,12 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BehindTheScene;
+use App\Models\Certificate;
+use App\Models\Machine;
+use App\Models\MasterProject;
+use App\Models\Project;
+use App\Models\Service;
+use App\Models\Tool;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        $counts = [
+            'services'   => Service::count(),
+            'bts'        => BehindTheScene::count(),
+            'machines'   => Machine::count(),
+            'tools'      => Tool::count(),
+            'clients'    => Project::count(),
+            'projects'   => MasterProject::count(),
+            'certificates' => Certificate::count(),
+        ];
+
+        return view('admin.dashboard', compact('counts'));
     }
 
     public function home()
