@@ -30,9 +30,10 @@ class HomeController extends Controller
         $serviceSection = ServiceSection::first();
         $services = Service::latest()->where('show_on_home', 1)->take(8)->get();
         $clientSection = ClientSection::first();
+        $clients = Project::latest()->get();
         $whyChooseUs = WhyChooseUs::first();
 
-        return view('web.home', compact('banner', 'about', 'stat', 'serviceSection', 'services', 'clientSection', 'whyChooseUs'));
+        return view('web.home', compact('banner', 'about', 'stat', 'serviceSection', 'services', 'clientSection', 'clients', 'whyChooseUs'));
     }
 
     public function about()

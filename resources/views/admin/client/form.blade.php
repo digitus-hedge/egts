@@ -73,55 +73,6 @@
             </div>
         </div>
 
-        {{-- Client Logos / Images --}}
-        <div class="card">
-            <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-images"></i></span> Client Logos / Images <span class="req">*</span></h2>
-            </div>
-
-            <div class="notice caution">
-                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p><b>Recommended size:</b> {{ $imageWidth ?? 90 }} &times; {{ $imageHeight ?? 60 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
-            </div>
-
-            {{-- Existing saved images --}}
-            @if (!empty($client->images))
-            <div class="slot-top" style="margin-bottom:8px;">
-                <span class="slot-label">Currently saved</span>
-            </div>
-            <div class="images-row" style="margin-bottom:20px;">
-                @foreach ($client->images as $img)
-                    <div class="image-slot" style="flex:0 0 110px; min-width:110px;">
-                        <div class="drop filled existing-logo">
-                            <img src="{{ Storage::url($img) }}" alt="Client logo">
-                            <label class="remove-img-btn" title="Remove this image">
-                                <input type="checkbox" name="remove_images[]" value="{{ $img }}" onchange="toggleRemoveMark(this)">
-                                <i class="bi bi-x-lg"></i>
-                            </label>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-            @endif
-
-            {{-- Dynamic new image upload rows --}}
-            <div class="slot-top" style="margin-bottom:8px;">
-                <span class="slot-label">Add new images</span>
-            </div>
-            <div class="images-row" id="imageRows"></div>
-
-            <button type="button" id="addImageBtn" class="choose-btn inline" style="margin-top:14px;">
-                <i class="bi bi-plus-circle"></i> Add Image
-            </button>
-
-            @error('images')
-                <span class="field-error" style="margin-top:14px;"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
-            @error('images.*')
-                <span class="field-error" style="margin-top:14px;"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
-        </div>
-
         <div class="savebar">
             <div class="savebar-inner">
                 <span class="savebar-status">All changes save to the live Client section</span>

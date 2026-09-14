@@ -456,23 +456,23 @@
 
                 <div class="clients-right">
                     <div class="clients-track">
-                        @php
-                            $clientImages = $clientSection->images ?? [];
-                        @endphp
-
                         {{-- First set --}}
-                        @foreach ($clientImages as $img)
-                            <div class="client-logo">
-                                <img src="{{ asset('storage/' . $img) }}" alt="Client Logo">
-                            </div>
+                        @foreach ($clients as $client)
+                            @if ($client->image)
+                                <div class="client-logo">
+                                    <img src="{{ asset('storage/' . $client->image) }}" alt="{{ $client->title }}">
+                                </div>
+                            @endif
                         @endforeach
 
                         {{-- Duplicate set for seamless loop --}}
-                        @if (count($clientImages) > 1)
-                            @foreach ($clientImages as $img)
-                                <div class="client-logo">
-                                    <img src="{{ asset('storage/' . $img) }}" alt="Client Logo">
-                                </div>
+                        @if ($clients->count() > 1)
+                            @foreach ($clients as $client)
+                                @if ($client->image)
+                                    <div class="client-logo">
+                                        <img src="{{ asset('storage/' . $client->image) }}" alt="{{ $client->title }}">
+                                    </div>
+                                @endif
                             @endforeach
                         @endif
                     </div>
