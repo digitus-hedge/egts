@@ -19,12 +19,12 @@ class AboutUsRequest extends FormRequest
             'meta_title'        => 'nullable|string|max:255',
             'meta_description'  => 'nullable|string|max:500',
 
-            'banner_heading'     => 'required|string|max:255',
-            'banner_description' => 'required|string',
+            'banner_heading'     => 'required|string|max:80',
+            'banner_description' => 'required|string|max:400',
             'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'about_heading'         => 'required|string|max:255',
-            'about_description'     => 'required|string',
+            'about_heading'         => 'required|string|max:65',
+            'about_description'     => 'required|string|max:800',
             'section_two_image_one' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'section_two_image_two' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
@@ -61,7 +61,7 @@ class AboutUsRequest extends FormRequest
         return [
             'required' => 'The :attribute is required.',
             'string'   => 'The :attribute must be plain text.',
-            'max'      => 'The :attribute is too long.',
+            'max'      => 'The :attribute :max is too long.',
             'image'    => 'The :attribute must be a valid image (JPG, PNG, or WEBP).',
             'mimes'    => 'The :attribute must be a file of type: :values.',
         ];
