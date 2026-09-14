@@ -46,7 +46,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         $project = new Project();
-        
+
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
         $project->meta_title = $data['meta_title'] ?? null;
@@ -72,7 +72,7 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
 
-     
+
         $project->client_name = $data['client_name'] ?? null;
         $project->description = $data['description'] ?? null;
         $project->meta_title = $data['meta_title'] ?? null;
@@ -111,7 +111,7 @@ class ProjectController extends Controller
 
         $manager = new ImageManager(new Driver());
         $image = $manager->read($file);
-        $image->cover($this->imageWidth, $this->imageHeight);
+        $image->scaleDown($this->imageWidth, $this->imageHeight);
         $encoded = $image->toWebp(quality: $this->compressQuality);
 
         Storage::disk('public')->put($filename, (string) $encoded);

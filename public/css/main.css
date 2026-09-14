@@ -545,20 +545,23 @@ a {
 
 .client-logo {
     flex-shrink: 0;
-    width: 180px;
     height: 100px;
+    width: auto;
     background: #fff;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 0;
+    overflow: hidden;
 }
 
 .client-logo img {
-    max-width: 100%;
-    max-height: unset;
+    height: 100%;
+    width: auto;
+    max-width: none;
     object-fit: contain;
+    display: block;
 }
 
 @keyframes clients-scroll {
