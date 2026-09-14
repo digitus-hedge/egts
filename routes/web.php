@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityBannerController;
 use App\Http\Controllers\Admin\HomeAboutController;
+use App\Http\Controllers\Admin\LicenseBannerController;
 use App\Http\Controllers\Admin\MachineController;
 use App\Http\Controllers\Admin\MasterProjectController;
 use App\Http\Controllers\Admin\ProjectController;
@@ -35,6 +36,11 @@ Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 Route::get('/contact', [HomeController::class, 'contact']);
 
 Route::get('/projects_clients', [HomeController::class, 'projectsClients']);
+
+Route::get('home/license-banner', [LicenseBannerController::class, 'index'])->name('admin.home.license-banner');
+Route::post('home/license-banner', [LicenseBannerController::class, 'store'])->name('admin.home.license-banner.store');
+
+Route::get('/licenses', [HomeController::class, 'licenses']);
 
 Route::post('/contact/submit', function () {
     // handle form submission — validate, send email, save to DB, etc.

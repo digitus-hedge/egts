@@ -18,7 +18,7 @@
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2500,
             timerProgressBar: true
         });
@@ -113,7 +113,7 @@
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
-    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
+    .crumbs span:first-child:hover{ color: var(--orange,#BF0001); }
 
     .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
     .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
@@ -121,7 +121,7 @@
 
     .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
-    .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
+    .icon{ display:inline-flex; color: var(--orange,#BF0001); }
 
     .field{ margin-bottom:0; }
     .field-hint{ font-size:11.5px; color: var(--faint,#9AA1B2); }
@@ -132,7 +132,7 @@
         outline:none; transition:box-shadow .15s, border-color .15s; resize:vertical;
     }
     input[type=text]:focus, textarea:focus{
-        border-color: var(--orange,#EF7B2E);
+        border-color: var(--orange,#BF0001);
         box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
     }
     .input-error{ border-color:#e74c3c !important; background:#fff8f8; }
@@ -166,7 +166,7 @@
     }
     .btn-save:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -6px rgba(15,21,38,0.5); }
     .req {
-    color: var(--orange, #EF7B2E);
+    color: var(--orange, #BF0001);
 }
 </style>
 

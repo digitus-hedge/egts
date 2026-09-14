@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use App\Models\BehindTheScene;
+use App\Models\Certificate;
 use App\Models\ClientSection;
 use App\Models\ContactBanner;
 use App\Models\FacilityBanner;
 use App\Models\HomeAbout;
+use App\Models\LicenseBanner;
 use App\Models\Machine;
+use App\Models\MasterProject;
 use App\Models\Project;
 use App\Models\ProjectsClientsBanner;
 use App\Models\Service;
@@ -52,9 +55,10 @@ class HomeController extends Controller
     public function projectsClients()
     {
         $banner = ProjectsClientsBanner::first();
-        $projects = Project::latest()->get();
+        $masterProjects = MasterProject::latest()->get();
+        $clients = Project::latest()->get();
 
-        return view('web.projects_clients', compact('banner', 'projects'));
+        return view('web.projects_clients', compact('banner', 'masterProjects', 'clients'));
     }
 
     public function services()
@@ -74,6 +78,14 @@ class HomeController extends Controller
             ->get();
 
         return view('web.service_details', compact('service', 'relatedServices'));
+    }
+
+    public function licenses()
+    {
+        $licenseBanner = LicenseBanner::first();
+        $certificates = Certificate::latest()->get();
+
+        return view('web.licenses', compact('licenseBanner', 'certificates'));
     }
 
     public function contact()

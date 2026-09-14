@@ -31,7 +31,7 @@
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2500,
             timerProgressBar: true
         });
@@ -66,7 +66,7 @@
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-building"></i></span> Company Info</h2>
             </div>
- 
+
             <div class="two-col">
                 <div class="field">
                     <div class="field-top">
@@ -79,7 +79,7 @@
                         <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                     @enderror
                 </div>
- 
+
                 <div class="field">
                     <div class="field-top">
                         <label class="field-label">Company Name <span class="req">*</span></label>
@@ -92,7 +92,7 @@
                     @enderror
                 </div>
             </div>
- 
+
             <div class="field" style="margin-bottom:0;">
                 <div class="field-top">
                     <label class="field-label">Description <span class="req">*</span></label>
@@ -105,18 +105,18 @@
                 @enderror
             </div>
         </div>
- 
+
         {{-- Image --}}
         <div class="card">
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-image"></i></span>Banner Image <span class="req">*</span></h2>
             </div>
- 
+
                <div class="notice caution">
                 <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
                 <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
             </div>
- 
+
             <div class="image-slot" style="max-width:350px;">
                 @php $contactImage = $c('image'); @endphp
                 <div class="drop img-slot {{ $contactImage ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
@@ -255,13 +255,13 @@
         </div>
 
         {{-- Map --}}
-       
+
 
         {{-- Social Links --}}
-       
+
 
         {{-- SEO Meta --}}
-   
+
 
         <div class="savebar">
             <div class="savebar-inner">
@@ -393,12 +393,12 @@ document.addEventListener('DOMContentLoaded', function () {
 @endif
 
 <style>
-    .req{ color: var(--orange, #EF7B2E); }
+    .req{ color: var(--orange, #BF0001); }
 
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
-    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
+    .crumbs span:first-child:hover{ color: var(--orange,#BF0001); }
 
     .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
     .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
-    .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
+    .icon{ display:inline-flex; color: var(--orange,#BF0001); }
     .section-sub{ font-size:12px; color: var(--faint,#9AA1B2); }
     .section-sub code{ background: var(--canvas,#F6F7FB); padding:1px 5px; border-radius:4px; font-size:11px; }
 
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function () {
         outline:none; transition:box-shadow .15s, border-color .15s; resize:vertical; background:#fff;
     }
     input:focus, textarea:focus{
-        border-color: var(--orange,#EF7B2E);
+        border-color: var(--orange,#BF0001);
         box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
     }
     .input-error{ border-color:#e74c3c !important; background:#fff8f8; }
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
     }
-    .drop:hover{ border-color: var(--orange,#EF7B2E); background: var(--orange-tint,#FFF8F3); }
+    .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
     .ico-circle{ width:40px; height:40px; border-radius:999px; background:#EEF0F6; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
         color:rgba(255,255,255,0.9); font-size:11px; display:flex; align-items:center; gap:4px;
     }
     .choose-btn{
-        margin-top:8px; width:100%; font-size:12px; font-weight:600; color: var(--orange,#EF7B2E);
+        margin-top:8px; width:100%; font-size:12px; font-weight:600; color: var(--orange,#BF0001);
         background:#fff; border:1px solid var(--orange-border,#F3D8C2); border-radius:8px;
         padding:7px 0; cursor:pointer; transition:background .15s;
     }

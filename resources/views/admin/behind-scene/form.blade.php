@@ -18,7 +18,7 @@
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2500,
             timerProgressBar: true
         });
@@ -133,7 +133,7 @@
                     <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
                     <p>Recommended format: MP4, MOV, AVI, WEBM &middot; up to 20MB</p>
 
-                    
+
                 </div>
 
                 <div class="image-slot" style="max-width:400px;">
@@ -297,12 +297,12 @@ document.addEventListener('DOMContentLoaded', function () {
 @endif
 
 <style>
-    .req{ color: var(--orange, #EF7B2E); }
+    .req{ color: var(--orange, #BF0001); }
 
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
-    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
+    .crumbs span:first-child:hover{ color: var(--orange,#BF0001); }
 
     .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
     .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
@@ -313,11 +313,11 @@ document.addEventListener('DOMContentLoaded', function () {
         color: var(--muted,#667085); background:#fff; border:1px solid var(--line,#E9EBF2); border-radius:9px;
         text-decoration:none; transition:all .15s ease; white-space:nowrap;
     }
-    .btn-back:hover{ background: var(--orange,#EF7B2E); border-color: var(--orange,#EF7B2E); color:#fff; }
+    .btn-back:hover{ background: var(--orange,#BF0001); border-color: var(--orange,#BF0001); color:#fff; }
 
     .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
-    .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
+    .icon{ display:inline-flex; color: var(--orange,#BF0001); }
     .section-sub{ font-size:12px; color: var(--faint,#9AA1B2); }
 
     .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     select{ cursor:pointer; }
     input:focus, textarea:focus, select:focus{
-        border-color: var(--orange,#EF7B2E);
+        border-color: var(--orange,#BF0001);
         box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
     }
     .input-error{ border-color:#e74c3c !important; background:#fff8f8; }
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
     }
-    .drop:hover{ border-color: var(--orange,#EF7B2E); background: var(--orange-tint,#FFF8F3); }
+    .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
     .video-drop-slot{ aspect-ratio:16/9; cursor:default; }
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
         color:rgba(255,255,255,0.9); font-size:11px; display:flex; align-items:center; gap:4px;
     }
     .choose-btn{
-        margin-top:8px; font-size:12px; font-weight:600; color: var(--orange,#EF7B2E);
+        margin-top:8px; font-size:12px; font-weight:600; color: var(--orange,#BF0001);
         background:#fff; border:1px solid var(--orange-border,#F3D8C2); border-radius:8px;
         padding:7px 16px; cursor:pointer; transition:background .15s; width:100%;
     }

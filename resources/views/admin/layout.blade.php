@@ -104,7 +104,7 @@
             width: 42px;
             height: 42px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #F2924B, #EF7B2E);
+            background: linear-gradient(135deg, #F2924B, #BF0001);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -583,6 +583,26 @@
                 </ul>
             </div>
 
+            {{-- Licenses (Banner only) --}}
+            @php
+            $licenseOpen = request()->routeIs('admin.home.license-banner') || request()->routeIs('admin.home.license-banner.*');
+            @endphp
+            <div class="nav-group {{ $licenseOpen ? 'expanded' : '' }}">
+                <a class="nav-item" onclick="toggleSub(this)">
+                    <i class="bi bi-patch-check nav-ico"></i>
+                    Licenses
+                    <i class="bi bi-chevron-right chev"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a class="nav-item {{ request()->routeIs('admin.home.license-banner') || request()->routeIs('admin.home.license-banner.*') ? 'active' : '' }}"
+                            href="{{ route('admin.home.license-banner') }}">
+                            <i class="bi bi-image nav-ico"></i> Banner
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             {{-- NEW: Master menu (grouped) --}}
             @php
             $masterOpen = request()->routeIs('admin.home.services') ||
@@ -610,7 +630,7 @@
                     <li>
                         <a class="nav-item {{ request()->routeIs('admin.home.services') || (request()->routeIs('admin.home.services.*') && !request()->routeIs('admin.home.services.behind-the-scenes*') && !request()->routeIs('admin.home.services.section*')) ? 'active' : '' }}"
                             href="{{ route('admin.home.services') }}">
-                            <i class="bi bi-pencil-square nav-ico"></i>Services 
+                            <i class="bi bi-pencil-square nav-ico"></i>Services
                         </a>
                     </li>
                     <li>

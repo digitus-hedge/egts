@@ -11,7 +11,7 @@
             icon: 'success',
             title: 'Done!',
             text: @json(session('success')),
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2200,
             timerProgressBar: true
         });
@@ -36,7 +36,7 @@
         </a>
     </div>
 
-  
+
 
     <div class="card">
         <div class="toolbar">
@@ -189,7 +189,7 @@
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
-    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
+    .crumbs span:first-child:hover{ color: var(--orange,#BF0001); }
 
     .page-header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; gap:16px; flex-wrap:wrap; }
     .page-header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
@@ -211,7 +211,7 @@
         box-shadow:0 1px 2px rgba(15,21,38,0.03);
     }
     .stat-chip .ico{ width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
-    .stat-chip .ico.orange{ background: var(--orange-tint-strong,#FFE9D8); color: var(--orange,#EF7B2E); }
+    .stat-chip .ico.orange{ background: var(--orange-tint-strong,#FFE9D8); color: var(--orange,#BF0001); }
     .stat-chip .num{ font-family:'Sora',sans-serif; font-size:18px; font-weight:700; color: var(--ink,#171B2C); line-height:1.1; }
     .stat-chip .label{ font-size:11.5px; color: var(--muted,#667085); margin-top:2px; }
 
@@ -230,7 +230,7 @@
         border:1px solid var(--input-border,#DBDFEA); border-radius:10px; padding:9px 12px;
         background:#FAFBFD; transition:border-color .15s, box-shadow .15s;
     }
-    .search-box:focus-within{ border-color: var(--orange,#EF7B2E); box-shadow:0 0 0 4px var(--orange-tint-strong,#FFE9D8); background:#fff; }
+    .search-box:focus-within{ border-color: var(--orange,#BF0001); box-shadow:0 0 0 4px var(--orange-tint-strong,#FFE9D8); background:#fff; }
     .search-box i{ color: var(--faint,#9AA1B2); flex-shrink:0; }
     .search-box input{ border:none; background:none; outline:none; font-size:13.5px; width:100%; color: var(--ink,#171B2C); }
     .clear-search{ color: var(--faint,#9AA1B2); font-size:16px; text-decoration:none; display:flex; align-items:center; flex-shrink:0; }
@@ -241,7 +241,7 @@
         border:1px solid var(--input-border,#DBDFEA); border-radius:8px; padding:6px 10px; font-size:13px;
         color: var(--ink,#171B2C); background:#fff; outline:none; cursor:pointer;
     }
-    .entries-select select:focus{ border-color: var(--orange,#EF7B2E); }
+    .entries-select select:focus{ border-color: var(--orange,#BF0001); }
 
     table{ width:100%; border-collapse:collapse; }
     thead th{
@@ -269,7 +269,7 @@
         cursor:pointer; text-decoration:none; font-size:14px; transition:background .15s, transform .1s;
     }
     .icon-btn:active{ transform:scale(0.94); }
-    .icon-btn.edit{ background: var(--orange-tint-strong,#FFE9D8); color: var(--orange,#EF7B2E); }
+    .icon-btn.edit{ background: var(--orange-tint-strong,#FFE9D8); color: var(--orange,#BF0001); }
     .icon-btn.edit:hover{ background:#FFDDBB; }
     .icon-btn.delete{ background:#FDEDEC; color:#E9483F; }
     .icon-btn.delete:hover{ background:#FADBD8; }
@@ -289,7 +289,7 @@
         display:flex; align-items:center; justify-content:center; text-decoration:none;
         transition:background .15s, color .15s, border-color .15s;
     }
-    .pagination-wrap li > a:hover{ border-color: var(--orange,#EF7B2E); color: var(--orange,#EF7B2E); }
+    .pagination-wrap li > a:hover{ border-color: var(--orange,#BF0001); color: var(--orange,#BF0001); }
     .pagination-wrap li.active span, .pagination-wrap li > span[aria-current]{
         background: linear-gradient(135deg, #0F1526, #1D2439); border-color: transparent; color:#fff;
     }
