@@ -84,9 +84,10 @@ class HomeController extends Controller
     public function licenses()
     {
         $licenseBanner = LicenseBanner::first();
-        $certificates = Certificate::latest()->get();
+        $apiCertificates = Certificate::where('license_type', 'API License')->latest()->get();
+        $premiumCertificates = Certificate::where('license_type', 'Premium License')->latest()->get();
 
-        return view('web.licenses', compact('licenseBanner', 'certificates'));
+        return view('web.licenses', compact('licenseBanner', 'apiCertificates', 'premiumCertificates'));
     }
 
     public function contact()

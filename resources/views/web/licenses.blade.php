@@ -27,10 +27,10 @@
         </section>
         {{-- ===== End Page Hero Section ===== --}}
 
-        {{-- ===== Certificates Grid Section ===== --}}
-        <section class="lc-section">
+                {{-- ===== API License Section ===== --}}
+        <section class="lc-group-section">
             <div class="lc-bg-decor lc-bg-decor-left">
-                <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                <svg viewBox="0 0 220 500" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <g transform="translate(140,10) rotate(-12)">
                         <circle cx="22" cy="22" r="20" />
@@ -54,12 +54,38 @@
                         <line x1="0" y1="28" x2="7" y2="28" />
                         <line x1="49" y1="28" x2="56" y2="28" />
                     </g>
-                    <g transform="translate(140,440) rotate(-15)">
-                        <path d="M18 0 C27 16 34 27 34 38 C34 49 26 57 18 57 C10 57 2 49 2 38 C2 27 9 16 18 0 Z" />
-                    </g>
                 </svg>
             </div>
 
+            <div class="lc-group-inner">
+                <h2>API License</h2>
+                <p class="lc-group-desc">EGTS maintains key American Petroleum Institute requirements and related qualifications supporting the manufacture, machining, threading, and inspection of oilfield components.</p>
+
+                @if ($apiCertificates->count())
+                <div class="lc-cert-grid">
+                    @foreach ($apiCertificates as $certificate)
+                        <div class="lc-cert-card">
+                            @if ($certificate->image)
+                                <div class="lc-cert-image">
+                                    <img src="{{ asset('storage/' . $certificate->image) }}" alt="{{ $certificate->title }}">
+                                </div>
+                            @endif
+                            <div class="lc-cert-body">
+                                <h3>{{ $certificate->title }}</h3>
+                                <p>{{ $certificate->description }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="lc-empty">No API license certificates added yet.</p>
+                @endif
+            </div>
+        </section>
+        {{-- ===== End API License Section ===== --}}
+
+        {{-- ===== Premium License Section ===== --}}
+        <section class="lc-group-section lc-group-section-alt">
             <div class="lc-bg-decor lc-bg-decor-right">
                 <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -91,31 +117,32 @@
                 </svg>
             </div>
 
-            <div class="lc-inner">
-                <span class="lc-eyebrow">OUR CERTIFICATIONS</span>
-                <h2>Quality You Can Verify</h2>
-                <p class="lc-intro">Every certification represents a standard we uphold consistently, backed by documented processes, audits, and continuous compliance across our operations.</p>
+            <div class="lc-group-inner">
+                <h2>Premium License</h2>
+                <p class="lc-group-desc">Our premium approvals and customer-specific qualifications support specialized oilfield connection machining and provide additional assurance of consistent technical quality.</p>
 
-                @if ($certificates->count())
-                <div class="lc-grid">
-                    @foreach ($certificates as $certificate)
-                        <div class="lc-card">
+                @if ($premiumCertificates->count())
+                <div class="lc-cert-grid">
+                    @foreach ($premiumCertificates as $certificate)
+                        <div class="lc-cert-card">
                             @if ($certificate->image)
-                                <div class="lc-card-image">
+                                <div class="lc-cert-image">
                                     <img src="{{ asset('storage/' . $certificate->image) }}" alt="{{ $certificate->title }}">
                                 </div>
                             @endif
-                            <h3>{{ $certificate->title }}</h3>
-                            <p>{{ $certificate->description }}</p>
+                            <div class="lc-cert-body">
+                                <h3>{{ $certificate->title }}</h3>
+                                <p>{{ $certificate->description }}</p>
+                            </div>
                         </div>
                     @endforeach
                 </div>
                 @else
-                <p class="lc-empty">No certifications added yet.</p>
+                <p class="lc-empty">No premium license certificates added yet.</p>
                 @endif
             </div>
         </section>
-        {{-- ===== End Certificates Grid Section ===== --}}
+        {{-- ===== End Premium License Section ===== --}}
 
     </main>
 

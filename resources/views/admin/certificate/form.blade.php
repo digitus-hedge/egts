@@ -50,16 +50,30 @@
             @method('PUT')
         @endif
 
-        {{-- Title --}}
+        {{-- Title & License Type --}}
         <div class="card">
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-type"></i></span> Title<span class="req">*</span></h2>
             </div>
-            <div class="field" style="margin-bottom:0;">
+            <div class="field">
                 <input type="text" name="title" value="{{ old('title', $certificate->title) }}"
                        class="{{ $errors->has('title') ? 'input-error' : '' }}"
                        placeholder="e.g. API Q1 Certification">
                 @error('title')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+                <div class="field-top">
+                    <label class="field-label"><i class="bi bi-tag"></i> License Type</label>
+                </div>
+                <select name="license_type" class="{{ $errors->has('license_type') ? 'input-error' : '' }}">
+                    <option value="">-- Select License Type --</option>
+                    <option value="API License" {{ old('license_type', $certificate->license_type) === 'API License' ? 'selected' : '' }}>API License</option>
+                    <option value="Premium License" {{ old('license_type', $certificate->license_type) === 'Premium License' ? 'selected' : '' }}>Premium License</option>
+                </select>
+                @error('license_type')
                     <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                 @enderror
             </div>
@@ -273,6 +287,37 @@ document.addEventListener('DOMContentLoaded', function () {
 @endif
 
 <style>
+
+    select {
+        width: 100%;
+        border: 1px solid var(--input-border,#DBDFEA);
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 14px;
+        font-family: inherit;
+        color: var(--ink,#171B2C);
+        outline: none;
+        background-color: #fff;
+        cursor: pointer;
+        transition: box-shadow .15s, border-color .15s;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        background-size: 16px;
+    }
+
+    select:focus {
+        border-color: var(--orange,#BF0001);
+        box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
+    }
+
+    select.input-error {
+        border-color: #e74c3c !important;
+        background-color: #fff8f8 !important;
+    }
+
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }

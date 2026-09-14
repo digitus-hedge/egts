@@ -47,6 +47,7 @@ class CertificateController extends Controller
         $certificate = new Certificate();
         $certificate->title = $data['title'];
         $certificate->description = $data['description'] ?? null;
+        $certificate->license_type = $data['license_type'] ?? null;
         $certificate->meta_title = $data['meta_title'] ?? null;
         $certificate->meta_description = $data['meta_description'] ?? null;
 
@@ -71,6 +72,7 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         $certificate->title = $data['title'];
+        $certificate->license_type = $data['license_type'] ?? null;
         $certificate->description = $data['description'] ?? null;
 
         if ($request->hasFile('image')) {

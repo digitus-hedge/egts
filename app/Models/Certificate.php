@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
-    protected $fillable = ['title', 'description', 'image','meta_title','meta_description'];
+    protected $fillable = ['title', 'license_type', 'description', 'image','meta_title','meta_description'];
 }

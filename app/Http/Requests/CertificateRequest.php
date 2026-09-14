@@ -18,6 +18,7 @@ class CertificateRequest extends FormRequest
         return [
             'title'       => 'required|string|max:255',
             'description' => 'required|string|max:1000',
+            'license_type' => 'required|in:API License,Premium License',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
             'meta_title'       => 'nullable|string|max:60',
@@ -37,6 +38,8 @@ class CertificateRequest extends FormRequest
             'image.image' => 'File must be a valid image.',
             'image.mimes' => 'Image must be JPG, PNG, or WEBP.',
             'image.max'   => 'Image must not exceed 10MB.',
+            'license_type.required' => 'Please select a license type.',
+            'license_type.in' => 'Please select a valid license type.',
         ];
     }
 

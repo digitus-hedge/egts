@@ -72,6 +72,7 @@
                         <th>Image</th>
                         <th>Title</th>
                         <th>Description</th>
+                        <th>License Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -91,6 +92,7 @@
                         <td class="desc-cell">
                             <div class="desc-clamp">{{ Str::limit($certificate->description, 90) ?: '—' }}</div>
                         </td>
+                        <td>{{ $certificate->license_type ?: '—' }}</td>
                         <td>
                             <div class="actions-cell">
                                 <a href="{{ route('admin.home.certificates.edit', $certificate->id) }}" class="icon-btn edit" title="Edit">
@@ -303,6 +305,7 @@
     .empty-state h3{ font-size:14.5px; font-weight:700; margin:0 0 4px; color: var(--ink,#171B2C); }
     .empty-state p{ font-size:13px; color: var(--muted,#667085); margin:0 0 18px; }
 
+    
     @media (max-width:760px){
         .desc-cell{ display:none; }
         thead th:nth-child(3){ display:none; }

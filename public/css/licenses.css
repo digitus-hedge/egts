@@ -61,14 +61,18 @@
 }
 
 /* ==========================================================================
-   CERTIFICATES GRID SECTION
+   LICENSE GROUP SECTIONS (API / Premium)
    ========================================================================== */
-.lc-section {
+.lc-group-section {
     position: relative;
     width: 100%;
-    padding: 90px 24px;
+    padding: 70px 24px;
     background-color: #ffffff;
     overflow: hidden;
+}
+
+.lc-group-section-alt {
+    background-color: #f7f7f7;
 }
 
 .lc-bg-decor {
@@ -76,7 +80,7 @@
     top: 0;
     width: 200px;
     height: 100%;
-    color: rgba(180, 7, 7, 0.12);
+    color: rgba(180, 7, 7, 0.1);
     pointer-events: none;
     z-index: 0;
 }
@@ -95,92 +99,83 @@
     right: 0;
 }
 
-.lc-inner {
+.lc-group-inner {
     position: relative;
     z-index: 1;
     max-width: 1280px;
     margin: 0 auto;
-    text-align: center;
 }
 
-.lc-eyebrow {
-    display: inline-block;
-    font-size: 13px;
+.lc-group-inner h2 {
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: 1px;
-    color: #b40707;
-    margin-bottom: 12px;
-}
-
-.lc-inner h2 {
-    font-size: 34px;
-    font-weight: 600;
     color: #1a1a1a;
-    margin: 0 0 20px;
+    margin: 0 0 14px;
 }
 
-.lc-intro {
+.lc-group-desc {
     font-size: 15px;
-    line-height: 1.75;
+    line-height: 1.7;
     color: #555;
-    max-width: 700px;
-    margin: 0 auto 50px;
+    max-width: 800px;
+    margin: 0 0 36px;
 }
 
 .lc-empty {
-    font-size: 15px;
+    font-size: 14px;
     color: #888;
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
-/* ===== Grid ===== */
-.lc-grid {
+/* ===== Certificate Card Grid — 4 per row ===== */
+.lc-cert-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
-    text-align: left;
+    gap: 24px;
 }
 
-.lc-card {
-    background-color: #ffffff;
-    border: 1px solid #eee;
+.lc-cert-card {
+    background-color: #eef0f4;
     border-radius: 10px;
-    padding: 28px 24px;
-    text-align: center;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.lc-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+.lc-cert-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
 }
 
-.lc-card-image {
+.lc-cert-image {
     width: 100%;
-    height: 120px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    padding: 16px;
 }
 
-.lc-card-image img {
+.lc-cert-image img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.lc-card h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 10px;
+.lc-cert-body {
+    background-color: #ffffff;
+    padding: 18px;
 }
 
-.lc-card p {
-    font-size: 13.5px;
-    line-height: 1.6;
+.lc-cert-body h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+}
+
+.lc-cert-body p {
+    font-size: 12.5px;
+    line-height: 1.55;
     color: #666;
     margin: 0;
 }
@@ -201,8 +196,12 @@
         display: none;
     }
 
-    .lc-grid {
+    .lc-cert-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lc-group-inner h2 {
+        font-size: 24px;
     }
 }
 
@@ -215,15 +214,11 @@
         padding: 0 20px 50px;
     }
 
-    .lc-section {
+    .lc-group-section {
         padding: 50px 20px;
     }
 
-    .lc-inner h2 {
-        font-size: 26px;
-    }
-
-    .lc-grid {
+    .lc-cert-grid {
         grid-template-columns: 1fr;
     }
 }
