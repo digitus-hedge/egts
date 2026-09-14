@@ -11,7 +11,7 @@
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#BF0001',
+            confirmButtonColor: '#EF7B2E',
             timer: 2500,
             timerProgressBar: true
         });
@@ -114,7 +114,7 @@
                         <div class="slot-top">
                             <span class="slot-label">{{ $label }}</span>
                         </div>
-                        <div class="drop img-slot {{ $banner->{$field} ? 'filled' : '' }}" data-file-input="file-{{ $field }}" onclick="handleDropClick(this)">
+                        <div class="drop img-slot {{ $banner->{$field} ? 'filled' : '' }}"    id="drop-{{ $field }}"  data-file-input="file-{{ $field }}" onclick="handleDropClick(this)">
                             @if ($banner->{$field})
                                 <img src="{{ Storage::url($banner->{$field}) }}" id="preview-{{ $field }}" alt="{{ $label }}">
                                 <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, '{{ $field }}', 'preview-{{ $field }}')" title="Remove image">
@@ -162,22 +162,22 @@
 
 
             <div class="video-slot-wrap">
-                @if ($banner->video)
-                    <div class="video-drop-filled" id="videoPreviewWrap">
-                        <video src="{{ Storage::url($banner->video) }}" controls></video>
-                        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                    </div>
-                @else
-                    <div class="video-drop" id="videoDrop" onclick="document.getElementById('file-video').click()">
-                        <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
-                        <div class="drop-title">Click to upload a video</div>
-                        <div class="drop-sub">Autoplays muted on the homepage banner</div>
-                    </div>
-                @endif
+             @if ($banner->video)
+    <div class="video-drop-filled" id="videoDrop">
+        <video src="{{ Storage::url($banner->video) }}" controls></video>
+        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+@else
+    <div class="video-drop" id="videoDrop" onclick="document.getElementById('file-video').click()">
+        <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+        <div class="drop-title">Click to upload a video</div>
+        <div class="drop-sub">Autoplays muted on the homepage banner</div>
+    </div>
+@endif
                 <input type="file" id="file-video" name="video" accept="video/*" data-max-size="20" hidden
-                       onchange="showFileSize(this,'size-video'); enforceMutualExclusivity()">
+       onchange="previewVideo(this); showFileSize(this,'size-video'); enforceMutualExclusivity()">
                 <input type="hidden" name="remove_video" id="remove-video" value="0">
                 <span class="file-size-info" id="size-video"></span>
                 @error('video')
@@ -234,6 +234,119 @@
         </div>
     </form>
 </div>
+
+
+
+<script>
+document.getElementById('bannerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitBannerForm();
+});
+
+function submitBannerForm() {
+    const form = document.getElementById('bannerForm');
+    const formData = new FormData(form);
+    const submitBtn = document.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    // clear previous errors
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    form.querySelectorAll('.notice.caution.dynamic-error').forEach(el => el.remove());
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showBannerValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: 'Banner updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showBannerValidationErrors(errors) {
+    const form = document.getElementById('bannerForm');
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        description: f => f.querySelector('[name="description"]'),
+        image_1: f => document.getElementById('drop-image_1'),
+        image_2: f => document.getElementById('drop-image_2'),
+        image_3: f => document.getElementById('drop-image_3'),
+        video: f => document.getElementById('videoDrop'),
+        meta_title: f => f.querySelector('[name="meta_title"]'),
+        meta_description: f => f.querySelector('[name="meta_description"]'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+
+        // Special case: "at least 1 image" error shows as a banner notice, not tied to one slot
+        if (field === 'image_1' && message.includes('at least 1 image')) {
+            const imageSection = document.getElementById('imageSection');
+            const notice = document.createElement('div');
+            notice.className = 'notice caution dynamic-error';
+            notice.style.marginBottom = '16px';
+            notice.innerHTML = `<i class="bi bi-exclamation-circle" style="margin-top:1px;"></i><p>${message}</p>`;
+            imageSection.querySelector('.section-title').insertAdjacentElement('afterend', notice);
+            return;
+        }
+
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
 
 <script>
     function handleDropClick(el) {
@@ -339,12 +452,38 @@
         enforceMutualExclusivity();
     }
 
-    function removeUploadedVideo(event) {
-        event.stopPropagation();
-        document.getElementById('remove-video').value = '1';
-        document.getElementById('file-video').value = '';
+   function previewVideo(input) {
+    const dropWrap = document.getElementById('videoDrop');
+    if (!dropWrap) {
+        console.error('previewVideo: #videoDrop not found in DOM');
+        return;
+    }
+    if (!input.files || !input.files[0]) return;
 
-        const wrap = document.getElementById('videoPreviewWrap');
+    const file = input.files[0];
+    const url = URL.createObjectURL(file);
+
+    dropWrap.outerHTML = `
+        <div class="video-drop-filled" id="videoDrop">
+            <video src="${url}" controls></video>
+            <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    `;
+}
+
+function removeUploadedVideo(event) {
+    event.stopPropagation();
+    document.getElementById('remove-video').value = '1';
+    document.getElementById('file-video').value = '';
+
+    const wrap = document.querySelector('.video-drop-filled');
+    if (wrap) {
+        const videoEl = wrap.querySelector('video');
+        if (videoEl && videoEl.src.startsWith('blob:')) {
+            URL.revokeObjectURL(videoEl.src);
+        }
         wrap.outerHTML = `
             <div class="video-drop" id="videoDrop" onclick="document.getElementById('file-video').click()">
                 <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
@@ -352,9 +491,10 @@
                 <div class="drop-sub">Autoplays muted on the homepage banner</div>
             </div>
         `;
-        document.getElementById('size-video').textContent = '';
-        enforceMutualExclusivity();
     }
+    document.getElementById('size-video').textContent = '';
+    enforceMutualExclusivity();
+}
 
     // ===== Images and video are mutually exclusive: selecting one disables the other =====
     function enforceMutualExclusivity() {
@@ -369,11 +509,11 @@
             return anyNewFile || anyExistingKept;
         }
 
-        function videoActive() {
-            const newFile = videoInput.files && videoInput.files.length > 0;
-            const existingKept = document.getElementById('videoPreviewWrap') !== null;
-            return newFile || existingKept;
-        }
+      function videoActive() {
+    const newFile = videoInput.files && videoInput.files.length > 0;
+    const existingKept = document.querySelector('.video-drop-filled') !== null;
+    return newFile || existingKept;
+}
 
         function clearNote(section) {
             const note = section.querySelector('.exclusivity-note');
@@ -417,8 +557,7 @@
 
     document.addEventListener('DOMContentLoaded', enforceMutualExclusivity);
 
-
-     document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     // ===== Scroll to the first validation error on page load =====
     const firstErrorField = document.querySelector('.input-error, .upload-btn-error');
     const firstErrorMsg = document.querySelector('.field-error');
@@ -442,7 +581,7 @@
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }
     .crumbs span:first-child{ cursor:pointer; transition:color .15s; }
-    .crumbs span:first-child:hover{ color: var(--orange,#BF0001); }
+    .crumbs span:first-child:hover{ color: var(--orange,#EF7B2E); }
 
     .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
     .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
@@ -451,7 +590,7 @@
     .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
     .section-title .optional{ font-size:11px; font-weight:400; color: var(--faint,#9AA1B2); }
-    .icon{ display:inline-flex; color: var(--orange,#BF0001); }
+    .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
     .section-sub{ font-size:12px; color: var(--faint,#9AA1B2); margin:0 0 16px; }
 
     .field{ margin-bottom:28px; }
@@ -466,7 +605,7 @@
         outline:none; transition:box-shadow .15s, border-color .15s;
     }
     input[type=text]:focus, textarea:focus{
-        border-color: var(--orange,#BF0001);
+        border-color: var(--orange,#EF7B2E);
         box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
     }
     textarea{ resize:vertical; line-height:1.5; }
@@ -492,7 +631,7 @@
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
     }
-    .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+    .drop:hover{ border-color: var(--orange,#EF7B2E); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
     .ico-circle{ width:40px; height:40px; border-radius:999px; background:#EEF0F6; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
@@ -504,7 +643,7 @@
         color:rgba(255,255,255,0.9); font-size:11px; display:flex; align-items:center; gap:4px;
     }
     .choose-btn{
-        margin-top:8px; width:100%; font-size:12px; font-weight:600; color: var(--orange,#BF0001);
+        margin-top:8px; width:100%; font-size:12px; font-weight:600; color: var(--orange,#EF7B2E);
         background:#fff; border:1px solid var(--orange-border,#F3D8C2); border-radius:8px;
         padding:7px 0; cursor:pointer; transition:background .15s;
     }
@@ -524,9 +663,29 @@
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; transition:border-color .15s, background .15s;
     }
-    .video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
-    .video-drop-filled{ position:relative; border-radius:12px; overflow:hidden; background:#000; }
-    .video-drop-filled video{ width:100%; display:block; }
+    .video-drop:hover{ border-color: var(--orange,#EF7B2E); background: var(--orange-tint,#FFF8F3); }
+    .video-drop-filled {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-drop-filled video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+.video-drop-filled .remove-img-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 5; /* sit above the native <video> controls layer */
+}
 
     .file-size-info{ display:block; font-size:12px; color:#1e8449; margin-top:6px; }
     .file-size-info.size-error{ color:#e74c3c; font-weight:600; }

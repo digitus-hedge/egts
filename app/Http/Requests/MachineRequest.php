@@ -13,10 +13,14 @@ class MachineRequest extends FormRequest
 
     public function rules(): array
     {
+        $machine = $this->route('machine');
+
         return [
             'title'       => 'required|string|max:255',
             'description' => 'required|string|max:1000',
-            'image'       => 'required|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'image'       => ($machine && $machine->image)
+                                ? 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240'
+                                : 'required|image|mimes:jpeg,jpg,png,webp|max:10240',
         ];
     }
 

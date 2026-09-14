@@ -40,7 +40,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.home.license-banner.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.home.license-banner.store') }}" method="POST" enctype="multipart/form-data"  id="licenseBannerForm">
         @csrf
 
         <div class="card">
@@ -67,30 +67,39 @@
             </div>
         </div>
 
-        <div class="card" style="margin-top:20px;">
-            <div class="card-body">
-                <label class="section-label"><i class="bi bi-image"></i> Banner Image</label>
-                <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong></p>
+     <div class="card" style="margin-top:20px;">
+    <div class="card-body">
+        <label class="section-label"><i class="bi bi-image"></i> Banner Image</label>
 
-                <div class="image-upload-box">
-                    <div class="thumb-wrap-lg">
-                        @if ($licenseBanner->image)
-                            <img src="{{ Storage::url($licenseBanner->image) }}" id="preview-image">
-                        @else
-                            <i class="bi bi-image" id="preview-image" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>
-                        @endif
-                    </div>
-                    <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
-                        <i class="bi bi-upload"></i> Choose file
-                        <input type="file" name="image" accept="image/*"
-                               onchange="previewImage(this, 'preview-image')" hidden>
-                    </label>
-                    @error('image')
-                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                    @enderror
-                </div>
+         <div class="notice caution">
+                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+                <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
             </div>
+        <!-- <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong></p> -->
+
+        <div class="image-upload-box">
+            <div class="thumb-wrap-lg" id="thumb-wrap-image">
+                @if ($licenseBanner->image)
+                    <img src="{{ Storage::url($licenseBanner->image) }}" id="preview-image">
+                    <button type="button" class="remove-img-btn" onclick="removeLicenseImage(event)" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                @else
+                    <i class="bi bi-image" id="preview-image" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>
+                @endif
+            </div>
+            <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
+                <i class="bi bi-upload"></i> Choose file
+                <input type="file" id="file-license-image" name="image" accept="image/*"
+                       onchange="previewLicenseImage(this)" hidden>
+            </label>
+            <input type="hidden" name="remove_image" id="remove-image" value="0">
+            @error('image')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
         </div>
+    </div>
+</div>
 
         <div class="form-actions">
             <a href="{{ route('admin.dashboard') }}" class="btn-cancel">Cancel</a>
@@ -100,6 +109,130 @@
         </div>
     </form>
 </div>
+
+<script>
+document.getElementById('licenseBannerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitLicenseBannerForm();
+});
+
+function submitLicenseBannerForm() {
+    const form = document.getElementById('licenseBannerForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-primary');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    form.querySelectorAll('.upload-btn-error').forEach(el => el.classList.remove('upload-btn-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showLicenseBannerValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'License banner updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showLicenseBannerValidationErrors(errors) {
+    const form = document.getElementById('licenseBannerForm');
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        description: f => f.querySelector('[name="description"]'),
+        image: f => f.querySelector('.upload-btn'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        if (field === 'image') {
+            target.classList.add('upload-btn-error');
+        } else {
+            target.classList.add('input-error');
+        }
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error, .upload-btn-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+<script>
+function previewLicenseImage(input) {
+    const wrap = document.getElementById('thumb-wrap-image');
+    if (!wrap || !input.files || !input.files[0]) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        wrap.innerHTML = `
+            <img src="${e.target.result}" id="preview-image">
+            <button type="button" class="remove-img-btn" onclick="removeLicenseImage(event)" title="Remove image">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        `;
+        document.getElementById('remove-image').value = '0';
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+function removeLicenseImage(event) {
+    event.stopPropagation();
+    document.getElementById('remove-image').value = '1';
+    document.getElementById('file-license-image').value = '';
+
+    const wrap = document.getElementById('thumb-wrap-image');
+    wrap.innerHTML = `<i class="bi bi-image" id="preview-image" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>`;
+}
+</script>
 
 <script>
     function previewImage(input, previewId) {
@@ -161,11 +294,19 @@
     .field-error{ display:flex; align-items:center; gap:5px; color:#E9483F; font-size:12.5px; margin-top:7px; }
 
     .image-upload-box{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; max-width:360px; }
-    .thumb-wrap-lg{
-        width:100%; height:170px; border-radius:12px; overflow:hidden; border:1px solid var(--line,#E9EBF2);
-        background: var(--canvas,#F6F7FB); display:flex; align-items:center; justify-content:center;
-    }
-    .thumb-wrap-lg img{ width:100%; height:100%; object-fit:cover; display:block; }
+   .thumb-wrap-lg{
+    position: relative;
+    width:100%; height:170px; border-radius:12px; overflow:hidden; border:1px solid var(--line,#E9EBF2);
+    background: var(--canvas,#F6F7FB); display:flex; align-items:center; justify-content:center;
+}
+.thumb-wrap-lg img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.thumb-wrap-lg .remove-img-btn{
+    position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:999px;
+    background:rgba(0,0,0,0.6); border:none; color:#fff; display:flex; align-items:center;
+    justify-content:center; cursor:pointer; transition:background .15s; z-index:3; font-size:13px;
+}
+.thumb-wrap-lg .remove-img-btn:hover{ background:rgba(0,0,0,0.85); }
 
     .upload-btn{
         display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color: var(--ink,#171B2C);
@@ -190,6 +331,14 @@
         transition:transform .12s ease, box-shadow .12s ease;
     }
     .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -6px rgba(15,21,38,0.5); color:#fff; }
+
+        .notice{ margin-top:16px; display:flex; align-items:flex-start; gap:8px; background: var(--canvas,#F6F7FB); border-radius:10px; padding:10px 12px; }
+    .notice p{ font-size:12px; color: var(--muted,#667085); margin:0; }
+    .notice.caution{ background:#FFF8E8; border:1px solid #F5E3B3; margin-top:0; margin-bottom:16px; }
+    .notice.caution i{ color:#B7791F; }
+    .notice.caution p{ color:#8A6116; }
+    .notice.caution p b{ color:#6B4A0E; font-weight:700; }
+    .exclusivity-note{ margin-bottom:0; }
 </style>
 
 @endsection

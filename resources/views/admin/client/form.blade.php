@@ -105,6 +105,7 @@
     </div>
 </template>
 
+
 <script>
     const imageRowsContainer = document.getElementById('imageRows');
     const imageTemplate = document.getElementById('imageRowTemplate');
@@ -181,6 +182,98 @@
 });
 
 
+</script>
+
+
+<script>
+document.getElementById('clientForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitClientTitleForm();
+});
+
+function submitClientTitleForm() {
+    const form = document.getElementById('clientForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showClientTitleValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Client section updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showClientTitleValidationErrors(errors) {
+    const form = document.getElementById('clientForm');
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        description: f => f.querySelector('[name="description"]'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
 </script>
 
 <style>

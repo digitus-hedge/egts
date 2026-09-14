@@ -1,16 +1,3 @@
-{{--
-    ============================================================================
-    Uses the confirmed real variable: $contactBanner (confirmed from your
-    actual code). Every field is wrapped in ?? null so the page won't crash
-    even if a particular column doesn't exist yet or the row hasn't been
-    created — values will simply show empty until saved.
-
-    One placeholder still needs confirming/replacing if wrong:
-      "admin.home.contact-banner.store" — the form action route below.
-      Swap it if your real route name differs.
-    ============================================================================
---}}
-
 @extends('admin.layout')
 @section('title', 'Contact Us')
 @section('content')
@@ -119,7 +106,7 @@
 
             <div class="image-slot" style="max-width:350px;">
                 @php $contactImage = $c('image'); @endphp
-                <div class="drop img-slot {{ $contactImage ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
+                <div class="drop img-slot {{ $contactImage ? 'filled' : '' }}"      id="drop-contact-banner-image" data-file-input="file-image" onclick="handleDropClick(this)">
                     @if ($contactImage)
                         <img src="{{ Storage::url($contactImage) }}" id="preview-image" alt="Contact banner image">
                         <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
@@ -156,7 +143,7 @@
             <div class="two-col">
                 <div class="field">
                     <div class="field-top">
-                        <label class="field-label"><i class="bi bi-telephone" style="font-size:13px;"></i> Phone Number</label>
+                        <label class="field-label"><i class="bi bi-telephone" style="font-size:13px;"></i> Phone Number <span class="req">*</span></label>
                     </div>
                     <input type="text" name="phone" value="{{ old('phone', $c('phone')) }}"
                            class="{{ $errors->has('phone') ? 'input-error' : '' }}"
@@ -168,7 +155,7 @@
 
                 <div class="field">
                     <div class="field-top">
-                        <label class="field-label"><i class="bi bi-envelope" style="font-size:13px;"></i> Email Address</label>
+                        <label class="field-label"><i class="bi bi-envelope" style="font-size:13px;"></i> Email Address<span class="req">*</span></label>
                     </div>
                     <input type="email" name="email" value="{{ old('email', $c('email')) }}"
                            class="{{ $errors->has('email') ? 'input-error' : '' }}"
@@ -181,7 +168,7 @@
 
             <div class="field">
                 <div class="field-top">
-                    <label class="field-label"><i class="bi bi-clock" style="font-size:13px;"></i> Working Hours</label>
+                    <label class="field-label"><i class="bi bi-clock" style="font-size:13px;"></i> Working Hours<span class="req">*</span></label>
                 </div>
                 <input type="text" name="working_hours" value="{{ old('working_hours', $c('working_hours')) }}"
                        class="{{ $errors->has('working_hours') ? 'input-error' : '' }}"
@@ -193,7 +180,7 @@
 
             <div class="field" style="margin-bottom:0;">
                 <div class="field-top">
-                    <label class="field-label"><i class="bi bi-geo-alt" style="font-size:13px;"></i> Address</label>
+                    <label class="field-label"><i class="bi bi-geo-alt" style="font-size:13px;"></i> Address<span class="req">*</span></label>
                 </div>
                 <textarea name="address" rows="3"
                           class="{{ $errors->has('address') ? 'input-error' : '' }}"
@@ -391,6 +378,112 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endif
+
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitContactBannerForm();
+});
+
+function submitContactBannerForm() {
+    const form = document.getElementById('contactForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showContactBannerValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Contact page updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showContactBannerValidationErrors(errors) {
+    const form = document.getElementById('contactForm');
+
+    const departments = ['admin', 'qa_qc', 'operations', 'sales'];
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        company_name: f => f.querySelector('[name="company_name"]'),
+        description: f => f.querySelector('[name="description"]'),
+        image: f => document.getElementById('drop-contact-banner-image'),
+        phone: f => f.querySelector('[name="phone"]'),
+        email: f => f.querySelector('[name="email"]'),
+        working_hours: f => f.querySelector('[name="working_hours"]'),
+        address: f => f.querySelector('[name="address"]'),
+    };
+
+    // Add department fields dynamically: admin_phone, admin_email, qa_qc_phone, etc.
+    departments.forEach(dept => {
+        fieldMap[`${dept}_phone`] = f => f.querySelector(`[name="${dept}_phone"]`);
+        fieldMap[`${dept}_email`] = f => f.querySelector(`[name="${dept}_email"]`);
+    });
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
 
 <style>
     .req{ color: var(--orange, #BF0001); }

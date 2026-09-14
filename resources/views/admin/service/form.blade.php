@@ -109,7 +109,7 @@
             </div>
 
             <div class="image-slot" style="max-width:340px;">
-                <div class="drop img-slot {{ $service->banner_image ? 'filled' : '' }}" data-file-input="file-banner-image" onclick="handleDropClick(this)">
+                <div class="drop img-slot {{ $service->banner_image ? 'filled' : '' }}"   id="drop-service-banner-image"  data-file-input="file-banner-image" onclick="handleDropClick(this)">
                     @if ($service->banner_image)
                         <img src="{{ Storage::url($service->banner_image) }}" id="preview-banner-image" alt="Banner image">
                         <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'banner_image', 'preview-banner-image')" title="Remove image">
@@ -148,7 +148,7 @@
             </div>
 
             <div class="image-slot" style="max-width:340px;">
-                <div class="drop img-slot {{ $service->image ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
+                <div class="drop img-slot {{ $service->image ? 'filled' : '' }}"     id="drop-service-hero-image"  data-file-input="file-image" onclick="handleDropClick(this)">
                     @if ($service->image)
                         <img src="{{ Storage::url($service->image) }}" id="preview-image" alt="Hero image">
                         <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
@@ -364,9 +364,15 @@
 
 <template id="specRowTemplate">
     <div class="specs-row">
-        <input type="text" name="specifications[__INDEX__][specification]" placeholder="e.g. Thread Form">
-        <input type="text" name="specifications[__INDEX__][details]" placeholder="e.g. Buttress thread form">
-        <input type="text" name="specifications[__INDEX__][compliance]" placeholder="e.g. API 5B">
+        <div class="spec-cell">
+            <input type="text" name="specifications[__INDEX__][specification]" placeholder="e.g. Thread Form">
+        </div>
+        <div class="spec-cell">
+            <input type="text" name="specifications[__INDEX__][details]" placeholder="e.g. Buttress thread form">
+        </div>
+        <div class="spec-cell">
+            <input type="text" name="specifications[__INDEX__][compliance]" placeholder="e.g. API 5B">
+        </div>
         <button type="button" class="action-btn delete btn-remove-row" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
@@ -389,7 +395,7 @@
                     <i class="bi bi-exclamation-triangle"></i>
                     <p>Recommended size: {{ $imageWidth ?? 552 }}&times;{{ $imageHeight ?? 340 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
                 </div>
-                <div class="drop img-slot inspection-drop" onclick="this.nextElementSibling.click()">
+               <div class="drop img-slot inspection-drop" onclick="this.closest('.field').querySelector('input[type=file]').click()">
                     <div class="preview-placeholder inspection-preview">
                         <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:16px;"></i></div>
                         <div class="drop-title">Click to upload</div>
@@ -724,6 +730,177 @@ function removeInspectionImage(event, btn) {
 }
 </script>
 
+
+<script>
+document.getElementById('serviceForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitServiceCardForm();
+});
+
+function submitServiceCardForm() {
+    const form = document.getElementById('serviceForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showServiceCardValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Service saved successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.href = (data && data.redirect) ? data.redirect : "{{ route('admin.home.services') }}";
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showServiceCardValidationErrors(errors) {
+    const form = document.getElementById('serviceForm');
+
+    const topLevelMap = {
+        title: f => f.querySelector('[name="title"]'),
+        show_on_home: f => f.querySelector('[name="show_on_home"]'),
+        description: f => f.querySelector('[name="description"]'),
+        banner_image: f => document.getElementById('drop-service-banner-image'),
+        image: f => document.getElementById('drop-service-hero-image'),
+        process_description: f => f.querySelector('[name="process_description"]'),
+        meta_title: f => f.querySelector('[name="meta_title"]'),
+        meta_description: f => f.querySelector('[name="meta_description"]'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+
+        // inspection_process.{i}.{subfield}
+        let m = field.match(/^inspection_process\.(\d+)\.(\w+)$/);
+        if (m) {
+            const [, idx, sub] = m;
+            const input = form.querySelector(`[name="inspection_process[${idx}][${sub}]"]`);
+            const target = input ? (sub === 'image' ? (input.previousElementSibling || input) : input) : null;
+            if (!target) return;
+            target.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            target.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // technical_scope.{i}
+        m = field.match(/^technical_scope\.(\d+)$/);
+        if (m) {
+            const [, idx] = m;
+            const input = form.querySelector(`[name="technical_scope[${idx}]"]`);
+            if (!input) return;
+            input.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            input.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // specifications.{i}.{subfield}
+        m = field.match(/^specifications\.(\d+)\.(\w+)$/);
+        if (m) {
+            const [, idx, sub] = m;
+            const input = form.querySelector(`[name="specifications[${idx}][${sub}]"]`);
+            if (!input) return;
+            input.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            input.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // Array-level / group errors -> attach after the relevant "Add" button
+        const groupTargets = {
+            inspection_process: 'addInspectionBtn',
+            technical_scope: 'addScopeBtn',
+            specifications: 'addSpecBtn',
+        };
+        if (groupTargets[field]) {
+            const btn = document.getElementById(groupTargets[field]);
+            if (btn) {
+                const errorEl = document.createElement('span');
+                errorEl.className = 'field-error';
+                errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+                btn.insertAdjacentElement('afterend', errorEl);
+            }
+            return;
+        }
+
+        // gallery / gallery.*
+        if (field === 'gallery' || field.startsWith('gallery.')) {
+            const uploadBtn = document.getElementById('galleryUploadBtn');
+            if (uploadBtn) {
+                const errorEl = document.createElement('span');
+                errorEl.className = 'field-error';
+                errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+                uploadBtn.insertAdjacentElement('afterend', errorEl);
+            }
+            return;
+        }
+
+        // top-level fields
+        const target = topLevelMap[field] ? topLevelMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+
 @if ($errors->any())
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -897,11 +1074,18 @@ document.addEventListener('DOMContentLoaded', function () {
         font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
         color: var(--faint,#9AA1B2); padding:0 4px 10px; border-bottom:1px solid var(--line,#E9EBF2); margin-bottom:12px;
     }
-    .specs-row{ display:grid; grid-template-columns:1fr 1.5fr 1fr 40px; gap:12px; margin-bottom:10px; align-items:center; }
-    @media (max-width:700px){
-        .specs-table-header{ display:none; }
-        .specs-row{ grid-template-columns:1fr; }
-    }
+   .specs-row{ display:grid; grid-template-columns:1fr 1.5fr 1fr 40px; gap:12px; margin-bottom:10px; align-items:start; }
+
+.spec-cell {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+@media (max-width:700px){
+    .specs-table-header{ display:none; }
+    .specs-row{ grid-template-columns:1fr; }
+}
 
     .action-btn{
         width:36px; height:36px; border-radius:8px; border:none;
@@ -952,6 +1136,15 @@ document.addEventListener('DOMContentLoaded', function () {
     position: relative;
 }
 
+.inspection-drop.img-slot img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    max-width: none !important;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
 .inspection-preview {
     position: absolute;
     inset: 0;
@@ -1067,6 +1260,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .notice-compact b {
     font-weight: 600;
+}
+
+.spec-cell {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 </style>
 

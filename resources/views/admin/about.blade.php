@@ -605,6 +605,146 @@
 });
 </script>
 
+
+
+
+
+<script>
+document.getElementById('aboutForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitAboutForm();
+});
+
+function submitAboutForm() {
+    const form = document.getElementById('aboutForm');
+
+    // Sync TinyMCE editor content back into their underlying textareas before reading FormData
+    if (window.tinymce) {
+        tinymce.triggerSave();
+    }
+
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showAboutValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'About page updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#D5392F'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showAboutValidationErrors(errors) {
+    const form = document.getElementById('aboutForm');
+
+    // Simple text/textarea fields -> found by [name]
+    // Image fields -> found by their .drop element via data-file-input's related input id
+    const imageFieldMap = {
+        banner_image: 'file-banner',
+        section_two_image_one: 'file-section_two_image_one',
+        section_two_image_two: 'file-section_two_image_two',
+        mission_image: 'file-mission',
+        vision_image: 'file-vision',
+        values_image: 'file-values',
+        commitment_image: 'file-commitment',
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+
+        // Rich text fields: named X_description_rich, editor id is X-desc-rich
+        if (field.endsWith('_description_rich')) {
+            const key = field.replace('_description_rich', '');
+            const editorTextarea = document.getElementById(`${key}-desc-rich`);
+            const anchor = editorTextarea
+                ? (editorTextarea.closest('.field') || editorTextarea)
+                : form.querySelector(`[name="${field}"]`);
+            if (!anchor) return;
+
+            anchor.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            anchor.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // Image fields
+        if (imageFieldMap[field]) {
+            const fileInput = document.getElementById(imageFieldMap[field]);
+            const drop = fileInput ? fileInput.closest('.image-slot, .field').querySelector('.drop') : null;
+            if (!drop) return;
+
+            drop.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            drop.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // Plain text/textarea fields
+        const target = form.querySelector(`[name="${field}"]`);
+        if (!target) return;
+
+        target.classList.add('input-error');
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+
 @if ($errors->any())
 <script>
 document.addEventListener('DOMContentLoaded', function () {

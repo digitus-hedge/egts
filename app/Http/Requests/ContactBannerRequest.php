@@ -13,20 +13,24 @@ class ContactBannerRequest extends FormRequest
 
     public function rules(): array
     {
+        $contactBanner = $this->route('contact_banner') ?? \App\Models\ContactBanner::first();
+
         return [
             'title'         => 'required|string|max:255',
             'company_name'  => 'required|string|max:255',
             'description'   => 'required|string|max:1000',
-                  'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
-            'address'       => 'nullable|string|max:255',
-            'phone'         => 'nullable|string|max:50',
-            'email'         => 'nullable|email|max:255',
-            'working_hours' => 'nullable|string|max:255',
+            'image'         => ($contactBanner && $contactBanner->image)
+                                    ? 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240'
+                                    : 'required|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'address'       => 'required|string|max:255',
+            'phone'         => 'required|string|max:50',
+            'email'         => 'required|email|max:255',
+            'working_hours' => 'required|string|max:255',
 
             'admin_phone'      => 'nullable|string|max:50',
             'admin_email'      => 'nullable|email|max:255',
-            'qaqc_phone'       => 'nullable|string|max:50',
-            'qaqc_email'       => 'nullable|email|max:255',
+            'qa_qc_phone'      => 'nullable|string|max:50',
+            'qa_qc_email'      => 'nullable|email|max:255',
             'operations_phone' => 'nullable|string|max:50',
             'operations_email' => 'nullable|email|max:255',
             'sales_phone'      => 'nullable|string|max:50',

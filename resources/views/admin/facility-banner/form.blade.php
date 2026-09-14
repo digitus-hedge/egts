@@ -92,7 +92,7 @@
             </div>
 
                 <div class="image-slot" style="max-width:350px;">
-                    <div class="drop img-slot {{ $facilityBanner->banner_image ? 'filled' : '' }}" data-file-input="file-banner-image" onclick="handleDropClick(this)">
+                    <div class="drop img-slot {{ $facilityBanner->banner_image ? 'filled' : '' }}" id="drop-facility-banner-image"  data-file-input="file-banner-image" onclick="handleDropClick(this)">
                         @if ($facilityBanner->banner_image)
                             <img src="{{ Storage::url($facilityBanner->banner_image) }}" id="preview-banner-image" alt="Banner image">
                             <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'banner_image', 'preview-banner-image')" title="Remove image">
@@ -336,6 +336,114 @@ initRichText('#infrastructure_description');
             chooseBtn.style.display = 'block';
         }
     }
+</script>
+
+
+<script>
+document.getElementById('facilityForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitFacilityForm();
+});
+
+function submitFacilityForm() {
+    const form = document.getElementById('facilityForm');
+
+    // In case infrastructure_description is a rich-text editor (TinyMCE) elsewhere on this page
+    if (window.tinymce) {
+        tinymce.triggerSave();
+    }
+
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showFacilityValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Facility page updated successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.reload();
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showFacilityValidationErrors(errors) {
+    const form = document.getElementById('facilityForm');
+
+    const fieldMap = {
+        banner_title: f => f.querySelector('[name="banner_title"]'),
+        banner_description: f => f.querySelector('[name="banner_description"]'),
+        banner_image: f => document.getElementById('drop-facility-banner-image'),
+        operations_heading: f => f.querySelector('[name="operations_heading"]'),
+        operations_description: f => f.querySelector('[name="operations_description"]'),
+        infrastructure_title: f => f.querySelector('[name="infrastructure_title"]'),
+        infrastructure_description: f => {
+            const el = document.getElementById('infrastructure_description');
+            return el ? (el.closest('.field') || el) : null;
+        },
+        meta_title: f => f.querySelector('[name="meta_title"]'),
+        meta_description: f => f.querySelector('[name="meta_description"]'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
 </script>
 
 @if ($errors->any())

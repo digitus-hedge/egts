@@ -92,7 +92,7 @@
             </div>
 
             <div class="image-slot" style="max-width:300px;">
-                <div class="drop img-slot {{ $tool->image ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
+                <div class="drop img-slot {{ $tool->image ? 'filled' : '' }}"  id="drop-tool-image" data-file-input="file-image" onclick="handleDropClick(this)">
                     @if ($tool->image)
                         <img src="{{ Storage::url($tool->image) }}" id="preview-image" alt="Tool image">
                         <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
@@ -240,7 +240,97 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endif
+<script>
+document.getElementById('toolForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitToolForm();
+});
 
+function submitToolForm() {
+    const form = document.getElementById('toolForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showToolValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Tool saved successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.href = (data && data.redirect) ? data.redirect : "{{ route('admin.home.facility.tools') }}";
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showToolValidationErrors(errors) {
+    const form = document.getElementById('toolForm');
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        description: f => f.querySelector('[name="description"]'),
+        image: f => document.getElementById('drop-tool-image'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
 <style>
     .crumbs{ display:flex; align-items:center; gap:8px; font-size:13px; color: var(--faint,#9AA1B2); margin-bottom:10px; }
     .crumbs b{ color: var(--ink,#171B2C); font-weight:600; }

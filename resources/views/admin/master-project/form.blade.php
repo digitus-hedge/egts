@@ -92,7 +92,7 @@
             </div>
 
             <div class="image-slot" style="max-width:300px;">
-                <div class="drop img-slot {{ $masterProject->image ? 'filled' : '' }}" data-file-input="file-image" onclick="handleDropClick(this)">
+                <div class="drop img-slot {{ $masterProject->image ? 'filled' : '' }}"      id="drop-master-project-image"  data-file-input="file-image" onclick="handleDropClick(this)">
                     @if ($masterProject->image)
                         <img src="{{ Storage::url($masterProject->image) }}" id="preview-image" alt="Project image">
                         <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
@@ -213,6 +213,101 @@
         }
     }
 </script>
+
+
+
+<script>
+document.getElementById('masterProjectForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitMasterProjectForm();
+});
+
+function submitMasterProjectForm() {
+    const form = document.getElementById('masterProjectForm');
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-save');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => null);
+
+        if (response.status === 422 && data && data.errors) {
+            showMasterProjectValidationErrors(data.errors);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved!',
+            text: (data && data.message) ? data.message : 'Project saved successfully.',
+            confirmButtonColor: '#BF0001',
+            timer: 2000,
+            timerProgressBar: true
+        }).then(() => {
+            window.location.href = (data && data.redirect) ? data.redirect : "{{ route('admin.home.masters.projects') }}";
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonColor: '#BF0001'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+}
+
+function showMasterProjectValidationErrors(errors) {
+    const form = document.getElementById('masterProjectForm');
+
+    const fieldMap = {
+        title: f => f.querySelector('[name="title"]'),
+        description: f => f.querySelector('[name="description"]'),
+        image: f => document.getElementById('drop-master-project-image'),
+    };
+
+    Object.keys(errors).forEach(field => {
+        const message = errors[field][0];
+        const target = fieldMap[field] ? fieldMap[field](form) : null;
+        if (!target) return;
+
+        target.classList.add('input-error');
+
+        const errorEl = document.createElement('span');
+        errorEl.className = 'field-error';
+        errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+        target.insertAdjacentElement('afterend', errorEl);
+    });
+
+    const firstErrorField = form.querySelector('.input-error');
+    if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+
 
 @if ($errors->any())
 <script>
