@@ -18,9 +18,14 @@ class FacilityBannerRequest extends FormRequest
         return [
             'banner_title'       => 'required|string|max:60',
             'banner_description' => 'required|string|max:150',
-            // banner_image is never "required" here — the after() hook below
-            // decides whether it's actually missing, based on the existing record.
+            // banner_image / banner_video are never "required" directly here — the
+            // after() hook below decides whether at least one is missing, based on
+            // the existing record and any removal flags.
             'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'banner_video'       => 'nullable|mimes:mp4,mov,webm|max:20480',
+
+            'remove_banner_image' => 'nullable|boolean',
+            'remove_banner_video' => 'nullable|boolean',
 
             'operations_heading'     => 'required|string|max:45',
             'operations_description' => 'required|string|max:350',
@@ -50,6 +55,7 @@ class FacilityBannerRequest extends FormRequest
             'banner_title'       => 'Banner Title',
             'banner_description' => 'Banner Description',
             'banner_image'       => 'Banner Image',
+            'banner_video'       => 'Banner Video',
 
             'operations_heading'     => 'Operations Heading',
             'operations_description' => 'Operations Description',
@@ -70,10 +76,16 @@ class FacilityBannerRequest extends FormRequest
             $facilityBanner = FacilityBanner::first();
 
             $hasNewImage = $this->hasFile('banner_image');
-            $hasExistingImage = $facilityBanner && !empty($facilityBanner->banner_image);
+            $hasNewVideo = $this->hasFile('banner_video');
 
-            if (!$hasNewImage && !$hasExistingImage) {
-                $validator->errors()->add('banner_image', 'Please upload a Banner Image.');
+            $hasExistingImage = $facilityBanner && !empty($facilityBanner->banner_image) && !$this->boolean('remove_banner_image');
+            $hasExistingVideo = $facilityBanner && !empty($facilityBanner->banner_video) && !$this->boolean('remove_banner_video');
+
+            $willHaveImage = $hasNewImage || $hasExistingImage;
+            $willHaveVideo = $hasNewVideo || $hasExistingVideo;
+
+            if (!$willHaveImage && !$willHaveVideo) {
+                $validator->errors()->add('banner_image', 'Please upload either a Banner Image or a Banner Video.');
             }
 
             // Same fix pattern for infrastructure_description (CKEditor empty-markup check)

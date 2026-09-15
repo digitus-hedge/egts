@@ -22,28 +22,59 @@ class ProjectsClientsBannerController extends Controller
         return view('admin.projects-clients-banner.form', compact('projectsClientsBanner'));
     }
 
-    public function store(ProjectsClientsBannerRequest $request)
-    {
-        $data = $request->validated();
+  public function store(ProjectsClientsBannerRequest $request)
+{
+    $data = $request->validated();
 
-        $banner = ProjectsClientsBanner::first() ?? new ProjectsClientsBanner();
-        $banner->title = $data['title'] ?? null;
-        $banner->content = $data['content'] ?? null;
-        $banner->description = $data['description'] ?? null;
+    $banner = ProjectsClientsBanner::first() ?? new ProjectsClientsBanner();
+    $banner->title = $data['title'] ?? null;
+    $banner->content = $data['content'] ?? null;
+    $banner->description = $data['description'] ?? null;
 
-        if ($request->hasFile('image')) {
-            if ($banner->image) {
-                Storage::disk('public')->delete($banner->image);
-            }
-            $banner->image = $this->processAndStoreImage($request->file('image'));
+    // ----- Image -----
+    if ($request->hasFile('image')) {
+        if ($banner->image) {
+            Storage::disk('public')->delete($banner->image);
         }
+        $banner->image = $this->processAndStoreImage($request->file('image'));
 
-        $banner->save();
-
-        return redirect()
-            ->route('admin.home.projects-clients.banner')
-            ->with('success', 'Projects & Clients banner saved successfully.');
+        // uploading a new image clears any existing video (mutually exclusive)
+        if ($banner->video) {
+            Storage::disk('public')->delete($banner->video);
+            $banner->video = null;
+        }
+    } elseif ($request->boolean('remove_image')) {
+        if ($banner->image) {
+            Storage::disk('public')->delete($banner->image);
+        }
+        $banner->image = null;
     }
+
+    // ----- Video -----
+    if ($request->hasFile('video')) {
+        if ($banner->video) {
+            Storage::disk('public')->delete($banner->video);
+        }
+        $banner->video = $request->file('video')->store('projects-clients/videos', 'public');
+
+        // uploading a new video clears any existing image (mutually exclusive)
+        if ($banner->image) {
+            Storage::disk('public')->delete($banner->image);
+            $banner->image = null;
+        }
+    } elseif ($request->boolean('remove_video')) {
+        if ($banner->video) {
+            Storage::disk('public')->delete($banner->video);
+        }
+        $banner->video = null;
+    }
+
+    $banner->save();
+
+    return redirect()
+        ->route('admin.home.projects-clients.banner')
+        ->with('success', 'Projects & Clients banner saved successfully.');
+}
 
     private function processAndStoreImage($file): string
     {

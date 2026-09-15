@@ -422,6 +422,106 @@
             }
         }
 
+
+        
+        /* ===== Small tablet / large phone ===== */
+@media (max-width: 700px) {
+    .topbar {
+        padding: 14px 18px;
+        gap: 12px;
+    }
+
+    .topbar h3 {
+        font-size: 16px;
+    }
+
+    .content-area {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 18px;
+        border-radius: 14px;
+    }
+}
+
+/* ===== Mobile phones ===== */
+@media (max-width: 560px) {
+    .topbar {
+        padding: 12px 14px;
+        gap: 8px;
+    }
+
+    .topbar h3 {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .topbar-right {
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    /* Hide the "Welcome, Name" text, keep just the avatar */
+    .topbar-user span:not(.avatar) {
+        display: none;
+    }
+
+    .topbar-user .avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    /* Icon-only logout button */
+    .logout-btn span {
+        display: none;
+    }
+
+    .logout-btn {
+        padding: 9px 11px;
+    }
+
+    .menu-toggle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .content-area {
+        padding: 14px;
+    }
+
+    .card {
+        padding: 14px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+    }
+
+    /* Sidebar takes full width as a drawer on small phones */
+    .sidebar {
+        width: 84%;
+        max-width: 300px;
+    }
+}
+
+/* ===== Extra small phones ===== */
+@media (max-width: 380px) {
+    .topbar h3 {
+        font-size: 13px;
+    }
+
+    .topbar-right {
+        gap: 6px;
+    }
+
+    .logout-btn {
+        padding: 8px 9px;
+        font-size: 12px;
+    }
+}
     </style>
 
     @stack('styles')

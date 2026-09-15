@@ -19,6 +19,10 @@ class ServiceBannerRequest extends FormRequest
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'video'       => ['nullable', 'mimes:mp4,mov,webm', 'max:20480'],
+
+            'remove_image' => ['nullable', 'boolean'],
+            'remove_video' => ['nullable', 'boolean'],
 
             'meta_title'       => ['nullable', 'string', 'max:60'],
             'meta_description' => ['nullable', 'string', 'max:160'],
@@ -41,26 +45,34 @@ class ServiceBannerRequest extends FormRequest
             'title'             => 'Title',
             'description'       => 'Short Description',
             'image'             => 'Image',
+            'video'             => 'Video',
             'meta_title'        => 'Meta Title',
             'meta_description'  => 'Meta Description',
         ];
     }
 
     /**
-     * Image is required only if THIS specific banner record has no image yet —
-     * not merely "does any row exist in the table."
+     * Either an Image or a Video is required — not both, and not neither.
+     * Checked against THIS specific banner record's existing files, not merely
+     * "does any row exist in the table."
      */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator) {
-            $banner = ServiceBanner::first(); // singleton row, adjust if you key by id
+   public function withValidator(Validator $validator): void
+{
+    $validator->after(function (Validator $validator) {
+        $banner = ServiceBanner::first(); // singleton row, adjust if you key by id
 
-            $hasNewImage = $this->hasFile('image');
-            $hasExistingImage = $banner && !empty($banner->image);
+        $hasNewImage = $this->hasFile('image');
+        $hasNewVideo = $this->hasFile('video');
 
-            if (!$hasNewImage && !$hasExistingImage) {
-                $validator->errors()->add('image', 'Please upload an image.');
-            }
-        });
-    }
+        $hasExistingImage = $banner && !empty($banner->image) && !$this->boolean('remove_image');
+        $hasExistingVideo = $banner && !empty($banner->banner_video) && !$this->boolean('remove_video');
+
+        $willHaveImage = $hasNewImage || $hasExistingImage;
+        $willHaveVideo = $hasNewVideo || $hasExistingVideo;
+
+        if (!$willHaveImage && !$willHaveVideo) {
+            $validator->errors()->add('image', 'Please upload either an Image or a Video.');
+        }
+    });
+}
 }

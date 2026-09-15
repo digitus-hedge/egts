@@ -28,34 +28,64 @@ class ServiceBannerController extends Controller
     /**
      * STORE — creates the Service Banner section if none exists, otherwise updates the existing one
      */
-    public function store(ServiceBannerRequest $request)
-    {
-        $data = $request->validated();
+  public function store(ServiceBannerRequest $request)
+{
+    $data = $request->validated();
 
-        $about = ServiceBanner::first() ?? new ServiceBanner();
+    $about = ServiceBanner::first() ?? new ServiceBanner();
 
-        // Mandatory fields
-        $about->banner_heading    = $data['title'];
-        $about->banner_description = $data['description'];
+    // Mandatory fields
+    $about->banner_heading     = $data['title'];
+    $about->banner_description = $data['description'];
 
-        // Optional (not mandatory) fields
-        $about->meta_title       = $data['meta_title'] ?? null;
-        $about->meta_description = $data['meta_description'] ?? null;
+    // Optional (not mandatory) fields
+    $about->meta_title       = $data['meta_title'] ?? null;
+    $about->meta_description = $data['meta_description'] ?? null;
 
-        if ($request->hasFile('image')) {
-            if ($about->image) {
-                Storage::disk('public')->delete($about->image);
-            }
-            $about->image = $this->processAndStoreImage($request->file('image'));
+    // ----- Image -----
+    if ($request->hasFile('image')) {
+        if ($about->image) {
+            Storage::disk('public')->delete($about->image);
         }
+        $about->image = $this->processAndStoreImage($request->file('image'));
 
-        $about->save();
-
-        return redirect()
-            ->route('admin.service.banner')
-            ->with('success', 'Service Banner Section saved successfully.');
+        // uploading a new image clears any existing video (mutually exclusive)
+        if ($about->video) {
+            Storage::disk('public')->delete($about->video);
+            $about->video = null;
+        }
+    } elseif ($request->boolean('remove_image')) {
+        if ($about->image) {
+            Storage::disk('public')->delete($about->image);
+        }
+        $about->image = null;
     }
 
+    // ----- Video -----
+if ($request->hasFile('video')) {
+    if ($about->banner_video) {
+        Storage::disk('public')->delete($about->banner_video);
+    }
+    $about->banner_video = $request->file('video')->store('service-banner/videos', 'public');
+
+    // uploading a new video clears any existing image (mutually exclusive)
+    if ($about->image) {
+        Storage::disk('public')->delete($about->image);
+        $about->image = null;
+    }
+} elseif ($request->boolean('remove_video')) {
+    if ($about->banner_video) {
+        Storage::disk('public')->delete($about->banner_video);
+    }
+    $about->banner_video = null;
+}
+
+    $about->save();
+
+    return redirect()
+        ->route('admin.service.banner')
+        ->with('success', 'Service Banner Section saved successfully.');
+}
     private function processAndStoreImage($file): string
     {
         $filename = 'services/' . Str::random(20) . '.webp';

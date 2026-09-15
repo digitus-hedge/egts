@@ -69,34 +69,62 @@
 
      <div class="card" style="margin-top:20px;">
     <div class="card-body">
-        <label class="section-label"><i class="bi bi-image"></i> Banner Image</label>
+        <label class="section-label"><i class="bi bi-image"></i> Banner Image or Video</label>
 
-         <div class="notice caution">
-                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
-            </div>
-        <!-- <p class="hint-text">Accepted: JPG, PNG, WEBP — Max size: <strong>2MB</strong></p> -->
+        <div class="notice caution">
+            <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+            <p><b>Image:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+               <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+        </div>
 
-        <div class="image-upload-box">
-            <div class="thumb-wrap-lg" id="thumb-wrap-image">
-                @if ($licenseBanner->image)
-                    <img src="{{ Storage::url($licenseBanner->image) }}" id="preview-image">
-                    <button type="button" class="remove-img-btn" onclick="removeLicenseImage(event)" title="Remove image">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                @else
-                    <i class="bi bi-image" id="preview-image" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>
-                @endif
+        <div class="media-row">
+            {{-- Image upload --}}
+            <div class="image-upload-box">
+                <span class="slot-label">Banner Image</span>
+                <div class="thumb-wrap-lg" id="thumb-wrap-image">
+                    @if ($licenseBanner->image)
+                        <img src="{{ Storage::url($licenseBanner->image) }}" id="preview-image">
+                        <button type="button" class="remove-img-btn" onclick="removeLicenseImage(event)" title="Remove image">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    @else
+                        <i class="bi bi-image" id="preview-image" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>
+                    @endif
+                </div>
+                <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
+                    <i class="bi bi-upload"></i> Choose file
+                    <input type="file" id="file-license-image" name="image" accept="image/*"
+                           onchange="previewLicenseImage(this)" hidden>
+                </label>
+                <input type="hidden" name="remove_image" id="remove-image" value="0">
+                @error('image')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
             </div>
-            <label class="upload-btn {{ $errors->has('image') ? 'upload-btn-error' : '' }}">
-                <i class="bi bi-upload"></i> Choose file
-                <input type="file" id="file-license-image" name="image" accept="image/*"
-                       onchange="previewLicenseImage(this)" hidden>
-            </label>
-            <input type="hidden" name="remove_image" id="remove-image" value="0">
-            @error('image')
-                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
+
+            {{-- Video upload --}}
+            <div class="image-upload-box">
+                <span class="slot-label">Banner Video</span>
+                <div class="thumb-wrap-lg" id="thumb-wrap-video">
+                    @if ($licenseBanner->video)
+                        <video src="{{ Storage::url($licenseBanner->video) }}" id="preview-video" muted playsinline preload="metadata"></video>
+                        <button type="button" class="remove-img-btn" onclick="removeLicenseVideo(event)" title="Remove video">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    @else
+                        <i class="bi bi-camera-video" id="preview-video" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>
+                    @endif
+                </div>
+                <label class="upload-btn {{ $errors->has('video') ? 'upload-btn-error' : '' }}">
+                    <i class="bi bi-upload"></i> Choose file
+                    <input type="file" id="file-license-video" name="video" accept="video/*"
+                           onchange="previewLicenseVideo(this)" hidden>
+                </label>
+                <input type="hidden" name="remove_video" id="remove-video" value="0">
+                @error('video')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
         </div>
     </div>
 </div>
@@ -180,7 +208,8 @@ function showLicenseBannerValidationErrors(errors) {
     const fieldMap = {
         title: f => f.querySelector('[name="title"]'),
         description: f => f.querySelector('[name="description"]'),
-        image: f => f.querySelector('.upload-btn'),
+        image: f => f.querySelector('#file-license-image').closest('.image-upload-box').querySelector('.upload-btn'),
+        video: f => f.querySelector('#file-license-video').closest('.image-upload-box').querySelector('.upload-btn'),
     };
 
     Object.keys(errors).forEach(field => {
@@ -188,7 +217,7 @@ function showLicenseBannerValidationErrors(errors) {
         const target = fieldMap[field] ? fieldMap[field](form) : null;
         if (!target) return;
 
-        if (field === 'image') {
+        if (field === 'image' || field === 'video') {
             target.classList.add('upload-btn-error');
         } else {
             target.classList.add('input-error');
@@ -252,6 +281,37 @@ function removeLicenseImage(event) {
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+
+    function previewLicenseVideo(input) {
+    const wrap = document.getElementById('thumb-wrap-video');
+    if (!wrap || !input.files || !input.files[0]) return;
+
+    const videoURL = URL.createObjectURL(input.files[0]);
+
+    wrap.innerHTML = `
+        <video src="${videoURL}" id="preview-video" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeLicenseVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    `;
+    document.getElementById('remove-video').value = '0';
+}
+
+function removeLicenseVideo(event) {
+    event.stopPropagation();
+
+    const wrap = document.getElementById('thumb-wrap-video');
+    const existingVideo = wrap.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    document.getElementById('remove-video').value = '1';
+    document.getElementById('file-license-video').value = '';
+
+    wrap.innerHTML = `<i class="bi bi-camera-video" id="preview-video" style="color:var(--faint,#9AA1B2); font-size:28px;"></i>`;
+}
 </script>
 
 <style>
@@ -293,13 +353,36 @@ function removeLicenseImage(event) {
     .upload-btn-error{ border-color:#E9483F !important; }
     .field-error{ display:flex; align-items:center; gap:5px; color:#E9483F; font-size:12.5px; margin-top:7px; }
 
-    .image-upload-box{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; max-width:360px; }
+  .image-upload-box{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+    width:360px;        /* was: max-width:360px */
+    flex-shrink:0;      /* prevent it from shrinking below 360px in the flex row */
+}
+
+/* ADD THIS */
+.media-row{
+    display:flex;
+    gap:24px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+}
    .thumb-wrap-lg{
     position: relative;
     width:100%; height:170px; border-radius:12px; overflow:hidden; border:1px solid var(--line,#E9EBF2);
     background: var(--canvas,#F6F7FB); display:flex; align-items:center; justify-content:center;
 }
 .thumb-wrap-lg img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+
+.thumb-wrap-lg video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
 
 .thumb-wrap-lg .remove-img-btn{
     position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:999px;
@@ -339,6 +422,91 @@ function removeLicenseImage(event) {
     .notice.caution p{ color:#8A6116; }
     .notice.caution p b{ color:#6B4A0E; font-weight:700; }
     .exclusivity-note{ margin-bottom:0; }
+
+
+    .video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+
+/* ===== Video preview state (filled) ===== */
+.video-drop.filled{
+    border:2px solid transparent;
+    cursor:default;
+}
+
+.video-drop video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    background:#0F1220;
+}
+
+.video-drop .uploaded-tag{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9);
+    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    pointer-events:none;
+}
+
+.images-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+}
+
+.slot-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted, #667085);
+}
+
+.slot-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.image-slot{
+    flex:1;
+    min-width:260px;
+}
+
+/* Make image drop use the same fixed height as video-drop instead of aspect-ratio */
+.drop{
+    position:relative;
+    height:190px;               /* was: aspect-ratio:4/3 */
+    border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA);
+    background:#FAFBFD;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color .15s, background .15s;
+    text-align:center;
+}
+.video-btn-spacer{
+    margin-top:8px;
+    height:35px; /* matches .choose-btn's total rendered height (padding + border + line-height) */
+}
+
 </style>
 
 @endsection

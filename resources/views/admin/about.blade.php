@@ -118,7 +118,7 @@
                     @enderror
                 </div>
 
-                <div class="field">
+                <!-- <div class="field">
                     <div class="field-top">
                         <label class="field-label">Banner Image<span class="req">*</span></label>
                     </div>
@@ -154,7 +154,80 @@
                     @error('banner_image')
                         <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                     @enderror
-                </div>
+                </div> -->
+
+
+
+                <div class="field">
+    <div class="field-top">
+        <label class="field-label">Banner Image or Video <span class="req">*</span></label>
+        <span class="field-hint">Provide either one</span>
+    </div>
+
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Image:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+           <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+    </div>
+
+    <div class="images-row">
+        {{-- Banner Image slot --}}
+        <div class="image-slot" style="max-width:340px;">
+            <div class="slot-top"><span class="slot-label">Banner Image</span></div>
+            <div class="drop img-slot {{ $why->banner_image ? 'filled' : '' }}" data-file-input="file-banner" onclick="handleDropClick(this)">
+                @if ($why->banner_image)
+                    <img src="{{ Storage::url($why->banner_image) }}" id="preview-banner" alt="Banner image">
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'banner_image', 'preview-banner')" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-banner">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-banner" name="banner_image" accept="image/*" hidden
+                   onchange="previewImage(this,'preview-banner')">
+            <input type="hidden" name="remove_banner_image" id="remove-banner_image" value="0">
+            @if (!$why->banner_image)
+                <button type="button" class="choose-btn" onclick="document.getElementById('file-banner').click()">Choose file</button>
+            @endif
+            @error('banner_image')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+        {{-- Banner Video slot --}}
+        <div class="image-slot" style="max-width:340px;">
+            <div class="slot-top"><span class="slot-label">Banner Video</span></div>
+           <div class="video-drop {{ $why->banner_video ? 'has-file filled' : '' }} {{ $errors->has('banner_video') ? 'input-error' : '' }}"
+     id="banner-video-drop" onclick="handleVideoDropClick(this)">
+    @if ($why->banner_video)
+        <video src="{{ Storage::url($why->banner_video) }}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+    @else
+        <div class="preview-placeholder" id="preview-banner-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    @endif
+</div>
+            <input type="file" id="file-banner-video" name="banner_video" accept="video/*" hidden
+                   onchange="showBannerVideoFileName(this)">
+            <input type="hidden" name="remove_banner_video" id="remove-banner_video" value="0">
+            @error('banner_video')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
             </div>
 
             {{-- About EGTS --}}
@@ -603,6 +676,56 @@
         firstErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 });
+
+
+function showBannerVideoFileName(input) {
+    const drop = document.getElementById('banner-video-drop');
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const videoURL = URL.createObjectURL(file);
+
+    drop.classList.add('has-file', 'filled');
+    drop.innerHTML = `
+        <video src="${videoURL}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> ${file.name} &middot; ${(file.size / (1024 * 1024)).toFixed(2)} MB</div>
+    `;
+}
+
+
+function handleVideoDropClick(el) {
+    if (el.classList.contains('filled')) return;
+    document.getElementById('file-banner-video').click();
+}
+
+function removeUploadedVideo(event) {
+    event.stopPropagation();
+    const drop = document.getElementById('banner-video-drop');
+    const fileInput = document.getElementById('file-banner-video');
+    const removeInput = document.getElementById('remove-banner_video');
+
+    // Revoke the object URL to free memory if one was set
+    const existingVideo = drop.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    if (removeInput) removeInput.value = '1';
+    if (fileInput) fileInput.value = '';
+
+    drop.classList.remove('has-file', 'filled');
+    drop.innerHTML = `
+        <div class="preview-placeholder" id="preview-banner-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
+
 </script>
 
 
@@ -710,6 +833,19 @@ function showAboutValidationErrors(errors) {
             errorEl.className = 'field-error';
             errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
             anchor.insertAdjacentElement('afterend', errorEl);
+            return;
+        }
+
+        // Banner video field -> its own .video-drop element, not a .drop
+        if (field === 'banner_video') {
+            const drop = document.getElementById('banner-video-drop');
+            if (!drop) return;
+
+            drop.classList.add('input-error');
+            const errorEl = document.createElement('span');
+            errorEl.className = 'field-error';
+            errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
+            drop.insertAdjacentElement('afterend', errorEl);
             return;
         }
 
@@ -911,6 +1047,42 @@ document.addEventListener('DOMContentLoaded', function () {
         0%, 100% { outline-color:#e74c3c; }
         50% { outline-color:#ff8a80; }
     } */
+.video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+
+/* ===== Video preview state (filled) ===== */
+.video-drop.filled{
+    border:2px solid transparent;
+    cursor:default;
+}
+
+.video-drop video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    background:#0F1220;
+}
+
+.video-drop .uploaded-tag{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9);
+    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    pointer-events:none;
+}
 </style>
 
 @endsection

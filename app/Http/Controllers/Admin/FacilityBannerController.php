@@ -22,34 +22,65 @@ class FacilityBannerController extends Controller
         return view('admin.facility-banner.form', compact('facilityBanner'));
     }
 
-    public function store(FacilityBannerRequest $request)
-    {
-        $data = $request->validated();
+  public function store(FacilityBannerRequest $request)
+{
+    $data = $request->validated();
 
-        $facilityBanner = FacilityBanner::first() ?? new FacilityBanner();
-        $facilityBanner->banner_title = $data['banner_title'] ?? null;
-        $facilityBanner->banner_description = $data['banner_description'] ?? null;
-        $facilityBanner->operations_heading = $data['operations_heading'] ?? null;
-        $facilityBanner->operations_description = $data['operations_description'] ?? null;
-        $facilityBanner->infrastructure_title = $data['infrastructure_title'] ?? null;
-        $facilityBanner->infrastructure_description = $data['infrastructure_description'] ?? null;
+    $facilityBanner = FacilityBanner::first() ?? new FacilityBanner();
+    $facilityBanner->banner_title = $data['banner_title'] ?? null;
+    $facilityBanner->banner_description = $data['banner_description'] ?? null;
+    $facilityBanner->operations_heading = $data['operations_heading'] ?? null;
+    $facilityBanner->operations_description = $data['operations_description'] ?? null;
+    $facilityBanner->infrastructure_title = $data['infrastructure_title'] ?? null;
+    $facilityBanner->infrastructure_description = $data['infrastructure_description'] ?? null;
 
-        $facilityBanner->meta_title = $data['meta_title'] ?? null;
-        $facilityBanner->meta_description = $data['meta_description'] ?? null;
+    $facilityBanner->meta_title = $data['meta_title'] ?? null;
+    $facilityBanner->meta_description = $data['meta_description'] ?? null;
 
-        if ($request->hasFile('banner_image')) {
-            if ($facilityBanner->banner_image) {
-                Storage::disk('public')->delete($facilityBanner->banner_image);
-            }
-            $facilityBanner->banner_image = $this->processAndStoreImage($request->file('banner_image'));
+    // ----- Banner Image -----
+    if ($request->hasFile('banner_image')) {
+        if ($facilityBanner->banner_image) {
+            Storage::disk('public')->delete($facilityBanner->banner_image);
         }
+        $facilityBanner->banner_image = $this->processAndStoreImage($request->file('banner_image'));
 
-        $facilityBanner->save();
-
-        return redirect()
-            ->route('admin.home.facility.banner')
-            ->with('success', 'Facility banner saved successfully.');
+        // uploading a new image clears any existing video (mutually exclusive)
+        if ($facilityBanner->banner_video) {
+            Storage::disk('public')->delete($facilityBanner->banner_video);
+            $facilityBanner->banner_video = null;
+        }
+    } elseif ($request->boolean('remove_banner_image')) {
+        if ($facilityBanner->banner_image) {
+            Storage::disk('public')->delete($facilityBanner->banner_image);
+        }
+        $facilityBanner->banner_image = null;
     }
+
+    // ----- Banner Video -----
+    if ($request->hasFile('banner_video')) {
+        if ($facilityBanner->banner_video) {
+            Storage::disk('public')->delete($facilityBanner->banner_video);
+        }
+        $facilityBanner->banner_video = $request->file('banner_video')->store('facility-banner/videos', 'public');
+
+        // uploading a new video clears any existing image (mutually exclusive)
+        if ($facilityBanner->banner_image) {
+            Storage::disk('public')->delete($facilityBanner->banner_image);
+            $facilityBanner->banner_image = null;
+        }
+    } elseif ($request->boolean('remove_banner_video')) {
+        if ($facilityBanner->banner_video) {
+            Storage::disk('public')->delete($facilityBanner->banner_video);
+        }
+        $facilityBanner->banner_video = null;
+    }
+
+    $facilityBanner->save();
+
+    return redirect()
+        ->route('admin.home.facility.banner')
+        ->with('success', 'Facility banner saved successfully.');
+}
 
     private function processAndStoreImage($file): string
     {

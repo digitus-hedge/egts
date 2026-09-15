@@ -72,49 +72,79 @@
                     <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                 @enderror
             </div>
+<div class="field" style="margin-bottom:0;">
+    <div class="field-top">
+        <label class="field-label">Banner Image or Video<span class="req">*</span></label>
+        <span class="field-hint">Provide either one</span>
+    </div>
 
-            <div class="field" style="margin-bottom:0;">
-                <div class="field-top">
-                    <label class="field-label">Banner Image<span class="req">*</span></label>
-                </div>
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Image:</b> {{ $imageWidth ?? 90 }} &times; {{ $imageHeight ?? 60 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+           <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+    </div>
 
-                <!-- <div class="notice caution">
-                    <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                    <p>JPG, PNG, WEBP &middot; up to 10MB.</p>
-                </div> -->
-
-                   <div class="notice caution">
-                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p><b>Recommended size:</b> {{ $imageWidth ?? 90 }} &times; {{ $imageHeight ?? 60 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
-            </div>
-
-                <div class="image-slot" style="max-width:350px;">
-                    <div class="drop img-slot {{ $projectsClientsBanner->image ? 'filled' : '' }}"   id="drop-projects-clients-image"  data-file-input="file-image" onclick="handleDropClick(this)">
-                        @if ($projectsClientsBanner->image)
-                            <img src="{{ Storage::url($projectsClientsBanner->image) }}" id="preview-image" alt="Banner image">
-                            <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
-                            <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
-                        @else
-                            <div class="preview-placeholder" id="preview-image">
-                                <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
-                                <div class="drop-title">Click to upload</div>
-                                <div class="drop-sub">or drag &amp; drop</div>
-                            </div>
-                        @endif
+    <div class="images-row">
+        {{-- Image slot --}}
+        <div class="image-slot" style="max-width:350px;">
+            <div class="slot-top"><span class="slot-label">Banner Image</span></div>
+            <div class="drop img-slot {{ $projectsClientsBanner->image ? 'filled' : '' }}" id="drop-projects-clients-image" data-file-input="file-image" onclick="handleDropClick(this)">
+                @if ($projectsClientsBanner->image)
+                    <img src="{{ Storage::url($projectsClientsBanner->image) }}" id="preview-image" alt="Banner image">
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-image">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
                     </div>
-                    <input type="file" id="file-image" name="image" accept="image/*" hidden
-                           onchange="previewImage(this, 'preview-image')">
-                    <input type="hidden" name="remove_image" id="remove-image" value="0">
-                    @if (!$projectsClientsBanner->image)
-                        <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
-                    @endif
-                </div>
-                @error('image')
-                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                @enderror
+                @endif
             </div>
+            <input type="file" id="file-image" name="image" accept="image/*" hidden
+                   onchange="previewImage(this, 'preview-image')">
+            <input type="hidden" name="remove_image" id="remove-image" value="0">
+            @if (!$projectsClientsBanner->image)
+                <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+            @else
+                <div class="video-btn-spacer"></div>
+            @endif
+            @error('image')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+
+        {{-- Video slot --}}
+        <div class="image-slot" style="max-width:350px;">
+            <div class="slot-top"><span class="slot-label">Banner Video</span></div>
+            <div class="video-drop {{ $projectsClientsBanner->video ? 'has-file filled' : '' }} {{ $errors->has('video') ? 'input-error' : '' }}"
+                 id="drop-projects-clients-video" onclick="handleProjectsClientsVideoDropClick(this)">
+                @if ($projectsClientsBanner->video)
+                    <video src="{{ Storage::url($projectsClientsBanner->video) }}" muted playsinline preload="metadata"></video>
+                    <button type="button" class="remove-img-btn" onclick="removeProjectsClientsUploadedVideo(event)" title="Remove video">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-video">
+                        <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-video" name="video" accept="video/*" hidden
+                   onchange="showProjectsClientsVideoFileName(this)">
+            <input type="hidden" name="remove_video" id="remove-video" value="0">
+            <div class="video-btn-spacer"></div>
+            @error('video')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
         </div>
 
         {{-- Page Content --}}
@@ -219,12 +249,13 @@ function submitProjectsClientsForm() {
 function showProjectsClientsValidationErrors(errors) {
     const form = document.getElementById('projectsClientsForm');
 
-    const fieldMap = {
-        title: f => f.querySelector('[name="title"]'),
-        content: f => f.querySelector('[name="content"]'),
-        image: f => document.getElementById('drop-projects-clients-image'),
-        description: f => f.querySelector('[name="description"]'),
-    };
+   const fieldMap = {
+    title: f => f.querySelector('[name="title"]'),
+    content: f => f.querySelector('[name="content"]'),
+    image: f => document.getElementById('drop-projects-clients-image'),
+    video: f => document.getElementById('drop-projects-clients-video'),
+    description: f => f.querySelector('[name="description"]'),
+};
 
     Object.keys(errors).forEach(field => {
         const message = errors[field][0];
@@ -293,6 +324,55 @@ function showProjectsClientsValidationErrors(errors) {
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+
+
+    function handleProjectsClientsVideoDropClick(el) {
+    if (el.classList.contains('filled')) return;
+    document.getElementById('file-video').click();
+}
+
+function showProjectsClientsVideoFileName(input) {
+    const drop = document.getElementById('drop-projects-clients-video');
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const videoURL = URL.createObjectURL(file);
+
+    drop.classList.add('has-file', 'filled');
+    drop.innerHTML = `
+        <video src="${videoURL}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeProjectsClientsUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+    `;
+}
+
+function removeProjectsClientsUploadedVideo(event) {
+    event.stopPropagation();
+    const drop = document.getElementById('drop-projects-clients-video');
+    const fileInput = document.getElementById('file-video');
+    const removeInput = document.getElementById('remove-video');
+
+    const existingVideo = drop.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    if (removeInput) removeInput.value = '1';
+    if (fileInput) fileInput.value = '';
+
+    drop.classList.remove('has-file', 'filled');
+    drop.innerHTML = `
+        <div class="preview-placeholder" id="preview-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
+
 
     function removeUploadedImage(event, btn, fieldName, previewId) {
         event.stopPropagation();
@@ -379,12 +459,7 @@ function showProjectsClientsValidationErrors(errors) {
     .notice.caution{ background:#FFF8E8; border:1px solid #F5E3B3; }
     .notice.caution i{ color:#B7791F; }
 
-    .drop{
-        position:relative; aspect-ratio:4/3; border-radius:12px;
-        border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
-        display:flex; flex-direction:column; align-items:center; justify-content:center;
-        cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
-    }
+   
     .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -440,6 +515,89 @@ function showProjectsClientsValidationErrors(errors) {
     }
  .req{ color: var(--orange, #BF0001); }
 
+
+.video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+
+/* ===== Video preview state (filled) ===== */
+.video-drop.filled{
+    border:2px solid transparent;
+    cursor:default;
+}
+
+.video-drop video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    background:#0F1220;
+}
+
+.video-drop .uploaded-tag{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9);
+    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    pointer-events:none;
+}
+
+.images-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+}
+
+.slot-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted, #667085);
+}
+
+.slot-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.image-slot{
+    flex:1;
+    min-width:260px;
+}
+
+/* Make image drop use the same fixed height as video-drop instead of aspect-ratio */
+.drop{
+    position:relative;
+    height:190px;               /* was: aspect-ratio:4/3 */
+    border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA);
+    background:#FAFBFD;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color .15s, background .15s;
+    text-align:center;
+}
+.video-btn-spacer{
+    margin-top:8px;
+    height:35px; /* matches .choose-btn's total rendered height (padding + border + line-height) */
+}
 </style>
 
 @endsection

@@ -43,18 +43,49 @@ class ContactBannerController extends Controller
 
         $contactBanner->admin_phone = $data['admin_phone'] ?? null;
         $contactBanner->admin_email = $data['admin_email'] ?? null;
-        $contactBanner->qaqc_phone = $data['qaqc_phone'] ?? null;
-        $contactBanner->qaqc_email = $data['qaqc_email'] ?? null;
+        $contactBanner->qaqc_phone = $data['qa_qc_phone'] ?? null;
+        $contactBanner->qaqc_email = $data['qa_qc_email'] ?? null;
         $contactBanner->operations_phone = $data['operations_phone'] ?? null;
         $contactBanner->operations_email = $data['operations_email'] ?? null;
         $contactBanner->sales_phone = $data['sales_phone'] ?? null;
         $contactBanner->sales_email = $data['sales_email'] ?? null;
 
+        // ----- Banner Image -----
         if ($request->hasFile('image')) {
             if ($contactBanner->image) {
                 Storage::disk('public')->delete($contactBanner->image);
             }
             $contactBanner->image = $this->processAndStoreImage($request->file('image'));
+
+            // uploading a new image clears any existing video (mutually exclusive)
+            if ($contactBanner->video) {
+                Storage::disk('public')->delete($contactBanner->video);
+                $contactBanner->video = null;
+            }
+        } elseif ($request->boolean('remove_image')) {
+            if ($contactBanner->image) {
+                Storage::disk('public')->delete($contactBanner->image);
+            }
+            $contactBanner->image = null;
+        }
+
+        // ----- Banner Video -----
+        if ($request->hasFile('video')) {
+            if ($contactBanner->video) {
+                Storage::disk('public')->delete($contactBanner->video);
+            }
+            $contactBanner->video = $request->file('video')->store('contact-banner/videos', 'public');
+
+            // uploading a new video clears any existing image (mutually exclusive)
+            if ($contactBanner->image) {
+                Storage::disk('public')->delete($contactBanner->image);
+                $contactBanner->image = null;
+            }
+        } elseif ($request->boolean('remove_video')) {
+            if ($contactBanner->video) {
+                Storage::disk('public')->delete($contactBanner->video);
+            }
+            $contactBanner->video = null;
         }
 
         $contactBanner->save();
@@ -63,7 +94,7 @@ class ContactBannerController extends Controller
             ->route('admin.home.contact-banner')
             ->with('success', 'Contact Us banner saved successfully.');
     }
-
+    
     private function processAndStoreImage($file): string
     {
         $filename = 'contact-banner/' . Str::random(20) . '.webp';

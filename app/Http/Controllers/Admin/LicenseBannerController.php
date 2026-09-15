@@ -23,26 +23,57 @@ class LicenseBannerController extends Controller
     }
 
     public function store(LicenseBannerRequest $request)
-    {
-        $data = $request->validated();
+{
+    $data = $request->validated();
 
-        $licenseBanner = LicenseBanner::first() ?? new LicenseBanner();
-        $licenseBanner->title = $data['title'] ?? null;
-        $licenseBanner->description = $data['description'] ?? null;
+    $licenseBanner = LicenseBanner::first() ?? new LicenseBanner();
+    $licenseBanner->title = $data['title'] ?? null;
+    $licenseBanner->description = $data['description'] ?? null;
 
-        if ($request->hasFile('image')) {
-            if ($licenseBanner->image) {
-                Storage::disk('public')->delete($licenseBanner->image);
-            }
-            $licenseBanner->image = $this->processAndStoreImage($request->file('image'));
+    // ----- Image -----
+    if ($request->hasFile('image')) {
+        if ($licenseBanner->image) {
+            Storage::disk('public')->delete($licenseBanner->image);
         }
+        $licenseBanner->image = $this->processAndStoreImage($request->file('image'));
 
-        $licenseBanner->save();
-
-        return redirect()
-            ->route('admin.home.license-banner')
-            ->with('success', 'License banner saved successfully.');
+        // uploading a new image clears any existing video (mutually exclusive)
+        if ($licenseBanner->video) {
+            Storage::disk('public')->delete($licenseBanner->video);
+            $licenseBanner->video = null;
+        }
+    } elseif ($request->boolean('remove_image')) {
+        if ($licenseBanner->image) {
+            Storage::disk('public')->delete($licenseBanner->image);
+        }
+        $licenseBanner->image = null;
     }
+
+    // ----- Video -----
+    if ($request->hasFile('video')) {
+        if ($licenseBanner->video) {
+            Storage::disk('public')->delete($licenseBanner->video);
+        }
+        $licenseBanner->video = $request->file('video')->store('license-banner/videos', 'public');
+
+        // uploading a new video clears any existing image (mutually exclusive)
+        if ($licenseBanner->image) {
+            Storage::disk('public')->delete($licenseBanner->image);
+            $licenseBanner->image = null;
+        }
+    } elseif ($request->boolean('remove_video')) {
+        if ($licenseBanner->video) {
+            Storage::disk('public')->delete($licenseBanner->video);
+        }
+        $licenseBanner->video = null;
+    }
+
+    $licenseBanner->save();
+
+    return redirect()
+        ->route('admin.home.license-banner')
+        ->with('success', 'License banner saved successfully.');
+}
 
     private function processAndStoreImage($file): string
     {

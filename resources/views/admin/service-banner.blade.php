@@ -74,44 +74,78 @@
         </div>
 
         {{-- Image --}}
-        <div class="card">
-            <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-image"></i></span> Image<span class="req">*</span></h2>
-            </div>
+     <div class="card">
+    <div class="section-title">
+        <h2><span class="icon"><i class="bi bi-image"></i></span> Image or Video<span class="req">*</span></h2>
+    </div>
 
-            <div class="notice caution">
-                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p><b>Recommended size:</b> {{ $imageWidth ?? 550 }} &times; {{ $imageHeight ?? 560 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.</p>
-            </div>
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Image:</b> {{ $imageWidth ?? 550 }} &times; {{ $imageHeight ?? 560 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+           <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+    </div>
 
-            <div class="image-slot" style="max-width:300px;">
-                <div class="drop img-slot {{ $about->image ? 'filled' : '' }}"   id="drop-service-banner-image"  data-file-input="file-image" onclick="handleDropClick(this)">
-                    @if ($about->image)
-                        <img src="{{ Storage::url($about->image) }}" id="preview-image" alt="Banner image">
-                        <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
-                    @else
-                        <div class="preview-placeholder" id="preview-image">
-                            <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
-                            <div class="drop-title">Click to upload</div>
-                            <div class="drop-sub">or drag &amp; drop</div>
-                        </div>
-                    @endif
-                </div>
-                <input type="file" id="file-image" name="image" accept="image/*" data-max-size="10" hidden
-                       onchange="previewImage(this,'preview-image'); showFileSize(this,'size-image')">
-                <input type="hidden" name="remove_image" id="remove-image" value="0">
-                @if (!$about->image)
-                    <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+    <div class="images-row">
+        {{-- Image slot --}}
+        <div class="image-slot" style="max-width:300px;">
+            <div class="slot-top"><span class="slot-label">Image</span></div>
+            <div class="drop img-slot {{ $about->image ? 'filled' : '' }}" id="drop-service-banner-image" data-file-input="file-image" onclick="handleDropClick(this)">
+                @if ($about->image)
+                    <img src="{{ Storage::url($about->image) }}" id="preview-image" alt="Banner image">
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-image">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
                 @endif
-                <span class="file-size-info" id="size-image"></span>
             </div>
+            <input type="file" id="file-image" name="image" accept="image/*" data-max-size="10" hidden
+                   onchange="previewImage(this,'preview-image'); showFileSize(this,'size-image')">
+            <input type="hidden" name="remove_image" id="remove-image" value="0">
+            @if (!$about->image)
+                <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+            @endif
+            <span class="file-size-info" id="size-image"></span>
             @error('image')
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
         </div>
+
+        {{-- Video slot --}}
+       {{-- Video slot --}}
+<div class="image-slot" style="max-width:300px;">
+    <div class="slot-top"><span class="slot-label">Video</span></div>
+    <div class="video-drop {{ $about->banner_video ? 'has-file filled' : '' }} {{ $errors->has('video') ? 'input-error' : '' }}"
+         id="drop-service-banner-video" onclick="handleVideoDropClick(this)">
+        @if ($about->banner_video)
+            <video src="{{ Storage::url($about->banner_video) }}" muted playsinline preload="metadata"></video>
+            <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+        @else
+            <div class="preview-placeholder" id="preview-video">
+                <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+                <div class="drop-title">Click to upload</div>
+                <div class="drop-sub">or drag &amp; drop</div>
+            </div>
+        @endif
+    </div>
+    <input type="file" id="file-video" name="video" accept="video/*" data-max-size="20" hidden
+           onchange="showBannerVideoFileName(this); showFileSize(this,'size-video')">
+    <input type="hidden" name="remove_video" id="remove-video" value="0">
+    <span class="file-size-info" id="size-video"></span>
+    @error('video')
+        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+    @enderror
+</div>
+    </div>
+</div>
 
         {{-- SEO Meta --}}
         <div class="card">
@@ -332,6 +366,53 @@ function submitServiceBannerForm() {
     });
 }
 
+
+function handleVideoDropClick(el) {
+    if (el.classList.contains('filled')) return;
+    document.getElementById('file-video').click();
+}
+
+function showBannerVideoFileName(input) {
+    const drop = document.getElementById('drop-service-banner-video');
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const videoURL = URL.createObjectURL(file);
+
+    drop.classList.add('has-file', 'filled');
+    drop.innerHTML = `
+        <video src="${videoURL}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+    `;
+}
+
+function removeUploadedVideo(event) {
+    event.stopPropagation();
+    const drop = document.getElementById('drop-service-banner-video');
+    const fileInput = document.getElementById('file-video');
+    const removeInput = document.getElementById('remove-video');
+
+    const existingVideo = drop.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    if (removeInput) removeInput.value = '1';
+    if (fileInput) fileInput.value = '';
+
+    drop.classList.remove('has-file', 'filled');
+    drop.innerHTML = `
+        <div class="preview-placeholder" id="preview-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
+
 function showServiceBannerValidationErrors(errors) {
     const form = document.getElementById('serviceBannerForm');
 
@@ -339,6 +420,7 @@ function showServiceBannerValidationErrors(errors) {
         title: f => f.querySelector('[name="title"]'),
         description: f => f.querySelector('[name="description"]'),
         image: f => document.getElementById('drop-service-banner-image'),
+        video: f => document.getElementById('drop-service-banner-video'),
         meta_title: f => f.querySelector('[name="meta_title"]'),
         meta_description: f => f.querySelector('[name="meta_description"]'),
     };
@@ -430,12 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .notice.caution p{ color:#8A6116; }
     .notice.caution p b{ color:#6B4A0E; font-weight:700; }
 
-    .drop{
-        position:relative; aspect-ratio:4/3; border-radius:12px;
-        border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
-        display:flex; flex-direction:column; align-items:center; justify-content:center;
-        cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
-    }
+  
     .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -505,6 +582,87 @@ document.addEventListener('DOMContentLoaded', function () {
     .req {
     color: var(--orange, #BF0001);
 }
+
+
+.video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+
+/* ===== Video preview state (filled) ===== */
+.video-drop.filled{
+    border:2px solid transparent;
+    cursor:default;
+}
+
+.video-drop video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    background:#0F1220;
+}
+
+.video-drop .uploaded-tag{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9);
+    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    pointer-events:none;
+}
+
+.images-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+}
+
+.slot-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted, #667085);
+}
+
+.slot-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.image-slot{
+    flex:1;
+    min-width:260px;
+}
+
+/* Make image drop use the same fixed height as video-drop instead of aspect-ratio */
+.drop{
+    position:relative;
+    height:190px;               /* was: aspect-ratio:4/3 */
+    border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA);
+    background:#FAFBFD;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color .15s, background .15s;
+    text-align:center;
+}
+
 </style>
 
 @endsection

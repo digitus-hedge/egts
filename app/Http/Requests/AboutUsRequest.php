@@ -21,7 +21,13 @@ class AboutUsRequest extends FormRequest
 
             'banner_heading'     => 'required|string|max:80',
             'banner_description' => 'required|string|max:400',
-            'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+            // 'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+
+
+                  'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+        'banner_video'       => 'nullable|mimes:mp4,mov,webm|max:20480',
+        'remove_banner_video' => 'nullable|boolean',
+
 
             'about_heading'         => 'required|string|max:65',
             'about_description'     => 'required|string|max:800',
@@ -95,6 +101,8 @@ class AboutUsRequest extends FormRequest
             'vision_description_rich'      => 'Vision Rich Description',
             'vision_image'                 => 'Vision Image',
 
+            'banner_video' => 'Banner Video',
+
             'values_title'                 => 'Core Values Title',
             'values_description'           => 'Core Values Description',
             'values_description_rich'      => 'Core Values Rich Description',
@@ -115,49 +123,61 @@ class AboutUsRequest extends FormRequest
      * - Each singleton image is required only if there's no existing image yet.
      * - Rich-text fields must have real content, not just empty editor markup.
      */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator) {
-            $about = AboutUs::first();
+   public function withValidator(Validator $validator): void
+{
+    $validator->after(function (Validator $validator) {
+        $about = AboutUs::first();
 
-            // ----- 1. Conditional image requirement -----
-            $imageFields = [
-                'banner_image',
-                'section_two_image_one',
-                'section_two_image_two',
-                'mission_image',
-                'vision_image',
-                'values_image',
-                'commitment_image',
-            ];
+        // ----- 1. Banner: image OR video required (not both) -----
+        $hasNewImage = $this->hasFile('banner_image');
+        $hasNewVideo = $this->hasFile('banner_video');
+        $hasExistingImage = $about && !empty($about->banner_image) && !$this->boolean('remove_banner_image');
+        $hasExistingVideo = $about && !empty($about->banner_video) && !$this->boolean('remove_banner_video');
 
-            foreach ($imageFields as $field) {
-                $hasNew = $this->hasFile($field);
-                $hasExisting = $about && !empty($about->{$field});
+        $willHaveImage = $hasNewImage || $hasExistingImage;
+        $willHaveVideo = $hasNewVideo || $hasExistingVideo;
 
-                if (!$hasNew && !$hasExisting) {
-                    $label = $this->attributes()[$field] ?? str_replace('_', ' ', $field);
-                    $validator->errors()->add($field, "Please upload an image for {$label}.");
-                }
+        if (!$willHaveImage && !$willHaveVideo) {
+            $validator->errors()->add('banner_image', 'Please upload either a Banner Image or a Banner Video.');
+        }
+
+        // ----- 2. Conditional image requirement (unchanged, minus banner_image) -----
+        $imageFields = [
+            'section_two_image_one',
+            'section_two_image_two',
+            'mission_image',
+            'vision_image',
+            'values_image',
+            'commitment_image',
+        ];
+
+        foreach ($imageFields as $field) {
+            $hasNew = $this->hasFile($field);
+            $hasExisting = $about && !empty($about->{$field});
+
+            if (!$hasNew && !$hasExisting) {
+                $label = $this->attributes()[$field] ?? str_replace('_', ' ', $field);
+                $validator->errors()->add($field, "Please upload an image for {$label}.");
             }
+        }
 
-            // ----- 2. Reject rich-text fields that are visually empty -----
-            $richTextFields = [
-                'mission_description_rich',
-                'vision_description_rich',
-                'values_description_rich',
-                'commitment_description_rich',
-            ];
+        // ----- 3. Rich text (unchanged) -----
+        $richTextFields = [
+            'mission_description_rich',
+            'vision_description_rich',
+            'values_description_rich',
+            'commitment_description_rich',
+        ];
 
-            foreach ($richTextFields as $field) {
-                $raw = $this->input($field, '');
-                $stripped = trim(strip_tags($raw));
+        foreach ($richTextFields as $field) {
+            $raw = $this->input($field, '');
+            $stripped = trim(strip_tags($raw));
 
-                if ($stripped === '') {
-                    $label = $this->attributes()[$field] ?? str_replace('_', ' ', $field);
-                    $validator->errors()->add($field, "{$label} cannot be empty.");
-                }
+            if ($stripped === '') {
+                $label = $this->attributes()[$field] ?? str_replace('_', ' ', $field);
+                $validator->errors()->add($field, "{$label} cannot be empty.");
             }
-        });
-    }
+        }
+    });
+}
 }

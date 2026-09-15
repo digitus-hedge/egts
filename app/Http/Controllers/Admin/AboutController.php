@@ -61,26 +61,67 @@ class AboutController extends Controller
             'foundation_description' => $data['foundation_description'],
         ]);
 
-        $imageFields = [
-            'banner_image',
-            'section_two_image_one',
-            'section_two_image_two',
-            'mission_image',
-            'vision_image',
-            'values_image',
-            'commitment_image',
-        ];
 
-        foreach ($imageFields as $field) {
-            if ($request->hasFile($field)) {
-                if ($about->{$field}) {
-                    Storage::disk('public')->delete($about->{$field});
-                }
-                $about->{$field} = $this->processAndStoreImage($request->file($field));
-            }
+        // ----- Banner image -----
+    if ($request->hasFile('banner_image')) {
+        if ($about->banner_image) {
+            Storage::disk('public')->delete($about->banner_image);
         }
+        $about->banner_image = $this->processAndStoreImage($request->file('banner_image'));
 
-        $about->save();
+        // uploading a new image while a video exists: clear the old video (mutually exclusive)
+        if ($about->banner_video) {
+            Storage::disk('public')->delete($about->banner_video);
+            $about->banner_video = null;
+        }
+    } elseif ($request->boolean('remove_banner_image')) {
+        if ($about->banner_image) {
+            Storage::disk('public')->delete($about->banner_image);
+        }
+        $about->banner_image = null;
+    }
+
+    // ----- Banner video -----
+    if ($request->hasFile('banner_video')) {
+        if ($about->banner_video) {
+            Storage::disk('public')->delete($about->banner_video);
+        }
+        $about->banner_video = $request->file('banner_video')->store('about/banner-videos', 'public');
+
+        // uploading a new video while an image exists: clear the old image (mutually exclusive)
+        if ($about->banner_image) {
+            Storage::disk('public')->delete($about->banner_image);
+            $about->banner_image = null;
+        }
+    } elseif ($request->boolean('remove_banner_video')) {
+        if ($about->banner_video) {
+            Storage::disk('public')->delete($about->banner_video);
+        }
+        $about->banner_video = null;
+    }
+
+
+         $imageFields = [
+        'section_two_image_one',
+        'section_two_image_two',
+        'mission_image',
+        'vision_image',
+        'values_image',
+        'commitment_image',
+    ];
+
+    foreach ($imageFields as $field) {
+        if ($request->hasFile($field)) {
+            if ($about->{$field}) {
+                Storage::disk('public')->delete($about->{$field});
+            }
+            $about->{$field} = $this->processAndStoreImage($request->file($field));
+        }
+    }
+
+    $about->save();
+
+    
 
         return redirect()
             ->route('admin.about')

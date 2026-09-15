@@ -94,7 +94,7 @@
         </div>
 
         {{-- Image --}}
-        <div class="card">
+        <!-- <div class="card">
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-image"></i></span>Banner Image <span class="req">*</span></h2>
             </div>
@@ -131,7 +131,83 @@
             @error('image')
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
+        </div> -->
+
+
+        <div class="card">
+    <div class="section-title">
+        <h2><span class="icon"><i class="bi bi-image"></i></span> Banner Image or Video <span class="req">*</span></h2>
+    </div>
+
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Image:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+           <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+    </div>
+
+    <div class="images-row">
+        {{-- Image slot --}}
+        <div class="image-slot">
+            <div class="slot-top"><span class="slot-label">Banner Image</span></div>
+            @php $contactImage = $c('image'); @endphp
+            <div class="drop img-slot {{ $contactImage ? 'filled' : '' }}" id="drop-contact-banner-image" data-file-input="file-image" onclick="handleDropClick(this)">
+                @if ($contactImage)
+                    <img src="{{ Storage::url($contactImage) }}" id="preview-image" alt="Contact banner image">
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-image">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-image" name="image" accept="image/*" hidden
+                   onchange="previewImage(this, 'preview-image')">
+            <input type="hidden" name="remove_image" id="remove-image" value="0">
+            @if (!$contactImage)
+                <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+            @else
+                <div class="video-btn-spacer"></div>
+            @endif
+            @error('image')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
         </div>
+
+        {{-- Video slot --}}
+        <div class="image-slot">
+            <div class="slot-top"><span class="slot-label">Banner Video</span></div>
+            @php $contactVideo = $c('video'); @endphp
+            <div class="video-drop {{ $contactVideo ? 'has-file filled' : '' }} {{ $errors->has('video') ? 'input-error' : '' }}"
+                 id="drop-contact-banner-video" onclick="handleContactVideoDropClick(this)">
+                @if ($contactVideo)
+                    <video src="{{ Storage::url($contactVideo) }}" muted playsinline preload="metadata"></video>
+                    <button type="button" class="remove-img-btn" onclick="removeContactUploadedVideo(event)" title="Remove video">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-video">
+                        <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-video" name="video" accept="video/*" hidden
+                   onchange="showContactVideoFileName(this)">
+            <input type="hidden" name="remove_video" id="remove-video" value="0">
+            <div class="video-btn-spacer"></div>
+            @error('video')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
 
 
         {{-- Contact Details --}}
@@ -343,6 +419,54 @@
             chooseBtn.style.display = 'block';
         }
     }
+
+
+    function handleContactVideoDropClick(el) {
+    if (el.classList.contains('filled')) return;
+    document.getElementById('file-video').click();
+}
+
+function showContactVideoFileName(input) {
+    const drop = document.getElementById('drop-contact-banner-video');
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const videoURL = URL.createObjectURL(file);
+
+    drop.classList.add('has-file', 'filled');
+    drop.innerHTML = `
+        <video src="${videoURL}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeContactUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+    `;
+}
+
+function removeContactUploadedVideo(event) {
+    event.stopPropagation();
+    const drop = document.getElementById('drop-contact-banner-video');
+    const fileInput = document.getElementById('file-video');
+    const removeInput = document.getElementById('remove-video');
+
+    const existingVideo = drop.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    if (removeInput) removeInput.value = '1';
+    if (fileInput) fileInput.value = '';
+
+    drop.classList.remove('has-file', 'filled');
+    drop.innerHTML = `
+        <div class="preview-placeholder" id="preview-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
+
 </script>
 
 @if ($errors->any())
@@ -448,16 +572,17 @@ function showContactBannerValidationErrors(errors) {
 
     const departments = ['admin', 'qa_qc', 'operations', 'sales'];
 
-    const fieldMap = {
-        title: f => f.querySelector('[name="title"]'),
-        company_name: f => f.querySelector('[name="company_name"]'),
-        description: f => f.querySelector('[name="description"]'),
-        image: f => document.getElementById('drop-contact-banner-image'),
-        phone: f => f.querySelector('[name="phone"]'),
-        email: f => f.querySelector('[name="email"]'),
-        working_hours: f => f.querySelector('[name="working_hours"]'),
-        address: f => f.querySelector('[name="address"]'),
-    };
+   const fieldMap = {
+    title: f => f.querySelector('[name="title"]'),
+    company_name: f => f.querySelector('[name="company_name"]'),
+    description: f => f.querySelector('[name="description"]'),
+    image: f => document.getElementById('drop-contact-banner-image'),
+    video: f => document.getElementById('drop-contact-banner-video'),
+    phone: f => f.querySelector('[name="phone"]'),
+    email: f => f.querySelector('[name="email"]'),
+    working_hours: f => f.querySelector('[name="working_hours"]'),
+    address: f => f.querySelector('[name="address"]'),
+};
 
     // Add department fields dynamically: admin_phone, admin_email, qa_qc_phone, etc.
     departments.forEach(dept => {
@@ -529,7 +654,7 @@ function showContactBannerValidationErrors(errors) {
     .notice.caution i{ color:#B7791F; }
 
     .drop{
-        position:relative; aspect-ratio:4/3; border-radius:12px;
+        position:relative;  border-radius:12px;
         border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
@@ -618,6 +743,36 @@ function showContactBannerValidationErrors(errors) {
         0%, 100% { outline-color:#e74c3c; }
         50% { outline-color:#ff8a80; }
     } */
+
+.image-slot{
+    width:350px;        /* was: only set via inline style="max-width:350px" */
+    flex-shrink:0;       /* prevent uneven shrinking between the two slots */
+}
+     .images-row{ display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; }
+.slot-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.slot-label{ font-size:12px; font-weight:500; color: var(--muted,#667085); }
+.video-btn-spacer{ margin-top:8px; height:35px; }
+
+.video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+.video-drop.filled{ border:2px solid transparent; cursor:default; }
+.video-drop video{ width:100%; height:100%; object-fit:cover; display:block; background:#0F1220; }
+.video-drop .uploaded-tag{
+    position:absolute; left:0; right:0; bottom:0; padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9); font-size:11px; display:flex; align-items:center; gap:4px;
+    pointer-events:none;
+}
+
+/* Ensure .drop matches fixed height too, if not already updated */
+.drop{ height:190px; }
 </style>
 
 @endsection
