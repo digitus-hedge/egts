@@ -16,7 +16,7 @@
     </div>
     <div class="detail-row">
         <span class="detail-label">Email</span>
-        <span class="detail-value"><a href="mailto:{{ $enquiry->email }}">{{ $enquiry->email }}</a></span>
+        <span class="detail-value">{{ $enquiry->email }}</span>
     </div>
     <div class="detail-row">
         <span class="detail-label">Phone</span>
