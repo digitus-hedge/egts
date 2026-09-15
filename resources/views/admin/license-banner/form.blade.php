@@ -129,6 +129,38 @@
     </div>
 </div>
 
+
+ <div class="card">
+            <div class="section-title">
+                <h2><span class="icon"><i class="bi bi-search"></i></span> SEO Meta</h2>
+            </div>
+
+            <div class="field">
+                <div class="field-top">
+                    <label class="field-label">Meta Title</label>
+                </div>
+                <input type="text" name="meta_title" value="{{ old('meta_title', $licenseBanner->meta_title) }}"
+                       class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
+                       placeholder="SEO title for search engines">
+                @error('meta_title')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+                <div class="field-top">
+                    <label class="field-label">Meta Description</label>
+                </div>
+                <textarea name="meta_description" rows="3"
+                          class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
+                          placeholder="SEO description shown in search results">{{ old('meta_description', $licenseBanner->meta_description) }}</textarea>
+                @error('meta_description')
+                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+
         <div class="form-actions">
             <a href="{{ route('admin.dashboard') }}" class="btn-cancel">Cancel</a>
             <button type="submit" class="btn-primary">
@@ -507,6 +539,23 @@ function removeLicenseVideo(event) {
     height:35px; /* matches .choose-btn's total rendered height (padding + border + line-height) */
 }
 
+
+.section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
+    .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
+    .icon{ display:inline-flex; color: var(--orange,#BF0001); }
+
+    .field{ margin-bottom:22px; }
+    .field-top{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; }
+    .field-label{ display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color: var(--ink,#171B2C); }
+  input[type=text], textarea{
+        width:100%; border:1px solid var(--input-border,#DBDFEA); border-radius:10px;
+        padding:11px 14px; font-size:14px; font-family:inherit; color: var(--ink,#171B2C);
+        outline:none; transition:box-shadow .15s, border-color .15s; resize:vertical;
+    }
+    input[type=text]:focus, textarea:focus{
+        border-color: var(--orange,#BF0001);
+        box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
+    }
 </style>
 
 @endsection

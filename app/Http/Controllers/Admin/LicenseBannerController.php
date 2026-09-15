@@ -30,6 +30,9 @@ class LicenseBannerController extends Controller
     $licenseBanner->title = $data['title'] ?? null;
     $licenseBanner->description = $data['description'] ?? null;
 
+    $licenseBanner->meta_title = $data['meta_title'] ?? null;
+$licenseBanner->meta_description = $data['meta_description'] ?? null;
+
     // ----- Image -----
     if ($request->hasFile('image')) {
         if ($licenseBanner->image) {

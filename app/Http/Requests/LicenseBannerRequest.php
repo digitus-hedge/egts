@@ -23,6 +23,9 @@ class LicenseBannerRequest extends FormRequest
 
             'remove_image' => 'nullable|boolean',
             'remove_video' => 'nullable|boolean',
+
+            'meta_title'       => 'nullable|string|max:60',
+            'meta_description' => 'nullable|string|max:160',
         ];
     }
 

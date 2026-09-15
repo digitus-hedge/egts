@@ -133,36 +133,8 @@
             @enderror
         </div>
 
-        {{-- SEO Meta --}}
-        <div class="card">
-            <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-search"></i></span> SEO Meta</h2>
-            </div>
 
-            <div class="field">
-                <div class="field-top">
-                    <label class="field-label">Meta Title</label>
-                </div>
-                <input type="text" name="meta_title" value="{{ old('meta_title', $certificate->meta_title) }}"
-                       class="{{ $errors->has('meta_title') ? 'input-error' : '' }}"
-                       placeholder="SEO title for search engines">
-                @error('meta_title')
-                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="field" style="margin-bottom:0;">
-                <div class="field-top">
-                    <label class="field-label">Meta Description</label>
-                </div>
-                <textarea name="meta_description" rows="3"
-                          class="{{ $errors->has('meta_description') ? 'input-error' : '' }}"
-                          placeholder="SEO description shown in search results">{{ old('meta_description', $certificate->meta_description) }}</textarea>
-                @error('meta_description')
-                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-                @enderror
-            </div>
-        </div>
+      
 
         <div class="savebar">
             <div class="savebar-inner">
