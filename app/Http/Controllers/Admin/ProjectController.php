@@ -111,6 +111,7 @@ class ProjectController extends Controller
 
         $manager = new ImageManager(new Driver());
         $image = $manager->read($file);
+        $image->trim();
         $image->scaleDown($this->imageWidth, $this->imageHeight);
         $encoded = $image->toWebp(quality: $this->compressQuality);
 
