@@ -42,26 +42,26 @@ class ServiceBannerController extends Controller
     $about->meta_title       = $data['meta_title'] ?? null;
     $about->meta_description = $data['meta_description'] ?? null;
 
-    // ----- Image -----
-    if ($request->hasFile('image')) {
-        if ($about->image) {
-            Storage::disk('public')->delete($about->image);
-        }
-        $about->image = $this->processAndStoreImage($request->file('image'));
-
-        // uploading a new image clears any existing video (mutually exclusive)
-        if ($about->video) {
-            Storage::disk('public')->delete($about->video);
-            $about->video = null;
-        }
-    } elseif ($request->boolean('remove_image')) {
-        if ($about->image) {
-            Storage::disk('public')->delete($about->image);
-        }
-        $about->image = null;
+ // ----- Image -----
+if ($request->hasFile('image')) {
+    if ($about->image) {
+        Storage::disk('public')->delete($about->image);
     }
+    $about->image = $this->processAndStoreImage($request->file('image'));
 
-    // ----- Video -----
+    // uploading a new image clears any existing video (mutually exclusive)
+    if ($about->banner_video) {
+        Storage::disk('public')->delete($about->banner_video);
+        $about->banner_video = null;
+    }
+} elseif ($request->boolean('remove_image')) {
+    if ($about->image) {
+        Storage::disk('public')->delete($about->image);
+    }
+    $about->image = null;
+}
+
+// ----- Video -----
 if ($request->hasFile('video')) {
     if ($about->banner_video) {
         Storage::disk('public')->delete($about->banner_video);
@@ -80,7 +80,7 @@ if ($request->hasFile('video')) {
     $about->banner_video = null;
 }
 
-    $about->save();
+$about->save();
 
     return redirect()
         ->route('admin.service.banner')
