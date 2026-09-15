@@ -16,17 +16,17 @@ class FacilityBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'banner_title'       => 'required|string|max:255',
-            'banner_description' => 'required|string|max:1000',
+            'banner_title'       => 'required|string|max:60',
+            'banner_description' => 'required|string|max:150',
             // banner_image is never "required" here — the after() hook below
             // decides whether it's actually missing, based on the existing record.
             'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'operations_heading'     => 'required|string|max:255',
-            'operations_description' => 'required|string|max:2000',
+            'operations_heading'     => 'required|string|max:45',
+            'operations_description' => 'required|string|max:350',
 
-            'infrastructure_title'       => 'required|string|max:255',
-            'infrastructure_description' => 'required|string',
+            'infrastructure_title'       => 'required|string|max:45',
+            'infrastructure_description' => 'required|string|max:600',
 
             'meta_title'       => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
@@ -38,7 +38,7 @@ class FacilityBannerRequest extends FormRequest
         return [
             'required' => 'The :attribute is required.',
             'string'   => 'The :attribute must be plain text.',
-            'max'      => 'The :attribute is too long or too large.',
+            'max'      => 'The :attribute :max is too long.',
             'image'    => 'The :attribute must be a valid image (JPG, PNG, or WEBP).',
             'mimes'    => 'The :attribute must be a file of type: :values.',
         ];

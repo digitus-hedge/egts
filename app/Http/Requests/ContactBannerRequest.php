@@ -16,25 +16,25 @@ class ContactBannerRequest extends FormRequest
         $contactBanner = $this->route('contact_banner') ?? \App\Models\ContactBanner::first();
 
         return [
-            'title'         => 'required|string|max:255',
-            'company_name'  => 'required|string|max:255',
-            'description'   => 'required|string|max:1000',
+            'title'         => 'required|string|max:80',
+            'company_name'  => 'required|string|max:50',
+            'description'   => 'required|string|max:700',
             'image'         => ($contactBanner && $contactBanner->image)
                                     ? 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240'
                                     : 'required|image|mimes:jpeg,jpg,png,webp|max:10240',
-            'address'       => 'required|string|max:255',
-            'phone'         => 'required|string|max:50',
-            'email'         => 'required|email|max:255',
-            'working_hours' => 'required|string|max:255',
+            'address'       => 'required|string|max:150',
+            'phone'         => 'required|string|max:20',
+            'email'         => 'required|email|max:40',
+            'working_hours' => 'required|string|max:50',
 
-            'admin_phone'      => 'nullable|string|max:50',
-            'admin_email'      => 'nullable|email|max:255',
-            'qa_qc_phone'      => 'nullable|string|max:50',
-            'qa_qc_email'      => 'nullable|email|max:255',
-            'operations_phone' => 'nullable|string|max:50',
-            'operations_email' => 'nullable|email|max:255',
+            'admin_phone'      => 'nullable|string|max:20',
+            'admin_email'      => 'nullable|email|max:40',
+            'qa_qc_phone'      => 'nullable|string|max:20',
+            'qa_qc_email'      => 'nullable|email|max:40',
+            'operations_phone' => 'nullable|string|max:20',
+            'operations_email' => 'nullable|email|max:40',
             'sales_phone'      => 'nullable|string|max:50',
-            'sales_email'      => 'nullable|email|max:255',
+            'sales_email'      => 'nullable|email|max:40',
         ];
     }
 
@@ -44,10 +44,10 @@ class ContactBannerRequest extends FormRequest
             'title.required' => 'Please enter a title.',
 
             'company_name.required' => 'Please enter the company name.',
-            'company_name.max'      => 'Company name must not exceed 255 characters.',
+            'company_name.max'      => 'Company name must not exceed 50 characters.',
 
             'description.required' => 'Please enter a description.',
-            'description.max'      => 'Description must not exceed 1000 characters.',
+            'description.max'      => 'Description must not exceed 700 characters.',
 
             'image.required' => 'Please upload an image.',
             'image.image'    => 'File must be a valid image.',

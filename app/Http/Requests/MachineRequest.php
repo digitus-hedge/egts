@@ -16,8 +16,8 @@ class MachineRequest extends FormRequest
         $machine = $this->route('machine');
 
         return [
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
+            'title'       => 'required|string|max:40',
+            'description' => 'required|string|max:400',
             'image'       => ($machine && $machine->image)
                                 ? 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240'
                                 : 'required|image|mimes:jpeg,jpg,png,webp|max:10240',

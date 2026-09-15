@@ -14,7 +14,7 @@ class MasterProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
+            'title'       => 'required|string|max:70',
             'description' => 'required|string|max:1000',
             'image'       => $this->isMethod('post')
                                 ? 'required|image|mimes:jpeg,jpg,png,webp|max:10240'

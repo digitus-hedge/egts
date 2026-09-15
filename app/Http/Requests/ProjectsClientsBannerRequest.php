@@ -17,9 +17,9 @@ class ProjectsClientsBannerRequest extends FormRequest
     {
         return [
             'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
-            'title'        => 'required|string|max:255',
-            'content'      => 'required|string|max:1000',
-            'description'  => 'required|string|max:2000',
+            'title'        => 'required|string|max:45',
+            'content'      => 'required|string|max:300',
+            'description'  => 'required|string|max:600',
         ];
     }
 

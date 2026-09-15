@@ -28,28 +28,28 @@ class AboutUsRequest extends FormRequest
             'section_two_image_one' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'section_two_image_two' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'mission_title'            => 'required|string|max:255',
-            'mission_description'      => 'required|string|max:2000',
-            'mission_description_rich' => 'required|string',
+            'mission_title'            => 'required|string|max:45',
+            'mission_description'      => 'required|string|max:200',
+            'mission_description_rich' => 'required|string|max:500',
             'mission_image'            => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'vision_title'             => 'required|string|max:255',
-            'vision_description'       => 'required|string|max:2000',
-            'vision_description_rich'  => 'required|string',
+            'vision_title'             => 'required|string|max:45',
+            'vision_description'       => 'required|string|max:200',
+            'vision_description_rich'  => 'required|string|max:500',
             'vision_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'values_title'             => 'required|string|max:255',
-            'values_description'       => 'required|string|max:2000',
-            'values_description_rich'  => 'required|string',
+            'values_title'             => 'required|string|max:45',
+            'values_description'       => 'required|string|max:200',
+            'values_description_rich'  => 'required|string|max:500',
             'values_image'             => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'commitment_title'            => 'required|string|max:255',
-            'commitment_description'      => 'required|string|max:2000',
-            'commitment_description_rich' => 'required|string',
+            'commitment_title'            => 'required|string|max:45',
+            'commitment_description'      => 'required|string|max:200',
+            'commitment_description_rich' => 'required|string|max:500',
             'commitment_image'            => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
-            'foundation_heading'     => 'required|string|max:255',
-            'foundation_description' => 'required|string',
+            'foundation_heading'     => 'required|string|max:50',
+            'foundation_description' => 'required|string|max:100',
         ];
     }
 

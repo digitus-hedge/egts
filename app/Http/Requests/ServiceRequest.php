@@ -16,17 +16,17 @@ class ServiceRequest extends FormRequest
         $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
 
         return [
-            'title'                     => 'required|string|max:255',
-            'description'               => 'required|string|max:500',
-            'process_description'       => 'required|string',
+            'title'                     => 'required|string|max:45',
+            'description'               => 'required|string|max:100',
+            'process_description'       => 'required|string|max:400',
 
             'technical_scope'           => 'required|array|min:1',
-            'technical_scope.*'         => 'required|string|max:255',
+            'technical_scope.*'         => 'required|string|max:100',
 
             'specifications'                 => 'required|array|min:1',
-            'specifications.*.specification' => 'required|string|max:255',
-            'specifications.*.details'       => 'required|string|max:255',
-            'specifications.*.compliance'    => 'required|string|max:100',
+            'specifications.*.specification' => 'required|string|max:35',
+            'specifications.*.details'       => 'required|string|max:100',
+            'specifications.*.compliance'    => 'required|string|max:30',
 
             'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'banner_image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
@@ -44,8 +44,8 @@ class ServiceRequest extends FormRequest
             // Image mandatory too, but enforced in withValidator() below since it
             // must accept EITHER a new upload OR an existing saved image (on update).
             'inspection_process'                 => 'required|array|min:1',
-            'inspection_process.*.heading'       => 'required|string|max:255',
-            'inspection_process.*.description'   => 'required|string',
+            'inspection_process.*.heading'       => 'required|string|max:40',
+            'inspection_process.*.description'   => 'required|string|max:500',
             'inspection_process.*.image'         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'inspection_process.*.existing_image' => 'nullable|string',
 

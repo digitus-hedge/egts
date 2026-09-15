@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\LicenseBanner;
 
 class LicenseBannerRequest extends FormRequest
 {
@@ -13,19 +14,27 @@ class LicenseBannerRequest extends FormRequest
 
     public function rules(): array
     {
+        $hasExistingImage = LicenseBanner::first()?->image;
+
         return [
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image'       => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'title'       => 'required|string|max:45',
+            'description' => 'required|string|max:300',
+            'image'       => [
+                $hasExistingImage ? 'nullable' : 'required',
+                'image',
+                'mimes:jpeg,jpg,png,webp',
+                'max:10240',
+            ],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'image.image' => 'File must be a valid image.',
-            'image.mimes' => 'Image must be JPG, PNG, or WEBP.',
-            'image.max'   => 'Image must not exceed 2MB.',
+            'image.required' => 'Please upload an image.',
+            'image.image'    => 'File must be a valid image.',
+            'image.mimes'    => 'Image must be JPG, PNG, or WEBP.',
+            'image.max'      => 'Image must not exceed 2MB.',
         ];
     }
 }

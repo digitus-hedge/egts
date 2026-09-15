@@ -16,7 +16,7 @@ class CertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
+            'title'       => 'required|string|max:50',
             'description' => 'required|string|max:1000',
             'license_type' => 'required|in:API License,Premium License',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
@@ -30,7 +30,7 @@ class CertificateRequest extends FormRequest
     {
         return [
             'title.required' => 'Please enter a title.',
-            'title.max'      => 'Title must not exceed 255 characters.',
+            'title.max'      => 'Title must not exceed 50 characters.',
 
             'description.required' => 'Please enter a description.',
             'description.max'      => 'Description must not exceed 1000 characters.',

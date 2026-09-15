@@ -18,13 +18,13 @@ class BehindTheSceneRequest extends FormRequest
 
         return [
             'service_id'  => 'required|exists:services,id',
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string|max:2000',
+            'title'       => 'required|string|max:45',
+            'description' => 'required|string|max:100',
 
             'media_type'  => 'required|in:video,video_url,image',
 
             'video'     => 'nullable|file|mimes:mp4,mov,avi,webm|max:20480', // 20MB
-            'video_url' => 'nullable|url|max:500',
+            'video_url' => 'nullable|url|max:600',
             'image'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240', // 10MB
         ];
     }
