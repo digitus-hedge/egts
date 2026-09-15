@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services - EGTS Erbil Gate Technical Services</title>
+    <title>{{ $serviceBanner->meta_title ?? 'Services' }}</title>
+    <meta name="description" content="{{ $serviceBanner->meta_description ?? '' }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
@@ -21,12 +22,11 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="page-hero" style="background-image: url('{{ asset('images/services-banner.webp') }}');">
+        <section class="page-hero" style="background-image: url('{{ asset('storage/' . $serviceBanner->image) }}');">
             <div class="page-hero-overlay"></div>
             <div class="page-hero-content">
-                <h1>Inspection Expertise That Keeps<br>Operations Moving</h1>
-                <p>Professional inspection, NDT, and technical support services helping oil and gas operators maintain
-                    equipment integrity, improve reliability, and operate with greater confidence.</p>
+                <h1>{{ $serviceBanner->banner_heading }}</h1>
+                <p>{{ $serviceBanner->banner_description }}</p>
             </div>
         </section>
         {{-- ===== End Page Hero Section ===== --}}

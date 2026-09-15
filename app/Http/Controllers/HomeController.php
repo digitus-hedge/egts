@@ -15,6 +15,7 @@ use App\Models\MasterProject;
 use App\Models\Project;
 use App\Models\ProjectsClientsBanner;
 use App\Models\Service;
+use App\Models\ServiceBanner;
 use App\Models\ServiceSection;
 use App\Models\Stat;
 use App\Models\Tool;
@@ -65,8 +66,9 @@ class HomeController extends Controller
     public function services()
     {
         $services = Service::get();
+        $serviceBanner = ServiceBanner::first();
 
-        return view('web.services', compact('services'));
+        return view('web.services', compact('services', 'serviceBanner'));
     }
 
     public function serviceDetails($slug)
