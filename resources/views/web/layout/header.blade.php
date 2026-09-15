@@ -57,12 +57,12 @@
                 </a>
 
                 <nav class="nav-links">
-                    <a href="{{ url('/') }}">Home</a>
-                    <a href="{{ url('/about') }}">About Us</a>
-                    <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
-                    <a href="{{ url('/services') }}">Services</a>
-                    <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
-                    <a href="{{ url('/contact') }}">Contact</a>
+                    <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
+                    <a href="{{ url('/about') }}" class="{{ request()->is('about') ? 'active' : '' }}">About Us</a>
+                    <a href="{{ url('/facility_capabilities') }}" class="{{ request()->is('facility_capabilities') ? 'active' : '' }}">Facility & Capabilities</a>
+                    <a href="{{ url('/services') }}" class="{{ request()->is('services') || request()->is('services/*') ? 'active' : '' }}">Services</a>
+                    <a href="{{ url('/projects_clients') }}" class="{{ request()->is('projects_clients') ? 'active' : '' }}">Projects & Clients</a>
+                    <a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                 </nav>
 
                 <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
@@ -75,12 +75,12 @@
             </div>
 
             <div id="mobile-menu" class="mobile-menu">
-                <a href="{{ url('/') }}">Home</a>
-                <a href="{{ url('/about') }}">About Us</a>
-                <a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a>
-                <a href="{{ url('/services') }}">Services</a>
-                <a href="{{ url('/projects_clients') }}">Projects & Clients</a>
-                <a href="{{ url('/contact') }}">Contact</a>
+                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
+                <a href="{{ url('/about') }}" class="{{ request()->is('about') ? 'active' : '' }}">About Us</a>
+                <a href="{{ url('/facility_capabilities') }}" class="{{ request()->is('facility_capabilities') ? 'active' : '' }}">Facility & Capabilities</a>
+                <a href="{{ url('/services') }}" class="{{ request()->is('services') || request()->is('services/*') ? 'active' : '' }}">Services</a>
+                <a href="{{ url('/projects_clients') }}" class="{{ request()->is('projects_clients') ? 'active' : '' }}">Projects & Clients</a>
+                <a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                 <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
             </div>
         </div>

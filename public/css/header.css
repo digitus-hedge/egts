@@ -256,3 +256,15 @@
         display: none;
     }
 }
+
+.nav-links a.active {
+    color: #e02020;
+    border-bottom: 2px solid #e02020;
+    padding-bottom: 4px;
+}
+
+.mobile-menu a.active {
+    color: #f87171;
+    border-left: 3px solid #e02020;
+    padding-left: 10px;
+}
