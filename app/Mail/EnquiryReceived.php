@@ -21,6 +21,9 @@ class EnquiryReceived extends Mailable
     public function build()
     {
         return $this->subject('New Enquiry from ' . $this->enquiry->full_name)
-            ->view('emails.enquiry-received');
+            ->view('emails.enquiry-received')
+            ->with([
+                'logoPath' => public_path('images/footer-logo.webp'),
+            ]);
     }
 }

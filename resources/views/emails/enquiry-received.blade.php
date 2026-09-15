@@ -11,7 +11,16 @@
 
                     <tr>
                         <td style="background-color:#b40707; padding:24px 32px;">
-                            <h1 style="margin:0; font-size:20px; color:#ffffff;">New Enquiry</h1>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="vertical-align:middle;">
+                                        <h1 style="margin:0; font-size:20px; color:#ffffff;">New Enquiry</h1>
+                                    </td>
+                                    <td style="vertical-align:middle; text-align:right; width:120px;">
+                                        <img src="{{ $message->embed($logoPath) }}" alt="EGTS Logo" style="max-height:36px; width:auto; display:inline-block;">
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
 
