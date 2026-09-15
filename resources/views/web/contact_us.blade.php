@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
-    <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
-    <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
 </head>
 <body>
 
@@ -173,33 +170,58 @@
                         <h3>Send Us a Message</h3>
                         <p>Fill out the form and our team will get back to you within one business day.</p>
 
-                        <form class="ct-form" action="{{ url('/contact/submit') }}" method="POST">
+                        <form class="ct-form" action="{{ url('/contact/submit') }}" method="POST" id="contactForm" novalidate>
                             @csrf
                             <div class="ct-form-row">
                                 <div class="ct-form-group">
-                                    <label for="full_name">Full Name</label>
-                                    <input type="text" id="full_name" name="full_name" placeholder="Your full name" required>
+                                    <label for="full_name">Full Name<span class="req">*</span></label>
+                                    <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}"
+                                           class="{{ $errors->has('full_name') ? 'input-error' : '' }}"
+                                           placeholder="Your full name" required minlength="2">
+                                    @error('full_name')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="ct-form-group">
-                                    <label for="email">Email Address</label>
-                                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                                    <label for="email">Email Address<span class="req">*</span></label>
+                                    <input type="email" id="email" name="email" value="{{ old('email') }}"
+                                           class="{{ $errors->has('email') ? 'input-error' : '' }}"
+                                           placeholder="you@example.com" required>
+                                    @error('email')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="ct-form-row">
                                 <div class="ct-form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" placeholder="+964 xxx xxx xxxx">
+                                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
+                                           class="{{ $errors->has('phone') ? 'input-error' : '' }}"
+                                           placeholder="+964 xxx xxx xxxx" pattern="^[0-9+\-\s()]{7,20}$">
+                                    @error('phone')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="ct-form-group">
-                                    <label for="subject">Subject</label>
-                                    <input type="text" id="subject" name="subject" placeholder="What is this regarding?" required>
+                                    <label for="subject">Subject<span class="req">*</span></label>
+                                    <input type="text" id="subject" name="subject" value="{{ old('subject') }}"
+                                           class="{{ $errors->has('subject') ? 'input-error' : '' }}"
+                                           placeholder="What is this regarding?" required minlength="3">
+                                    @error('subject')
+                                        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="ct-form-group ct-form-group-full">
-                                <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="5" placeholder="Tell us about your requirement..." required></textarea>
+                                <label for="message">Message<span class="req">*</span></label>
+                                <textarea id="message" name="message" rows="5"
+                                          class="{{ $errors->has('message') ? 'input-error' : '' }}"
+                                          placeholder="Tell us about your requirement..." required minlength="10">{{ old('message') }}</textarea>
+                                @error('message')
+                                    <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+                                @enderror
                             </div>
 
                             <button type="submit" class="ct-submit-btn">Send Message</button>
@@ -213,8 +235,13 @@
 
         {{-- ===== Map Section ===== --}}
         <section class="ct-map-section">
+            @php
+                $mapQuery = ($contactBanner?->latitude && $contactBanner?->longitude)
+                    ? $contactBanner->latitude . ',' . $contactBanner->longitude
+                    : urlencode($contactBanner->address ?? 'Ankawa Industrial Area, Erbil, Iraq');
+            @endphp
             <iframe
-                src="https://www.google.com/maps?q=Ankawa+Industrial+Area,+Erbil,+Iraq&output=embed"
+                src="https://www.google.com/maps?q={{ $mapQuery }}&output=embed"
                 width="100%"
                 height="100%"
                 style="border:0;"
@@ -228,6 +255,78 @@
     </main>
 
     @include('web.layout.footer')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Message Sent!',
+                text: @json(session('success')),
+                confirmButtonColor: '#b40707',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+    @endif
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Please Check Your Form',
+                html: `<ul style="text-align:left; margin:0; padding-left:20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>`,
+                confirmButtonColor: '#b40707',
+                confirmButtonText: 'OK'
+            });
+
+            const form = document.getElementById('contactForm');
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+    @endif
+
+    <script>
+        // Basic client-side validation feedback before submit (progressive enhancement)
+        document.getElementById('contactForm')?.addEventListener('submit', function (e) {
+            let valid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+
+            requiredFields.forEach(field => {
+                field.classList.remove('input-error');
+                if (!field.value.trim() || (field.minLength && field.value.trim().length < field.minLength)) {
+                    field.classList.add('input-error');
+                    valid = false;
+                }
+            });
+
+            const emailField = document.getElementById('email');
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField && !emailPattern.test(emailField.value.trim())) {
+                emailField.classList.add('input-error');
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Information',
+                    text: 'Please fill in all required fields correctly before submitting.',
+                    confirmButtonColor: '#b40707'
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

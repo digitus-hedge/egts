@@ -423,7 +423,7 @@
         }
 
 
-        
+
         /* ===== Small tablet / large phone ===== */
 @media (max-width: 700px) {
     .topbar {
@@ -777,6 +777,13 @@
                     href="{{ route('admin.home.contact-banner') }}">
                     <i class="bi bi-envelope nav-ico"></i>
                     Contact Us
+                </a>
+            </div>
+
+            <div class="nav-group">
+                <a class="nav-item {{ request()->routeIs('admin.home.enquiries*') ? 'active' : '' }}" href="{{ route('admin.home.enquiries') }}">
+                    <i class="bi bi-chat-left-text nav-ico"></i>
+                    Enquiries
                 </a>
             </div>
 

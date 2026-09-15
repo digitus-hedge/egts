@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ClientSectionController;
 use App\Http\Controllers\Admin\ContactBannerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\FacilityBannerController;
 use App\Http\Controllers\Admin\HomeAboutController;
 use App\Http\Controllers\Admin\LicenseBannerController;
@@ -22,6 +23,10 @@ use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Requests\EnquiryRequest;
+use App\Mail\EnquiryReceived;
+use App\Models\Enquiry;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
@@ -42,9 +47,12 @@ Route::post('home/license-banner', [LicenseBannerController::class, 'store'])->n
 
 Route::get('/licenses', [HomeController::class, 'licenses']);
 
-Route::post('/contact/submit', function () {
-    // handle form submission — validate, send email, save to DB, etc.
-    return back()->with('success', 'Your message has been sent.');
+Route::post('/contact/submit', function (EnquiryRequest $request) {
+    $enquiry = Enquiry::create($request->validated());
+
+    Mail::to('resnithnest@gmail.com')->send(new EnquiryReceived($enquiry));
+
+    return back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
 });
 
 
@@ -151,6 +159,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/masters/projects/{master_project}/edit', [MasterProjectController::class, 'edit'])->name('home.masters.projects.edit');
         Route::put('home/masters/projects/{master_project}', [MasterProjectController::class, 'update'])->name('home.masters.projects.update');
         Route::delete('home/masters/projects/{master_project}', [MasterProjectController::class, 'destroy'])->name('home.masters.projects.destroy');
+
+        Route::get('home/enquiries', [EnquiryController::class, 'index'])->name('home.enquiries');
+        Route::get('home/enquiries/{enquiry}', [EnquiryController::class, 'show'])->name('home.enquiries.show');
+        Route::delete('home/enquiries/{enquiry}', [EnquiryController::class, 'destroy'])->name('home.enquiries.destroy');
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
