@@ -29,7 +29,12 @@ class ServiceRequest extends FormRequest
             'specifications.*.compliance'    => 'required|string|max:30',
 
             'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+
             'banner_image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
+            'banner_video' => 'nullable|mimes:mp4,mov,webm|max:20480',
+
+            'remove_banner_image' => 'nullable|boolean',
+            'remove_banner_video' => 'nullable|boolean',
 
             'meta_title'       => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
@@ -51,6 +56,83 @@ class ServiceRequest extends FormRequest
 
             'sort_order'       => 'nullable|integer|min:0',
             'status'           => 'nullable|boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Please enter a service title.',
+            'title.max'      => 'Title must not exceed 45 characters.',
+
+            'description.required' => 'Please enter a short description.',
+            'description.max'      => 'Description must not exceed 100 characters.',
+
+            'process_description.required' => 'Please enter a process description.',
+            'process_description.max'      => 'Process description must not exceed 400 characters.',
+
+            'technical_scope.required' => 'Please add at least one technical scope point.',
+            'technical_scope.min'      => 'Please add at least one technical scope point.',
+            'technical_scope.*.required' => 'This technical scope point cannot be empty.',
+            'technical_scope.*.max'      => 'Each technical scope point must not exceed 100 characters.',
+
+            'specifications.required' => 'Please add at least one specification row.',
+            'specifications.min'      => 'Please add at least one specification row.',
+            'specifications.*.specification.required' => 'Specification is required for this row.',
+            'specifications.*.specification.max'      => 'Specification must not exceed 35 characters.',
+            'specifications.*.details.required' => 'Details is required for this row.',
+            'specifications.*.details.max'      => 'Details must not exceed 100 characters.',
+            'specifications.*.compliance.required' => 'Compliance is required for this row.',
+            'specifications.*.compliance.max'      => 'Compliance must not exceed 30 characters.',
+
+            'image.image' => 'The hero/card image must be a valid image.',
+            'image.mimes' => 'The hero/card image must be a JPG, PNG, or WEBP file.',
+            'image.max'   => 'The hero/card image must not exceed 10MB.',
+
+            'banner_image.image' => 'The banner image must be a valid image.',
+            'banner_image.mimes' => 'The banner image must be a JPG, PNG, or WEBP file.',
+            'banner_image.max'   => 'The banner image must not exceed 10MB.',
+
+            'banner_video.mimes' => 'The banner video must be an MP4, MOV, or WEBM file.',
+            'banner_video.max'   => 'The banner video must not exceed 20MB.',
+
+            'meta_title.max'       => 'Meta title must not exceed 60 characters.',
+            'meta_description.max' => 'Meta description must not exceed 160 characters.',
+
+            'gallery.required' => 'Please upload at least one gallery image.',
+            'gallery.array'    => 'Gallery images were not submitted correctly.',
+            'gallery.max'      => 'You can upload a maximum of 6 gallery images.',
+            'gallery.*.image'  => 'Each gallery file must be a valid image.',
+            'gallery.*.mimes'  => 'Each gallery image must be a JPG, PNG, or WEBP file.',
+            'gallery.*.max'    => 'Each gallery image must not exceed 10MB.',
+
+            'inspection_process.required' => 'Please add at least one inspection process step.',
+            'inspection_process.min'      => 'Please add at least one inspection process step.',
+            'inspection_process.*.heading.required'     => 'Heading is required for this inspection step.',
+            'inspection_process.*.heading.max'          => 'Heading must not exceed 40 characters.',
+            'inspection_process.*.description.required' => 'Description is required for this inspection step.',
+            'inspection_process.*.description.max'      => 'Description must not exceed 500 characters.',
+            'inspection_process.*.image.image' => 'The inspection step image must be a valid image.',
+            'inspection_process.*.image.mimes' => 'The inspection step image must be a JPG, PNG, or WEBP file.',
+            'inspection_process.*.image.max'   => 'The inspection step image must not exceed 10MB.',
+
+            'sort_order.integer' => 'Sort order must be a whole number.',
+            'sort_order.min'     => 'Sort order cannot be negative.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title'                 => 'title',
+            'description'           => 'short description',
+            'process_description'   => 'process description',
+            'image'                 => 'hero/card image',
+            'banner_image'          => 'banner image',
+            'banner_video'          => 'banner video',
+            'meta_title'            => 'meta title',
+            'meta_description'      => 'meta description',
+            'gallery'               => 'gallery',
         ];
     }
 
@@ -79,15 +161,30 @@ class ServiceRequest extends FormRequest
             $hasNewImageUpload = $this->hasFile('image');
 
             if (!$hasExistingImage && !$hasNewImageUpload) {
-                $validator->errors()->add('image', 'The hero/card image field is required.');
+                $validator->errors()->add('image', 'Please upload a hero/card image.');
             }
 
-            // ===== Banner image: must exist either as upload or already saved =====
-            $hasExistingBanner = $service && $service->banner_image;
-            $hasNewBannerUpload = $this->hasFile('banner_image');
+            // ===== Banner Image OR Video: exactly one required, not both, not neither =====
+            $hasNewBannerImage = $this->hasFile('banner_image');
+            $hasNewBannerVideo = $this->hasFile('banner_video');
 
-            if (!$hasExistingBanner && !$hasNewBannerUpload) {
-                $validator->errors()->add('banner_image', 'The banner image field is required.');
+            $hasExistingBannerImage = $service
+                && !empty($service->banner_image)
+                && !$this->boolean('remove_banner_image');
+
+            $hasExistingBannerVideo = $service
+                && !empty($service->banner_video)
+                && !$this->boolean('remove_banner_video');
+
+            $willHaveBannerImage = $hasNewBannerImage || $hasExistingBannerImage;
+            $willHaveBannerVideo = $hasNewBannerVideo || $hasExistingBannerVideo;
+
+            if (!$willHaveBannerImage && !$willHaveBannerVideo) {
+                $validator->errors()->add('banner_image', 'Please upload either a Banner Image or a Banner Video.');
+            }
+
+            if ($willHaveBannerImage && $willHaveBannerVideo) {
+                $validator->errors()->add('banner_image', 'Please choose only one — a Banner Image OR a Banner Video, not both.');
             }
 
             // ===== Inspection Process: each row's image must exist (new upload OR existing kept) =====

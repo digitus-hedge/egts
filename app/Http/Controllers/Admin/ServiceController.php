@@ -86,6 +86,7 @@ class ServiceController extends Controller
 
 
 
+
     // private function fillService(Service $service, array $data, Request $request): void
     // {
     //     $service->title = $data['title'];
@@ -96,6 +97,7 @@ class ServiceController extends Controller
     //     $service->meta_title = $data['meta_title'] ?? null;
     //     $service->meta_description = $data['meta_description'] ?? null;
 
+    //        $service->show_on_home = $request->boolean('show_on_home');
 
     //     $service->technical_scope = collect($data['technical_scope'] ?? [])
     //         ->filter(fn($v) => trim((string) $v) !== '')
@@ -107,7 +109,7 @@ class ServiceController extends Controller
     //         ->values()
     //         ->all();
 
-
+    //     // ===== Hero image =====
     //     if ($request->hasFile('image')) {
     //         if ($service->image) {
     //             Storage::disk('public')->delete($service->image);
@@ -122,7 +124,7 @@ class ServiceController extends Controller
     //         $service->banner_image = $this->processAndStoreImage($request->file('banner_image'));
     //     }
 
-
+    //     // ===== Gallery: handle removals FIRST, then additions =====
     //     $currentGallery = $service->gallery ?? [];
 
     //     if ($request->filled('remove_gallery')) {
@@ -139,110 +141,184 @@ class ServiceController extends Controller
     //         $slotsAvailable = max(0, 6 - count($currentGallery));
 
     //         foreach ($request->file('gallery') as $index => $file) {
-    //             if ($index >= $slotsAvailable) break; // enforce max 6 total
+    //             if ($index >= $slotsAvailable) break;
     //             $currentGallery[] = $this->processAndStoreImage($file);
     //         }
     //     }
 
     //     $service->gallery = count($currentGallery) > 0 ? array_values($currentGallery) : null;
 
+    //     // ===== Inspection Process: heading + description + image per row =====
+    //     $inspectionInput = $data['inspection_process'] ?? [];
+    //     $oldInspection = $service->inspection_process ?? [];
+    //     $processedInspection = [];
+
+    //     foreach ($inspectionInput as $index => $row) {
+    //         $heading = trim($row['heading'] ?? '');
+    //         $description = trim($row['description'] ?? '');
+    //         $hasNewImage = $request->hasFile("inspection_process.$index.image");
+
+    //         // skip rows that are entirely empty (no heading, no description, no image, no existing image kept)
+    //         if ($heading === '' && $description === '' && !$hasNewImage && empty($row['existing_image'])) {
+    //             continue;
+    //         }
+
+    //         $imagePath = $row['existing_image'] ?? null;
+
+    //         if ($hasNewImage) {
+    //             // delete the old image for this specific row if it's being replaced
+    //             if (!empty($oldInspection[$index]['image'])) {
+    //                 Storage::disk('public')->delete($oldInspection[$index]['image']);
+    //             }
+    //             $imagePath = $this->processAndStoreImage($request->file("inspection_process.$index.image"));
+    //         }
+
+    //         $processedInspection[] = [
+    //             'heading'     => $heading,
+    //             'description' => $description,
+    //             'image'       => $imagePath,
+    //         ];
+    //     }
+
+    //     $service->inspection_process = count($processedInspection) > 0 ? array_values($processedInspection) : null;
     // }
 
+
+
     private function fillService(Service $service, array $data, Request $request): void
-    {
-        $service->title = $data['title'];
-        $service->slug = Str::slug($data['title']);
-        $service->description = $data['description'];
-        $service->process_description = $data['process_description'] ?? null;
+{
+    $service->title = $data['title'];
+    $service->slug = Str::slug($data['title']);
+    $service->description = $data['description'];
+    $service->process_description = $data['process_description'] ?? null;
 
-        $service->meta_title = $data['meta_title'] ?? null;
-        $service->meta_description = $data['meta_description'] ?? null;
+    $service->meta_title = $data['meta_title'] ?? null;
+    $service->meta_description = $data['meta_description'] ?? null;
 
-           $service->show_on_home = $request->boolean('show_on_home');
+    $service->show_on_home = $request->boolean('show_on_home');
 
-        $service->technical_scope = collect($data['technical_scope'] ?? [])
-            ->filter(fn($v) => trim((string) $v) !== '')
-            ->values()
-            ->all();
+    $service->technical_scope = collect($data['technical_scope'] ?? [])
+        ->filter(fn($v) => trim((string) $v) !== '')
+        ->values()
+        ->all();
 
-        $service->specifications = collect($data['specifications'] ?? [])
-            ->filter(fn($row) => !empty($row['specification']) || !empty($row['details']) || !empty($row['compliance']))
-            ->values()
-            ->all();
+    $service->specifications = collect($data['specifications'] ?? [])
+        ->filter(fn($row) => !empty($row['specification']) || !empty($row['details']) || !empty($row['compliance']))
+        ->values()
+        ->all();
 
-        // ===== Hero image =====
-        if ($request->hasFile('image')) {
-            if ($service->image) {
-                Storage::disk('public')->delete($service->image);
-            }
-            $service->image = $this->processAndStoreImage($request->file('image'));
+    // ===== Hero image =====
+    if ($request->hasFile('image')) {
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
         }
-
-        if ($request->hasFile('banner_image')) {
-            if ($service->banner_image) {
-                Storage::disk('public')->delete($service->banner_image);
-            }
-            $service->banner_image = $this->processAndStoreImage($request->file('banner_image'));
-        }
-
-        // ===== Gallery: handle removals FIRST, then additions =====
-        $currentGallery = $service->gallery ?? [];
-
-        if ($request->filled('remove_gallery')) {
-            $toRemove = $request->input('remove_gallery');
-
-            foreach ($toRemove as $path) {
-                Storage::disk('public')->delete($path);
-            }
-
-            $currentGallery = array_values(array_diff($currentGallery, $toRemove));
-        }
-
-        if ($request->hasFile('gallery')) {
-            $slotsAvailable = max(0, 6 - count($currentGallery));
-
-            foreach ($request->file('gallery') as $index => $file) {
-                if ($index >= $slotsAvailable) break;
-                $currentGallery[] = $this->processAndStoreImage($file);
-            }
-        }
-
-        $service->gallery = count($currentGallery) > 0 ? array_values($currentGallery) : null;
-
-        // ===== Inspection Process: heading + description + image per row =====
-        $inspectionInput = $data['inspection_process'] ?? [];
-        $oldInspection = $service->inspection_process ?? [];
-        $processedInspection = [];
-
-        foreach ($inspectionInput as $index => $row) {
-            $heading = trim($row['heading'] ?? '');
-            $description = trim($row['description'] ?? '');
-            $hasNewImage = $request->hasFile("inspection_process.$index.image");
-
-            // skip rows that are entirely empty (no heading, no description, no image, no existing image kept)
-            if ($heading === '' && $description === '' && !$hasNewImage && empty($row['existing_image'])) {
-                continue;
-            }
-
-            $imagePath = $row['existing_image'] ?? null;
-
-            if ($hasNewImage) {
-                // delete the old image for this specific row if it's being replaced
-                if (!empty($oldInspection[$index]['image'])) {
-                    Storage::disk('public')->delete($oldInspection[$index]['image']);
-                }
-                $imagePath = $this->processAndStoreImage($request->file("inspection_process.$index.image"));
-            }
-
-            $processedInspection[] = [
-                'heading'     => $heading,
-                'description' => $description,
-                'image'       => $imagePath,
-            ];
-        }
-
-        $service->inspection_process = count($processedInspection) > 0 ? array_values($processedInspection) : null;
+        $service->image = $this->processAndStoreImage($request->file('image'));
     }
+
+    // ===== Banner Image =====
+    if ($request->boolean('remove_banner_image') && !$request->hasFile('banner_image')) {
+        if ($service->banner_image) {
+            Storage::disk('public')->delete($service->banner_image);
+        }
+        $service->banner_image = null;
+    }
+
+    if ($request->hasFile('banner_image')) {
+        if ($service->banner_image) {
+            Storage::disk('public')->delete($service->banner_image);
+        }
+        $service->banner_image = $this->processAndStoreImage($request->file('banner_image'));
+    }
+
+    // ===== Banner Video =====
+    if ($request->boolean('remove_banner_video') && !$request->hasFile('banner_video')) {
+        if ($service->banner_video) {
+            Storage::disk('public')->delete($service->banner_video);
+        }
+        $service->banner_video = null;
+    }
+
+    if ($request->hasFile('banner_video')) {
+        if ($service->banner_video) {
+            Storage::disk('public')->delete($service->banner_video);
+        }
+        $service->banner_video = $this->storeVideo($request->file('banner_video'));
+    }
+
+    // Since Banner Image and Banner Video are mutually exclusive (per ServiceRequest validation),
+    // uploading one clears the other automatically.
+    if ($request->hasFile('banner_image') && $service->banner_video) {
+        Storage::disk('public')->delete($service->banner_video);
+        $service->banner_video = null;
+    }
+    if ($request->hasFile('banner_video') && $service->banner_image) {
+        Storage::disk('public')->delete($service->banner_image);
+        $service->banner_image = null;
+    }
+
+    // ===== Gallery: handle removals FIRST, then additions =====
+    $currentGallery = $service->gallery ?? [];
+
+    if ($request->filled('remove_gallery')) {
+        $toRemove = $request->input('remove_gallery');
+
+        foreach ($toRemove as $path) {
+            Storage::disk('public')->delete($path);
+        }
+
+        $currentGallery = array_values(array_diff($currentGallery, $toRemove));
+    }
+
+    if ($request->hasFile('gallery')) {
+        $slotsAvailable = max(0, 6 - count($currentGallery));
+
+        foreach ($request->file('gallery') as $index => $file) {
+            if ($index >= $slotsAvailable) break;
+            $currentGallery[] = $this->processAndStoreImage($file);
+        }
+    }
+
+    $service->gallery = count($currentGallery) > 0 ? array_values($currentGallery) : null;
+
+    // ===== Inspection Process: heading + description + image per row =====
+    $inspectionInput = $data['inspection_process'] ?? [];
+    $oldInspection = $service->inspection_process ?? [];
+    $processedInspection = [];
+
+    foreach ($inspectionInput as $index => $row) {
+        $heading = trim($row['heading'] ?? '');
+        $description = trim($row['description'] ?? '');
+        $hasNewImage = $request->hasFile("inspection_process.$index.image");
+
+        if ($heading === '' && $description === '' && !$hasNewImage && empty($row['existing_image'])) {
+            continue;
+        }
+
+        $imagePath = $row['existing_image'] ?? null;
+
+        if ($hasNewImage) {
+            if (!empty($oldInspection[$index]['image'])) {
+                Storage::disk('public')->delete($oldInspection[$index]['image']);
+            }
+            $imagePath = $this->processAndStoreImage($request->file("inspection_process.$index.image"));
+        }
+
+        $processedInspection[] = [
+            'heading'     => $heading,
+            'description' => $description,
+            'image'       => $imagePath,
+        ];
+    }
+
+    $service->inspection_process = count($processedInspection) > 0 ? array_values($processedInspection) : null;
+}
+
+private function storeVideo($file): string
+{
+    $name = Str::random(20) . '.' . $file->getClientOriginalExtension();
+    return $file->storeAs('services/videos', $name, 'public');
+}
+
 
     private function processAndStoreImage($file): string
     {

@@ -99,7 +99,7 @@
         </div>
 
         {{-- Banner Image --}}
-        <div class="card">
+        <!-- <div class="card">
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-image"></i></span> Banner Image<span class="req">*</span></h2>
             </div>
@@ -134,7 +134,84 @@
             @error('banner_image')
                 <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
             @enderror
+        </div> -->
+
+
+
+
+
+
+       <div class="card">
+    <div class="section-title">
+        <h2><span class="icon"><i class="bi bi-image"></i></span>Banner Image or Video<span class="req">*</span></h2>
+    </div>
+
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Image:</b> {{ $imageWidth ?? 550 }} &times; {{ $imageHeight ?? 560 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB.
+           <b>Video:</b> MP4, MOV, WEBM &middot; up to 20MB.</p>
+    </div>
+
+    <div class="images-row">
+        {{-- Image slot --}}
+        <div class="image-slot" style="max-width:300px;">
+            <div class="slot-top"><span class="slot-label">Image</span></div>
+            <div class="drop img-slot {{ $service->banner_image ? 'filled' : '' }}" id="drop-service-banner-image" data-file-input="file-banner-image" onclick="handleDropClick(this)">
+                @if ($service->banner_image)
+                    <img src="{{ Storage::url($service->banner_image) }}" id="preview-banner-image" alt="Banner image">
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'banner_image', 'preview-banner-image')" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-banner-image">
+                        <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-banner-image" name="banner_image" accept="image/*" data-max-size="10" hidden
+                   onchange="previewImage(this,'preview-banner-image'); showFileSize(this,'size-banner-image')">
+            <input type="hidden" name="remove_banner_image" id="remove-banner_image" value="0">
+            @if (!$service->banner_image)
+                <button type="button" class="choose-btn" onclick="document.getElementById('file-banner-image').click()">Choose file</button>
+            @endif
+            <span class="file-size-info" id="size-banner-image"></span>
+            @error('banner_image')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
         </div>
+
+        {{-- Video slot --}}
+        <div class="image-slot" style="max-width:300px;">
+            <div class="slot-top"><span class="slot-label">Video</span></div>
+            <div class="video-drop {{ $service->banner_video ? 'has-file filled' : '' }} {{ $errors->has('banner_video') ? 'input-error' : '' }}"
+                 id="drop-service-banner-video" onclick="handleVideoDropClick(this)">
+                @if ($service->banner_video)
+                    <video src="{{ Storage::url($service->banner_video) }}" muted playsinline preload="metadata"></video>
+                    <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+                @else
+                    <div class="preview-placeholder" id="preview-video">
+                        <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+                        <div class="drop-title">Click to upload</div>
+                        <div class="drop-sub">or drag &amp; drop</div>
+                    </div>
+                @endif
+            </div>
+            <input type="file" id="file-banner-video" name="banner_video" accept="video/*" data-max-size="20" hidden
+                   onchange="showBannerVideoFileName(this); showFileSize(this,'size-banner-video')">
+            <input type="hidden" name="remove_banner_video" id="remove-banner_video" value="0">
+            <span class="file-size-info" id="size-banner-video"></span>
+            @error('banner_video')
+                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
 
         {{-- Hero Image --}}
         <div class="card">
@@ -355,9 +432,16 @@
 </div>
 
 {{-- ===== Templates for dynamic rows ===== --}}
-<template id="scopeRowTemplate">
+<!-- <template id="scopeRowTemplate">
     <div class="scope-row">
         <input type="text" name="technical_scope[]" placeholder="e.g. Thread types: Buttress, LTC, STC">
+        <button type="button" class="action-btn delete btn-remove-row" title="Remove"><i class="bi bi-trash3"></i></button>
+    </div>
+</template> -->
+
+<template id="scopeRowTemplate">
+    <div class="scope-row">
+        <input type="text" name="technical_scope[__INDEX__]" placeholder="e.g. Thread types: Buttress, LTC, STC">
         <button type="button" class="action-btn delete btn-remove-row" title="Remove"><i class="bi bi-trash3"></i></button>
     </div>
 </template>
@@ -420,7 +504,7 @@
 
 <script>
     // ===== Drop-zone click + remove (image slots that support server-side removal) =====
-    function handleDropClick(el) {
+      function handleDropClick(el) {
         if (el.classList.contains('filled')) return;
         const inputId = el.getAttribute('data-file-input');
         const input = document.getElementById(inputId);
@@ -500,24 +584,28 @@
 
     // ===== Technical Scope (simple list) =====
     const existingScope = @json(old('technical_scope', $service->technical_scope ?? []));
-    const scopeContainer = document.getElementById('scopeRows');
-    const scopeTemplate = document.getElementById('scopeRowTemplate');
+const scopeContainer = document.getElementById('scopeRows');
+const scopeTemplate = document.getElementById('scopeRowTemplate');
+let scopeIndex = 0;
 
-    function addScopeRow(value = '') {
-        const clone = scopeTemplate.content.cloneNode(true);
-        const row = clone.querySelector('.scope-row');
-        row.querySelector('input').value = value;
-        row.querySelector('.btn-remove-row').addEventListener('click', () => row.remove());
-        scopeContainer.appendChild(row);
-    }
+function addScopeRow(value = '') {
+    const clone = scopeTemplate.content.cloneNode(true);
+    const row = clone.querySelector('.scope-row');
+    const input = row.querySelector('input');
+    input.name = input.name.replace('__INDEX__', scopeIndex);
+    input.value = value;
+    row.querySelector('.btn-remove-row').addEventListener('click', () => row.remove());
+    scopeContainer.appendChild(row);
+    scopeIndex++;
+}
 
-    document.getElementById('addScopeBtn').addEventListener('click', () => addScopeRow());
+document.getElementById('addScopeBtn').addEventListener('click', () => addScopeRow());
 
-    if (existingScope.length > 0) {
-        existingScope.forEach(v => addScopeRow(v));
-    } else {
-        addScopeRow();
-    }
+if (existingScope.length > 0) {
+    existingScope.forEach(v => addScopeRow(v));
+} else {
+    addScopeRow();
+}
 
     // ===== Specifications (table rows) =====
     const existingSpecs = @json(old('specifications', $service->specifications ?? []));
@@ -710,6 +798,28 @@ function previewInspectionImage(input) {
     reader.readAsDataURL(file);
 }
 
+
+ function showFileSize(input, displayId) {
+        const display = document.getElementById(displayId);
+        if (!display) return;
+        if (!input.files || !input.files[0]) {
+            display.textContent = '';
+            display.classList.remove('size-error');
+            return;
+        }
+        const file = input.files[0];
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        const maxMB = parseFloat(input.dataset.maxSize);
+
+        if (sizeMB > maxMB) {
+            display.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${sizeMB} MB — exceeds ${maxMB}MB limit!`;
+            display.classList.add('size-error');
+        } else {
+            display.innerHTML = `<i class="bi bi-check-circle"></i> ${sizeMB} MB`;
+            display.classList.remove('size-error');
+        }
+    }
+
 function removeInspectionImage(event, btn) {
     event.stopPropagation();
     const dropEl = btn.closest('.inspection-drop');
@@ -794,19 +904,71 @@ function submitServiceCardForm() {
     });
 }
 
+
+
+function handleVideoDropClick(el) {
+    if (el.classList.contains('filled')) return;
+    document.getElementById('file-banner-video').click();
+}
+
+function showBannerVideoFileName(input) {
+    const drop = document.getElementById('drop-service-banner-video');
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const videoURL = URL.createObjectURL(file);
+
+    drop.classList.add('has-file', 'filled');
+    drop.innerHTML = `
+        <video src="${videoURL}" muted playsinline preload="metadata"></video>
+        <button type="button" class="remove-img-btn" onclick="removeUploadedVideo(event)" title="Remove video">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="uploaded-tag"><i class="bi bi-camera-video-fill"></i> Uploaded</div>
+    `;
+    document.getElementById('remove-banner_video').value = '0';
+}
+
+function removeUploadedVideo(event) {
+    event.stopPropagation();
+    const drop = document.getElementById('drop-service-banner-video');
+    const fileInput = document.getElementById('file-banner-video');
+    const removeInput = document.getElementById('remove-banner_video');
+
+    const existingVideo = drop.querySelector('video');
+    if (existingVideo && existingVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(existingVideo.src);
+    }
+
+    if (removeInput) removeInput.value = '1';
+    if (fileInput) fileInput.value = '';
+
+    drop.classList.remove('has-file', 'filled');
+    drop.innerHTML = `
+        <div class="preview-placeholder" id="preview-video">
+            <div class="ico-circle"><i class="bi bi-camera-video" style="color:#AEB4C4;font-size:18px;"></i></div>
+            <div class="drop-title">Click to upload</div>
+            <div class="drop-sub">or drag &amp; drop</div>
+        </div>
+    `;
+}
+
+
 function showServiceCardValidationErrors(errors) {
     const form = document.getElementById('serviceForm');
 
     const topLevelMap = {
-        title: f => f.querySelector('[name="title"]'),
-        show_on_home: f => f.querySelector('[name="show_on_home"]'),
-        description: f => f.querySelector('[name="description"]'),
-        banner_image: f => document.getElementById('drop-service-banner-image'),
-        image: f => document.getElementById('drop-service-hero-image'),
-        process_description: f => f.querySelector('[name="process_description"]'),
-        meta_title: f => f.querySelector('[name="meta_title"]'),
-        meta_description: f => f.querySelector('[name="meta_description"]'),
-    };
+    title: f => f.querySelector('[name="title"]'),
+    show_on_home: f => f.querySelector('[name="show_on_home"]'),
+    description: f => f.querySelector('[name="description"]'),
+     banner_image: f => document.getElementById('drop-service-banner-image'),
+        banner_video: f => document.getElementById('drop-service-banner-video'),
+
+    image: f => document.getElementById('drop-service-hero-image'),
+    process_description: f => f.querySelector('[name="process_description"]'),
+    meta_title: f => f.querySelector('[name="meta_title"]'),
+    meta_description: f => f.querySelector('[name="meta_description"]'),
+};
 
     Object.keys(errors).forEach(field => {
         const message = errors[field][0];
@@ -1012,12 +1174,12 @@ document.addEventListener('DOMContentLoaded', function () {
     .slot-label{ font-size:12px; font-weight:600; color: var(--muted,#667085); }
     .images-row, .gallery-new{ display:flex; gap:14px; flex-wrap:wrap; }
 
-    .drop{
-        position:relative; aspect-ratio:4/3; border-radius:12px;
+    /* .drop{
+        position:relative;  border-radius:12px;
         border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
-    }
+    } */
     .drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
     .drop.filled{ border:2px solid transparent; background:#0F1220; cursor:default; }
     .drop img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -1266,6 +1428,91 @@ document.addEventListener('DOMContentLoaded', function () {
     display: flex;
     flex-direction: column;
     min-width: 0;
+}
+
+/* .card .images-row > .image-slot {
+    flex: 1 1 300px;
+    max-width: 300px;
+    width: 100%;
+} */
+
+ .video-drop{
+    position:relative; height:190px; border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA); background:#FAFBFD;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s; text-align:center;
+}
+.video-drop:hover{ border-color: var(--orange,#BF0001); background: var(--orange-tint,#FFF8F3); }
+.video-drop.has-file .drop-title{ color: var(--green,#12875A); }
+.video-drop.input-error{ border-color:#e74c3c; background:#fff8f8; }
+
+/* ===== Video preview state (filled) ===== */
+.video-drop.filled{
+    border:2px solid transparent;
+    cursor:default;
+}
+
+.video-drop video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    background:#0F1220;
+}
+
+.video-drop .uploaded-tag{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:8px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:rgba(255,255,255,0.9);
+    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    pointer-events:none;
+}
+
+.images-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+}
+
+.slot-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted, #667085);
+}
+
+.slot-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.image-slot{
+    flex:1;
+    min-width:260px;
+}
+
+/* Make image drop use the same fixed height as video-drop instead of aspect-ratio */
+.drop{
+    position:relative;
+    height:190px;               /* was: aspect-ratio:4/3 */
+    border-radius:12px;
+    border:2px dashed var(--input-border,#DBDFEA);
+    background:#FAFBFD;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color .15s, background .15s;
+    text-align:center;
 }
 </style>
 

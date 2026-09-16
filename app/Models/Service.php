@@ -19,7 +19,7 @@ class Service extends Model
         'image',
         'gallery',
         'inspection_process',
-        'show_on_home'
+        'show_on_home',
     ];
 
     protected $casts = [
