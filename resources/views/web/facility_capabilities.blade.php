@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
 </head>
+
 <body>
 
     @include('web.layout.header')
@@ -20,7 +22,15 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="fc-hero" @if($facilityBanner?->banner_image) style="background-image: url('{{ asset('storage/' . $facilityBanner->banner_image) }}');" @endif>
+        <section class="fc-hero" @if(!$facilityBanner?->banner_video && $facilityBanner?->banner_image)
+            style="background-image: url('{{ asset('storage/' . $facilityBanner->banner_image) }}');" @endif>
+
+            @if ($facilityBanner?->banner_video)
+            <video class="fc-hero-video-bg" autoplay muted loop playsinline>
+                <source src="{{ asset('storage/' . $facilityBanner->banner_video) }}" type="video/mp4">
+            </video>
+            @endif
+
             <div class="fc-hero-overlay"></div>
             <div class="fc-hero-content">
                 <h1>{{ $facilityBanner->banner_title ?? '' }}</h1>
@@ -177,27 +187,31 @@
 
                 <div class="fc-carousel">
                     <button type="button" class="fc-carousel-arrow fc-carousel-prev" data-target="machineTrack">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" /></svg>
                     </button>
 
                     <div class="fc-carousel-viewport">
                         <div class="fc-carousel-track" id="machineTrack">
                             @foreach ($machines as $machine)
-                                <div class="fc-machinery-card fc-carousel-item">
-                                    @if ($machine->image)
-                                        <img src="{{ asset('storage/' . $machine->image) }}" alt="{{ $machine->title }}">
-                                    @endif
-                                    <div class="fc-machinery-body">
-                                        <h3>{{ $machine->title }}</h3>
-                                        <p>{{ $machine->description }}</p>
-                                    </div>
+                            <div class="fc-machinery-card fc-carousel-item">
+                                @if ($machine->image)
+                                <img src="{{ asset('storage/' . $machine->image) }}" alt="{{ $machine->title }}">
+                                @endif
+                                <div class="fc-machinery-body">
+                                    <h3>{{ $machine->title }}</h3>
+                                    <p>{{ $machine->description }}</p>
                                 </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
 
                     <button type="button" class="fc-carousel-arrow fc-carousel-next" data-target="machineTrack">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6" /></svg>
                     </button>
                 </div>
             </div>
@@ -269,27 +283,31 @@
 
                 <div class="fc-carousel">
                     <button type="button" class="fc-carousel-arrow fc-carousel-prev" data-target="toolTrack">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" /></svg>
                     </button>
 
                     <div class="fc-carousel-viewport">
                         <div class="fc-carousel-track" id="toolTrack">
                             @foreach ($tools as $tool)
-                                <div class="fc-qc-card fc-carousel-item">
-                                    @if ($tool->image)
-                                        <div class="fc-qc-image">
-                                            <img src="{{ asset('storage/' . $tool->image) }}" alt="{{ $tool->title }}">
-                                        </div>
-                                    @endif
-                                    <h3>{{ $tool->title }}</h3>
-                                    <p>{{ $tool->description }}</p>
+                            <div class="fc-qc-card fc-carousel-item">
+                                @if ($tool->image)
+                                <div class="fc-qc-image">
+                                    <img src="{{ asset('storage/' . $tool->image) }}" alt="{{ $tool->title }}">
                                 </div>
+                                @endif
+                                <h3>{{ $tool->title }}</h3>
+                                <p>{{ $tool->description }}</p>
+                            </div>
                             @endforeach
                         </div>
                     </div>
 
                     <button type="button" class="fc-carousel-arrow fc-carousel-next" data-target="toolTrack">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6" /></svg>
                     </button>
                 </div>
             </div>
@@ -306,7 +324,9 @@
 
                 <div class="fc-closing-content">
                     <h2>Looking for precision<br>technical capabilities?</h2>
-                    <p>Talk to EGTS about your machining, threading, inspection, and other precision engineering requirements. Our experienced team is ready to understand your needs and provide reliable, accurate, and efficient solutions tailored to your specific application.</p>
+                    <p>Talk to EGTS about your machining, threading, inspection, and other precision engineering
+                        requirements. Our experienced team is ready to understand your needs and provide reliable,
+                        accurate, and efficient solutions tailored to your specific application.</p>
                     <a href="{{ url('/contact') }}" class="fc-closing-btn">Request Consultation</a>
                 </div>
             </div>
@@ -374,7 +394,9 @@
             initCarousel('machineTrack');
             initCarousel('toolTrack');
         })();
+
     </script>
 
 </body>
+
 </html>

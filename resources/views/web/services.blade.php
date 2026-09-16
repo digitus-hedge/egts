@@ -22,7 +22,15 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="page-hero" style="background-image: url('{{ asset('storage/' . $serviceBanner->image) }}');">
+        <section class="page-hero" @if(!$serviceBanner?->banner_video && $serviceBanner?->image)
+            style="background-image: url('{{ asset('storage/' . $serviceBanner->image) }}');" @endif>
+
+            @if ($serviceBanner?->banner_video)
+            <video class="page-hero-video-bg" autoplay muted loop playsinline>
+                <source src="{{ asset('storage/' . $serviceBanner->banner_video) }}" type="video/mp4">
+            </video>
+            @endif
+
             <div class="page-hero-overlay"></div>
             <div class="page-hero-content">
                 <h1>{{ $serviceBanner->banner_heading }}</h1>
@@ -151,7 +159,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6" />
-                                    </svg>
+                                </svg>
                             </a>
                         </div>
                     </div>

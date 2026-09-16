@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
     <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
 </head>
+
 <body>
 
     @include('web.layout.header')
@@ -19,7 +21,15 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="pj-hero" @if($banner?->image) style="background-image: url('{{ asset('storage/' . $banner->image) }}');" @endif>
+        <section class="pj-hero" @if(!$banner?->video && $banner?->image) style="background-image:
+            url('{{ asset('storage/' . $banner->image) }}');" @endif>
+
+            @if ($banner?->video)
+            <video class="pj-hero-video-bg" autoplay muted loop playsinline>
+                <source src="{{ asset('storage/' . $banner->video) }}" type="video/mp4">
+            </video>
+            @endif
+
             <div class="pj-hero-overlay"></div>
             <div class="pj-hero-content">
                 <h1>{{ $banner->title ?? '' }}</h1>
@@ -105,18 +115,20 @@
             <div class="pj-projects-inner">
                 <span class="pj-eyebrow">PROJECTS</span>
                 <h2>Projects Delivered</h2>
-                <p class="pj-intro-text">From thread repair on individual joints to full remanufacturing programs, our project work spans drilling and OCTG equipment across operators, drilling contractors and service companies in Iraq and the wider region.</p>
+                <p class="pj-intro-text">From thread repair on individual joints to full remanufacturing programs, our
+                    project work spans drilling and OCTG equipment across operators, drilling contractors and service
+                    companies in Iraq and the wider region.</p>
 
                 @if ($masterProjects->count())
                 <div class="pj-projects-grid" id="pjProjectsGrid">
                     @foreach ($masterProjects as $index => $project)
-                        <div class="pj-project-card {{ $index >= 8 ? 'pj-project-hidden' : '' }}">
-                            @if ($project->image)
-                                <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
-                            @endif
-                            <h3>{{ $project->title }}</h3>
-                            <p>{{ $project->description }}</p>
-                        </div>
+                    <div class="pj-project-card {{ $index >= 8 ? 'pj-project-hidden' : '' }}">
+                        @if ($project->image)
+                        <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
+                        @endif
+                        <h3>{{ $project->title }}</h3>
+                        <p>{{ $project->description }}</p>
+                    </div>
                     @endforeach
                 </div>
 
@@ -137,16 +149,18 @@
             <div class="pj-clients-inner">
                 <span class="pj-eyebrow">CLIENTS</span>
                 <h2>Trusted by Industry Leaders</h2>
-                <p class="pj-intro-text">EGTS works alongside national oil companies, global oilfield service majors and regional operators, delivering the precision machining and inspection work their drilling and production programs depend on.</p>
+                <p class="pj-intro-text">EGTS works alongside national oil companies, global oilfield service majors and
+                    regional operators, delivering the precision machining and inspection work their drilling and
+                    production programs depend on.</p>
 
                 @if ($clients->count())
                 <div class="pj-clients-grid">
                     @foreach ($clients as $client)
-                        <div class="pj-client-card">
-                            @if ($client->image)
-                                <img src="{{ asset('storage/' . $client->image) }}" alt="{{ $client->title }}">
-                            @endif
-                        </div>
+                    <div class="pj-client-card">
+                        @if ($client->image)
+                        <img src="{{ asset('storage/' . $client->image) }}" alt="{{ $client->title }}">
+                        @endif
+                    </div>
                     @endforeach
                 </div>
                 @else
@@ -178,11 +192,16 @@
                     hiddenCards.forEach(card => card.classList.add('pj-project-hidden'));
                     btn.textContent = 'Load More';
                     expanded = false;
-                    document.getElementById('pjProjectsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('pjProjectsGrid').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         })();
+
     </script>
 
 </body>
+
 </html>

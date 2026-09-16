@@ -21,13 +21,19 @@
     <main>
 
         {{-- ===== Page Hero Section ===== --}}
-        <section class="sd-hero" @if($service->banner_image) style="background-image:
-            url('{{ asset('storage/' . $service->banner_image) }}');" @endif>
-            <div class="sd-hero-overlay"></div>
-            <div class="sd-hero-content">
-                <h1>{{ $service->title }}:<br>Detailed Specifications</h1>
-            </div>
-        </section>
+        <section class="sd-hero" @if(!$service->banner_video && $service->banner_image) style="background-image: url('{{ asset('storage/' . $service->banner_image) }}');" @endif>
+
+    @if ($service->banner_video)
+        <video class="sd-hero-video-bg" autoplay muted loop playsinline>
+            <source src="{{ asset('storage/' . $service->banner_video) }}" type="video/mp4">
+        </video>
+    @endif
+
+    <div class="sd-hero-overlay"></div>
+    <div class="sd-hero-content">
+        <h1>{{ $service->title }}:<br>Detailed Specifications</h1>
+    </div>
+</section>
         {{-- ===== End Page Hero Section ===== --}}
 
         {{-- ===== Overview & Technical Process ===== --}}
