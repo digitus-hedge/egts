@@ -139,22 +139,27 @@ class ServiceRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $service = $this->route('service');
+        $service = $this->route('service');
 
-            // ===== Gallery: combined total check =====
-            $existingGalleryCount = $service ? count($service->gallery ?? []) : 0;
-            $removeCount = count($this->input('remove_gallery', []));
-            $newGalleryCount = count($this->file('gallery', []));
+        // ===== Gallery: combined total check =====
+        $existingGalleryCount = $service ? count($service->gallery ?? []) : 0;
+        $removeCount = count($this->input('remove_gallery', []));
+        $newGalleryCount = count($this->file('gallery', []));
 
-            $remainingExisting = max(0, $existingGalleryCount - $removeCount);
-            $finalGalleryCount = $remainingExisting + $newGalleryCount;
+        $remainingExisting = max(0, $existingGalleryCount - $removeCount);
+        $finalGalleryCount = $remainingExisting + $newGalleryCount;
 
-            if ($finalGalleryCount > 6) {
-                $validator->errors()->add(
-                    'gallery',
-                    "Total gallery images cannot exceed 6. You currently have {$remainingExisting} remaining plus {$newGalleryCount} new (total {$finalGalleryCount})."
-                );
-            }
+        if ($finalGalleryCount > 6) {
+            $validator->errors()->add(
+                'gallery',
+                "Total gallery images cannot exceed 6. You currently have {$remainingExisting} remaining plus {$newGalleryCount} new (total {$finalGalleryCount})."
+            );
+        }
+
+        // NEW: require at least 1 gallery image overall, whether create or update
+        if ($finalGalleryCount < 1) {
+            $validator->errors()->add('gallery', 'Please upload at least one gallery image.');
+        }
 
             // ===== Hero image: must exist either as upload or already saved =====
             $hasExistingImage = $service && $service->image;

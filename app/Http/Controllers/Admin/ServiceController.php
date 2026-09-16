@@ -39,34 +39,76 @@ class ServiceController extends Controller
         return view('admin.service.form', compact('service'));
     }
 
+    // public function store(ServiceRequest $request)
+    // {
+    //     $data = $request->validated();
+
+    //     $service = new Service();
+    //     $this->fillService($service, $data, $request);
+    //     $service->save();
+
+    //     return redirect()
+    //         ->route('admin.home.services')
+    //         ->with('success', 'Service created successfully.');
+    // }
+
+
     public function store(ServiceRequest $request)
-    {
-        $data = $request->validated();
+{
+    $data = $request->validated();
 
-        $service = new Service();
-        $this->fillService($service, $data, $request);
-        $service->save();
+    $service = new Service();
+    $this->fillService($service, $data, $request);
+    $service->save();
 
-        return redirect()
-            ->route('admin.home.services')
-            ->with('success', 'Service created successfully.');
+    if ($request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Service created successfully.',
+            'redirect' => route('admin.home.services'),
+        ]);
     }
+
+    return redirect()
+        ->route('admin.home.services')
+        ->with('success', 'Service created successfully.');
+}
 
     public function edit(Service $service)
     {
         return view('admin.service.form', compact('service'));
     }
 
-    public function update(ServiceRequest $request, Service $service)
-    {
-        $data = $request->validated();
-        $this->fillService($service, $data, $request);
-        $service->save();
+    // public function update(ServiceRequest $request, Service $service)
+    // {
+    //     $data = $request->validated();
+    //     $this->fillService($service, $data, $request);
+    //     $service->save();
 
-        return redirect()
-            ->route('admin.home.services')
-            ->with('success', 'Service updated successfully.');
+    //     return redirect()
+    //         ->route('admin.home.services')
+    //         ->with('success', 'Service updated successfully.');
+    // }
+
+
+    public function update(ServiceRequest $request, Service $service)
+{
+    $data = $request->validated();
+    $this->fillService($service, $data, $request);
+    $service->save();
+
+    if ($request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Service updated successfully.',
+            'redirect' => route('admin.home.services'),
+        ]);
     }
+
+    return redirect()
+        ->route('admin.home.services')
+        ->with('success', 'Service updated successfully.');
+}
 
     public function destroy(Service $service)
     {
