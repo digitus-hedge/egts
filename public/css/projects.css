@@ -287,7 +287,7 @@
     }
 
     .pj-hero {
-        min-height: 70vh;
+        min-height: 320px;
     }
 
     .pj-hero-content h1 {
@@ -315,7 +315,7 @@
 
 @media (max-width: 576px) {
     .pj-hero {
-        min-height: 60vh;
+        min-height: 320px;
     }
 
     .pj-hero-content {

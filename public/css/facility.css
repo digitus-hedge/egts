@@ -313,7 +313,7 @@
    ========================================================================== */
 @media (max-width: 991px) {
     .fc-hero {
-        min-height: 70vh;
+        min-height: 320px;
     }
 
     .fc-hero-content h1 {
@@ -340,7 +340,7 @@
 
 @media (max-width: 576px) {
     .fc-hero {
-        min-height: 60vh;
+        min-height: 320px;
     }
 
     .fc-hero-content {

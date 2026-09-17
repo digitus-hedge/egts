@@ -560,6 +560,35 @@
 
     @include('web.layout.footer')
 
+    <script>
+    (function () {
+        const hero = document.querySelector('.au-hero');
+        if (!hero) return;
+
+        function matchHeroToImage() {
+            if (window.innerWidth > 767) {
+                hero.style.aspectRatio = '';
+                return;
+            }
+
+            const bgImage = getComputedStyle(hero).backgroundImage;
+            const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
+            if (!match || !match[1]) return;
+
+            const img = new Image();
+            img.onload = function () {
+                if (img.naturalWidth && img.naturalHeight) {
+                    hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+                }
+            };
+            img.src = match[1];
+        }
+
+        matchHeroToImage();
+        window.addEventListener('resize', matchHeroToImage);
+    })();
+</script>
+
 </body>
 
 </html>

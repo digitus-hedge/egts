@@ -68,21 +68,33 @@
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 767px) {
     .au-hero {
-        min-height: 480px;
+        min-height: 320px;
+        background-size: cover;
+        background-position: center center;
+    }
+
+    .au-hero-video-bg {
+        object-fit: cover;
     }
 
     .au-hero-content {
-        padding: 0 20px 50px;
+        padding: 0 20px 30px;
     }
 
     .au-hero-content h1 {
-        font-size: 26px;
+        font-size: 24px;
     }
 
     .au-hero-content p {
-        font-size: 14px;
+        font-size: 13.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .au-hero-content h1 {
+        font-size: 21px;
     }
 }
 

@@ -32,7 +32,6 @@
 
             <div class="ct-hero-overlay"></div>
             <div class="ct-hero-content">
-                <span class="ct-hero-eyebrow">CONTACT US</span>
                 <h1>{{ $contactBanner->title ?? '' }}</h1>
                 <p>{{ $contactBanner->description ?? '' }}</p>
             </div>
@@ -360,6 +359,35 @@
         });
 
     </script>
+
+    <script>
+    (function () {
+        const hero = document.querySelector('.ct-hero');
+        if (!hero) return;
+
+        function matchHeroToImage() {
+            if (window.innerWidth > 991) {
+                hero.style.aspectRatio = '';
+                return;
+            }
+
+            const bgImage = getComputedStyle(hero).backgroundImage;
+            const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
+            if (!match || !match[1]) return;
+
+            const img = new Image();
+            img.onload = function () {
+                if (img.naturalWidth && img.naturalHeight) {
+                    hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+                }
+            };
+            img.src = match[1];
+        }
+
+        matchHeroToImage();
+        window.addEventListener('resize', matchHeroToImage);
+    })();
+</script>
 
 </body>
 

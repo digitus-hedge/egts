@@ -81,7 +81,6 @@
                 <a href="{{ url('/services') }}" class="{{ request()->is('services') || request()->is('services/*') ? 'active' : '' }}">Services</a>
                 <a href="{{ url('/projects_clients') }}" class="{{ request()->is('projects_clients') ? 'active' : '' }}">Projects & Clients</a>
                 <a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
-                <a href="{{ url('/contact') }}" class="cta-btn">Request a Consultation</a>
             </div>
         </div>
     </header>

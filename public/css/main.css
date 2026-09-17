@@ -484,7 +484,7 @@ a {
 .clients-section {
     width: 100%;
     background-color: #b40707;
-    padding: 32px 0;
+    padding: 20px 0;
     overflow: hidden;
 }
 
@@ -763,7 +763,7 @@ a {
 .certs-section {
     width: 100%;
     background-color: #b40707;
-    padding: 40px 24px;
+    padding: 24px 24px;
 }
 
 .certs-inner {
@@ -1088,7 +1088,7 @@ a {
     }
 
     .clients-section {
-        padding: 24px 0;
+        padding: 16px 0;
     }
 
     .clients-inner {
@@ -1124,7 +1124,7 @@ a {
     }
 
     .certs-section {
-        padding: 30px 20px;
+        padding: 18px 20px;
     }
 
     .certs-inner h2 {
@@ -1132,8 +1132,21 @@ a {
     }
 
     .certs-grid {
-        flex-direction: column;
-        gap: 28px;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 32px;
+        padding: 4px 20px 12px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .certs-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cert-item {
+        flex-shrink: 0;
     }
 
     .cert-item img {

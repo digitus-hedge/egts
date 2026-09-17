@@ -307,7 +307,8 @@
    ========================================================================== */
 @media (max-width: 991px) {
     .ct-hero {
-        min-height: 70vh;
+        min-height: 320px;
+        max-height: none;
     }
 
     .ct-hero-content h1 {
@@ -328,7 +329,7 @@
     }
 
     .ct-dept-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 
     .ct-info-col-red {
@@ -337,6 +338,11 @@
 }
 
 @media (max-width: 576px) {
+    .ct-hero {
+        min-height: 320px;
+        max-height: none;
+    }
+
     .ct-hero-content h1 {
         font-size: 24px;
     }
@@ -438,6 +444,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-bottom: 28px;
+    min-width: 0;
 }
 
 .ct-dept-card {
@@ -448,6 +455,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
 }
 
 .ct-dept-card h4 {
@@ -464,6 +472,7 @@
     color: #fff;
     line-height: 1.5;
     word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .ct-form-success {
@@ -512,4 +521,10 @@
     height: 100%;
     object-fit: cover;
     z-index: 0;
+}
+
+@media (max-width: 991px) {
+    .ct-dept-grid {
+        grid-template-columns: 1fr !important;
+    }
 }

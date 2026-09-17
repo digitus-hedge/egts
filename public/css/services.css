@@ -55,7 +55,7 @@
    ========================================================================== */
 @media (max-width: 991px) {
     .page-hero {
-        min-height: 70vh;
+        min-height: 320px;
     }
 
     .page-hero-content h1 {
@@ -69,7 +69,7 @@
 
 @media (max-width: 576px) {
     .page-hero {
-        min-height: 60vh;
+        min-height: 320px;
     }
 
     .page-hero-content {
@@ -813,7 +813,7 @@
    ========================================================================== */
 @media (max-width: 991px) {
     .sd-hero {
-        min-height: 70vh;
+        min-height: 320px;
     }
     .sd-hero-content h1 {
         font-size: 28px;
@@ -846,7 +846,7 @@
 
 @media (max-width: 576px) {
     .sd-hero {
-        min-height: 60vh;
+        min-height: 320px;
     }
 
     .sd-hero-content {
