@@ -295,7 +295,7 @@
     .thumb {
         width: 48px;
         height: 34px;
-        object-fit: cover;
+        object-fit: fill;
         border-radius: 4px;
         border: 1px solid #eee;
     }

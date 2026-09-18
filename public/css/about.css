@@ -76,7 +76,7 @@
     }
 
     .au-hero-video-bg {
-        object-fit: cover;
+        object-fit: fill;
     }
 
     .au-hero-content {
@@ -155,7 +155,7 @@
 .au-img-primary {
     width: 100%;
     height: 420px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 16px;
     display: block;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
@@ -167,7 +167,7 @@
     right: 0;
     width: 55%;
     height: 260px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 16px;
     border: 6px solid #fff;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
@@ -354,7 +354,7 @@
 .au-mv-image img {
     width: 100%;
     height: 280px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 10px;
     display: block;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
@@ -635,7 +635,7 @@
 .au-infra-item img {
     width: 100%;
     height: 260px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 10px;
     display: block;
     margin-bottom: 18px;
@@ -761,7 +761,7 @@
 .au-closing-image img {
     width: 100%;
     height: 340px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 14px;
     display: block;
 }
@@ -841,7 +841,7 @@
 .au-infra-media {
     width: 100%;
     height: 260px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 10px;
     display: block;
     margin-bottom: 18px;
@@ -888,6 +888,6 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     z-index: 0;
 }
