@@ -347,7 +347,7 @@
                         <div class="au-foundation-overlay"></div>
                         <div class="au-foundation-content">
                             <h3>{{ $whyChooseUs->values_title }}</h3>
-                            <p>{!! $whyChooseUs->vision_description_rich !!}</p>
+                            <p>{!! $whyChooseUs->values_description_rich !!}</p>
                         </div>
                     </div>
 
