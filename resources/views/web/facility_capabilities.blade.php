@@ -104,12 +104,13 @@
             </div>
 
             <div class="fc-narrative-inner">
-                <span class="fc-section-eyebrow">ANKAWA OPERATIONS &amp; INFRASTRUCTURE</span>
+                <span class="fc-section-eyebrow">OPERATIONS &amp; INFRASTRUCTURE</span>
 
                 <div class="fc-narrative-grid">
                     <div class="fc-narrative-col">
                         <h3>{{ $facilityBanner->operations_heading ?? 'Facility Narrative' }}</h3>
-                        <p>{{ $facilityBanner->operations_description ?? '' }}</p>
+                        <!--<p>{{ $facilityBanner->operations_description ?? '' }}</p>-->
+                        <p>{!! nl2br(e($facilityBanner->operations_description ?? '')) !!}</p>
                     </div>
 
                     <div class="fc-narrative-col">
@@ -425,6 +426,50 @@
         window.addEventListener('resize', matchHeroToImage);
     })();
 </script>
+
+<style>
+    /* Center the carousel cards */
+.fc-carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.fc-carousel-viewport {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.fc-carousel-track {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0 auto;
+}
+
+/* Center content inside each card */
+.fc-qc-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.fc-qc-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.fc-qc-image img {
+    display: block;
+    margin: 0 auto;
+}
+</style>
 
 </body>
 

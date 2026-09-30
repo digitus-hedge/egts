@@ -112,35 +112,37 @@
                 </svg>
             </div>
 
-            <div class="pj-projects-inner">
-                <span class="pj-eyebrow">PROJECTS</span>
-                <h2>Projects Delivered</h2>
-                <p class="pj-intro-text">From thread repair on individual joints to full remanufacturing programs, our
-                    project work spans drilling and OCTG equipment across operators, drilling contractors and service
-                    companies in Iraq and the wider region.</p>
+           
+            <!--<div class="pj-projects-inner">-->
+            <!--    <span class="pj-eyebrow">PROJECTS</span>-->
+            <!--    <h2>Projects Delivered</h2>-->
+            <!--    <p class="pj-intro-text">From thread repair on individual joints to full remanufacturing programs, our-->
+            <!--        project work spans drilling and OCTG equipment across operators, drilling contractors and service-->
+            <!--        companies in Iraq and the wider region.</p>-->
 
-                @if ($masterProjects->count())
-                <div class="pj-projects-grid" id="pjProjectsGrid">
-                    @foreach ($masterProjects as $index => $project)
-                    <div class="pj-project-card {{ $index >= 8 ? 'pj-project-hidden' : '' }}">
-                        @if ($project->image)
-                        <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
-                        @endif
-                        <h3>{{ $project->title }}</h3>
-                        <p>{{ $project->description }}</p>
-                    </div>
-                    @endforeach
-                </div>
+            <!--    @if ($masterProjects->count())-->
+            <!--    <div class="pj-projects-grid" id="pjProjectsGrid">-->
+            <!--        @foreach ($masterProjects as $index => $project)-->
+            <!--        <div class="pj-project-card {{ $index >= 8 ? 'pj-project-hidden' : '' }}">-->
+            <!--            @if ($project->image)-->
+            <!--            <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">-->
+            <!--            @endif-->
+            <!--            <h3>{{ $project->title }}</h3>-->
+            <!--            <p>{{ $project->description }}</p>-->
+            <!--        </div>-->
+            <!--        @endforeach-->
+            <!--    </div>-->
 
-                @if ($masterProjects->count() > 8)
-                <div class="pj-loadmore-wrap">
-                    <button type="button" class="pj-loadmore-btn" id="pjLoadMoreBtn">Load More</button>
-                </div>
-                @endif
-                @else
-                <p class="pj-empty">No projects added yet.</p>
-                @endif
-            </div>
+            <!--    @if ($masterProjects->count() > 8)-->
+            <!--    <div class="pj-loadmore-wrap">-->
+            <!--        <button type="button" class="pj-loadmore-btn" id="pjLoadMoreBtn">Load More</button>-->
+            <!--    </div>-->
+            <!--    @endif-->
+            <!--    @else-->
+            <!--    <p class="pj-empty">No projects added yet.</p>-->
+            <!--    @endif-->
+            <!--</div>-->
+            
         </section>
         {{-- ===== End Projects Delivered Section ===== --}}
 

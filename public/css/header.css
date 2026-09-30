@@ -24,7 +24,8 @@
 /* ===== Top Info Bar ===== */
 .top-bar {
     width: 100%;
-    background: rgba(0, 0, 0, 0.35);
+    /*background: rgba(0, 0, 0, 0.35);*/
+    background:rgba(38, 73, 136);
     color: #fff;
     font-size: 14px;
     padding: 8px 0;

@@ -549,8 +549,7 @@
             <div class="why-inner">
                 <span class="why-eyebrow">WHY CHOOSE EGTS</span>
                 <h2>{{ $whyChooseUs->heading ?? '' }}</h2>
-                <!-- <p class="why-sub">{{ $whyChooseUs->description ?? '' }}</p> -->
-                <p class="why-sub">{!! $whyChooseUs->description ?? '' !!}</p>
+                       <p class="why-sub">{!! $whyChooseUs->description ?? '' !!}</p>
 
                 <div class="why-grid">
 
@@ -703,7 +702,9 @@
 
             <div class="closing-inner">
                 <div class="closing-image">
-                    <img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">
+                    <!--<img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">-->
+                    
+                    <img src="{{ asset('images/contact.jpeg') }}" alt="EGTS Technician at Work">
                 </div>
 
                 <div class="closing-content">

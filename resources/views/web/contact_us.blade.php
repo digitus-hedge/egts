@@ -271,9 +271,14 @@
             ? $contactBanner->latitude . ',' . $contactBanner->longitude
             : urlencode($contactBanner->address ?? 'Ankawa Industrial Area, Erbil, Iraq');
             @endphp
-            <iframe src="https://www.google.com/maps?q={{ $mapQuery }}&output=embed" width="100%" height="100%"
+            <!--<iframe src="https://www.google.com/maps?q={{ $mapQuery }}&output=embed" width="100%" height="100%"-->
+            <!--    style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">-->
+            <!--</iframe>-->
+            
+             <iframe src="https://www.google.com/maps?q=36.268120,43.964869&z=16&output=embed" width="100%" height="100%"
                 style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
             </iframe>
+            
         </section>
         {{-- ===== End Map Section ===== --}}
 

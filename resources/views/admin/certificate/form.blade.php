@@ -72,6 +72,8 @@
                     <option value="">-- Select License Type --</option>
                     <option value="API License" {{ old('license_type', $certificate->license_type) === 'API License' ? 'selected' : '' }}>API License</option>
                     <option value="Premium License" {{ old('license_type', $certificate->license_type) === 'Premium License' ? 'selected' : '' }}>Premium License</option>
+                         <option value="ISO License" {{ old('license_type', $certificate->license_type) === 'ISO License' ? 'selected' : '' }}>ISO ND Q1</option>
+                  
                 </select>
                 @error('license_type')
                     <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
@@ -96,42 +98,59 @@
 
         {{-- Image --}}
         <div class="card">
-            <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-image"></i></span> Banner Image<span class="req">*</span></h2>
-            </div>
+    <div class="section-title">
+        <h2><span class="icon"><i class="bi bi-file-earmark-text"></i></span> Certificate File<span class="req">*</span></h2>
+    </div>
 
-              <div class="notice caution">
-                <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
-                <p><b>Recommended size:</b> {{ $imageWidth ?? 1200 }} &times; {{ $imageHeight ?? 600 }}px &middot; JPG, PNG, WEBP &middot; up to 10MB per image.</p>
-            </div>
+    <div class="notice caution">
+        <i class="bi bi-exclamation-triangle" style="margin-top:1px;"></i>
+        <p><b>Allowed files:</b> PDF, DOC, DOCX &middot; up to 10MB.</p>
+    </div>
 
-            <div class="image-slot" style="max-width:300px;">
-                <div class="drop img-slot {{ $certificate->image ? 'filled' : '' }}"  id="drop-certificate-image"  data-file-input="file-image" onclick="handleDropClick(this)">
-                    @if ($certificate->image)
-                        <img src="{{ Storage::url($certificate->image) }}" id="preview-image" alt="Certificate image">
-                        <button type="button" class="remove-img-btn" onclick="removeUploadedImage(event, this, 'image', 'preview-image')" title="Remove image">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <div class="uploaded-tag"><i class="bi bi-check-circle"></i> Uploaded</div>
-                    @else
-                        <div class="preview-placeholder" id="preview-image">
-                            <div class="ico-circle"><i class="bi bi-image" style="color:#AEB4C4;font-size:18px;"></i></div>
-                            <div class="drop-title">Click to upload</div>
-                            <div class="drop-sub">or drag &amp; drop</div>
-                        </div>
-                    @endif
-                </div>
-                <input type="file" id="file-image" name="image" accept="image/*" hidden
-                       onchange="previewImage(this, 'preview-image')">
-                <input type="hidden" name="remove_image" id="remove-image" value="0">
-                @if (!$certificate->image)
-                    <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+    @php
+        $certFile = $certificate->image;
+        $certExt  = $certFile ? strtolower(pathinfo($certFile, PATHINFO_EXTENSION)) : null;
+    @endphp
+
+    <div class="image-slot" style="max-width:300px;">
+        <div class="drop img-slot {{ $certFile ? 'filled' : '' }}" id="drop-certificate-file"
+             onclick="if(!this.classList.contains('filled')) document.getElementById('file-image').click()">
+
+            {{-- Existing file --}}
+            <div id="cert-file-preview" class="cert-file-preview" style="{{ $certFile ? '' : 'display:none;' }}">
+                <i id="cert-file-icon" class="bi {{ $certExt === 'pdf' ? 'bi-file-earmark-pdf' : 'bi-file-earmark-word' }}"></i>
+                <div id="cert-file-name" class="cert-file-name">{{ $certFile ? basename($certFile) : '' }}</div>
+                @if ($certFile)
+                    <a href="{{ Storage::url($certFile) }}" target="_blank" id="cert-file-view"
+                       class="cert-file-view" onclick="event.stopPropagation()">View file</a>
                 @endif
+                <button type="button" class="remove-img-btn" onclick="removeCertFile(event)" title="Remove file">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <div class="uploaded-tag"><i class="bi bi-check-circle"></i> {{ $certFile ? 'Uploaded' : 'Selected' }}</div>
             </div>
-            @error('image')
-                <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
-            @enderror
+
+            {{-- Empty state --}}
+            <div id="cert-file-placeholder" class="preview-placeholder" style="{{ $certFile ? 'display:none;' : '' }}">
+                <div class="ico-circle"><i class="bi bi-file-earmark-arrow-up" style="color:#AEB4C4;font-size:18px;"></i></div>
+                <div class="drop-title">Click to upload</div>
+                <div class="drop-sub">PDF, DOC or DOCX</div>
+            </div>
         </div>
+
+        <input type="file" id="file-image" name="image" hidden
+               accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+               onchange="previewCertFile(this)">
+        <input type="hidden" name="remove_image" id="remove-image" value="0">
+
+        <button type="button" class="choose-btn" onclick="document.getElementById('file-image').click()">Choose file</button>
+        <span class="field-error" id="cert-file-error" style="display:none;"></span>
+    </div>
+
+    @error('image')
+        <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
+    @enderror
+</div>
 
 
       
@@ -245,7 +264,8 @@ function submitCertificateForm() {
     const submitBtn = form.querySelector('.btn-save');
     const originalBtnHtml = submitBtn.innerHTML;
 
-    form.querySelectorAll('.field-error').forEach(el => el.remove());
+    form.querySelectorAll('.field-error:not(#cert-file-error)').forEach(el => el.remove());
+document.getElementById('cert-file-error').style.display = 'none';
     form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
     submitBtn.disabled = true;
@@ -303,7 +323,7 @@ function showCertificateFormValidationErrors(errors) {
         title: f => f.querySelector('[name="title"]'),
         license_type: f => f.querySelector('[name="license_type"]'),
         description: f => f.querySelector('[name="description"]'),
-        image: f => document.getElementById('drop-certificate-image'),
+        image: f => document.getElementById('drop-certificate-file'),
         meta_title: f => f.querySelector('[name="meta_title"]'),
         meta_description: f => f.querySelector('[name="meta_description"]'),
     };
@@ -316,9 +336,12 @@ function showCertificateFormValidationErrors(errors) {
         target.classList.add('input-error');
 
         const errorEl = document.createElement('span');
-        errorEl.className = 'field-error';
+        errorEl.className = 'field-error js-field-error';
         errorEl.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${message}`;
-        target.insertAdjacentElement('afterend', errorEl);
+
+        // For the file box, show the message below the whole upload block
+        const anchor = field === 'image' ? target.closest('.image-slot') : target;
+        anchor.insertAdjacentElement('afterend', errorEl);
     });
 
     const firstErrorField = form.querySelector('.input-error');
@@ -355,6 +378,51 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 @endif
 
+
+<script>
+    function previewCertFile(input) {
+        const errorEl = document.getElementById('cert-file-error');
+        errorEl.style.display = 'none';
+
+        const file = input.files[0];
+        if (!file) return;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!['pdf', 'doc', 'docx'].includes(ext)) {
+            errorEl.textContent = 'Only PDF, DOC or DOCX files are allowed.';
+            errorEl.style.display = 'block';
+            input.value = '';
+            return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+            errorEl.textContent = 'File must not exceed 10MB.';
+            errorEl.style.display = 'block';
+            input.value = '';
+            return;
+        }
+
+        document.getElementById('cert-file-icon').className =
+            'bi ' + (ext === 'pdf' ? 'bi-file-earmark-pdf' : 'bi-file-earmark-word');
+        document.getElementById('cert-file-name').textContent = file.name;
+
+        const viewLink = document.getElementById('cert-file-view');
+        if (viewLink) viewLink.style.display = 'none';
+
+        document.getElementById('cert-file-preview').style.display = 'flex';
+        document.getElementById('cert-file-placeholder').style.display = 'none';
+        document.getElementById('drop-certificate-file').classList.add('filled');
+        document.getElementById('remove-image').value = '0';
+    }
+
+    function removeCertFile(e) {
+        e.stopPropagation();
+        document.getElementById('file-image').value = '';
+        document.getElementById('remove-image').value = '1';
+        document.getElementById('cert-file-preview').style.display = 'none';
+        document.getElementById('cert-file-placeholder').style.display = '';
+        document.getElementById('drop-certificate-file').classList.remove('filled');
+    }
+</script>
 <style>
 
     select {
@@ -491,6 +559,11 @@ document.addEventListener('DOMContentLoaded', function () {
     color: var(--orange, #BF0001);
 }
 
+   .cert-file-preview { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:24px 12px; text-align:center; width:100%; }
+    .cert-file-preview > i { font-size:42px; color:#C0392B; }
+    .cert-file-preview .bi-file-earmark-word { color:#2B579A; }
+    .cert-file-name { font-size:13px; font-weight:600; word-break:break-all; color:#333; }
+    .cert-file-view { font-size:12px; color:#2B579A; text-decoration:underline; }
 </style>
 
 @endsection

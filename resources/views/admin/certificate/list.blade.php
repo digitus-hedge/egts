@@ -69,7 +69,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Image</th>
+                        <th>File</th>
                         <th>Title</th>
                         <th>Description</th>
                         <th>License Type</th>
@@ -79,15 +79,28 @@
                 <tbody>
                     @forelse ($certificates as $certificate)
                     <tr>
-                        <td>
-                            <div class="thumb-wrap">
-                                @if ($certificate->image)
-                                    <img src="{{ Storage::url($certificate->image) }}" alt="{{ $certificate->title }}">
-                                @else
-                                    <i class="bi bi-image" style="color:var(--faint,#9AA1B2);"></i>
-                                @endif
-                            </div>
-                        </td>
+                       <td>
+    <div class="thumb-wrap">
+        @if ($certificate->image)
+            @php
+                $ext = strtolower(pathinfo($certificate->image, PATHINFO_EXTENSION));
+            @endphp
+
+            @if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp']))
+                <img src="{{ Storage::url($certificate->image) }}" alt="{{ $certificate->title }}">
+            @else
+                <a href="{{ Storage::url($certificate->image) }}" target="_blank"
+                   class="file-thumb {{ $ext === 'pdf' ? 'is-pdf' : 'is-doc' }}"
+                   title="Open {{ strtoupper($ext) }} file">
+                    <i class="bi {{ $ext === 'pdf' ? 'bi-file-earmark-pdf' : 'bi-file-earmark-word' }}"></i>
+                    <span>{{ strtoupper($ext) }}</span>
+                </a>
+            @endif
+        @else
+            <i class="bi bi-file-earmark" style="color:var(--faint,#9AA1B2);"></i>
+        @endif
+    </div>
+</td>
                         <td class="title-cell">{{ $certificate->title }}</td>
                         <td class="desc-cell">
                             <div class="desc-clamp">{{ Str::limit($certificate->description, 90) ?: '—' }}</div>
@@ -311,6 +324,22 @@
         thead th:nth-child(3){ display:none; }
         .table-wrap{ overflow-x:auto; }
     }
+
+    .file-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    gap: 2px;
+}
+.file-thumb i { font-size: 22px; line-height: 1; }
+.file-thumb span { font-size: 9px; font-weight: 700; letter-spacing: .03em; }
+.file-thumb.is-pdf { color: #C0392B; }
+.file-thumb.is-doc { color: #2B579A; }
+.file-thumb:hover { opacity: .8; }
 </style>
 
 @endsection

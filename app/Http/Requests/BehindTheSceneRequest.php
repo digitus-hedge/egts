@@ -19,7 +19,7 @@ class BehindTheSceneRequest extends FormRequest
         return [
             'service_id'  => 'required|exists:services,id',
             'title'       => 'required|string|max:45',
-            'description' => 'required|string|max:120',
+            'description' => 'required|string|max:350',
 
             'media_type'  => 'required|in:video,video_url,image',
 
@@ -37,7 +37,7 @@ class BehindTheSceneRequest extends FormRequest
             'in'       => 'Please choose a valid :attribute.',
             'url'      => 'The :attribute must be a valid URL.',
             'mimes'    => 'The :attribute must be a file of type: :values.',
-            'max'      => 'The :attribute is too large.',
+            'max' => 'The :attribute must not exceed :max characters.',
         ];
     }
 

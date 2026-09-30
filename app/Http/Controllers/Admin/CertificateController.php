@@ -5,18 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CertificateRequest;
 use App\Models\Certificate;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class CertificateController extends Controller
 {
-    protected int $imageWidth = 400;
-    protected int $imageHeight = 400;
-    protected int $compressQuality = 70;
-
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
@@ -45,21 +40,19 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         $certificate = new Certificate();
-        $certificate->title = $data['title'];
-        $certificate->description = $data['description'] ?? null;
-        $certificate->license_type = $data['license_type'] ?? null;
-        $certificate->meta_title = $data['meta_title'] ?? null;
+        $certificate->title            = $data['title'];
+        $certificate->description      = $data['description'] ?? null;
+        $certificate->license_type     = $data['license_type'] ?? null;
+        $certificate->meta_title       = $data['meta_title'] ?? null;
         $certificate->meta_description = $data['meta_description'] ?? null;
 
         if ($request->hasFile('image')) {
-            $certificate->image = $this->processAndStoreImage($request->file('image'));
+            $certificate->image = $this->storeCertificateFile($request->file('image'));
         }
 
         $certificate->save();
 
-        return redirect()
-            ->route('admin.home.certificates')
-            ->with('success', 'Certificate created successfully.');
+        return $this->successResponse($request, 'Certificate created successfully.');
     }
 
     public function edit(Certificate $certificate)
@@ -71,30 +64,30 @@ class CertificateController extends Controller
     {
         $data = $request->validated();
 
-        $certificate->title = $data['title'];
-        $certificate->license_type = $data['license_type'] ?? null;
-        $certificate->description = $data['description'] ?? null;
+        $certificate->title            = $data['title'];
+        $certificate->license_type     = $data['license_type'] ?? null;
+        $certificate->description      = $data['description'] ?? null;
+        $certificate->meta_title       = $data['meta_title'] ?? $certificate->meta_title;
+        $certificate->meta_description = $data['meta_description'] ?? $certificate->meta_description;
 
         if ($request->hasFile('image')) {
-            if ($certificate->image) {
-                Storage::disk('public')->delete($certificate->image);
-            }
-            $certificate->image = $this->processAndStoreImage($request->file('image'));
+            // New file uploaded: replace the old one
+            $this->deleteFile($certificate->image);
+            $certificate->image = $this->storeCertificateFile($request->file('image'));
+        } elseif ($request->input('remove_image') === '1') {
+            // Removed with no replacement (validation normally blocks this, kept as a safeguard)
+            $this->deleteFile($certificate->image);
+            $certificate->image = null;
         }
 
         $certificate->save();
 
-        return redirect()
-            ->route('admin.home.certificates')
-            ->with('success', 'Certificate updated successfully.');
+        return $this->successResponse($request, 'Certificate updated successfully.');
     }
 
     public function destroy(Certificate $certificate)
     {
-        if ($certificate->image) {
-            Storage::disk('public')->delete($certificate->image);
-        }
-
+        $this->deleteFile($certificate->image);
         $certificate->delete();
 
         return redirect()
@@ -102,17 +95,38 @@ class CertificateController extends Controller
             ->with('success', 'Certificate deleted successfully.');
     }
 
-    private function processAndStoreImage($file): string
+    /**
+     * Save the certificate file (PDF / DOC / DOCX) without modifying it.
+     */
+    private function storeCertificateFile(UploadedFile $file): string
     {
-        $filename = 'certificates/' . Str::random(20) . '.webp';
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename  = Str::random(20) . '.' . $extension;
 
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($file);
-        $image->cover($this->imageWidth, $this->imageHeight);
-        $encoded = $image->toWebp(quality: $this->compressQuality);
+        return $file->storeAs('certificates', $filename, 'public');
+    }
 
-        Storage::disk('public')->put($filename, (string) $encoded);
+    private function deleteFile(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+    }
 
-        return $filename;
+    /**
+     * JSON for the AJAX form, redirect for normal form submits.
+     */
+    private function successResponse(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message'  => $message,
+                'redirect' => route('admin.home.certificates'),
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.home.certificates')
+            ->with('success', $message);
     }
 }

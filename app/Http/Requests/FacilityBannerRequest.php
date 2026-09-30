@@ -18,7 +18,7 @@ class FacilityBannerRequest extends FormRequest
         return [
             'banner_title'       => 'required|string|max:60',
             'banner_description' => 'required|string|max:150',
-            // banner_image / banner_video are never "required" directly here — the
+            // banner_image / banner_video are never "required" directly here  the
             // after() hook below decides whether at least one is missing, based on
             // the existing record and any removal flags.
             'banner_image'       => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
@@ -28,10 +28,10 @@ class FacilityBannerRequest extends FormRequest
             'remove_banner_video' => 'nullable|boolean',
 
             'operations_heading'     => 'required|string|max:45',
-            'operations_description' => 'required|string|max:350',
+            'operations_description' => 'required|string|max:1200',
 
             'infrastructure_title'       => 'required|string|max:45',
-            'infrastructure_description' => 'required|string|max:600',
+            'infrastructure_description' => 'required|string|max:1200',
 
             'meta_title'       => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',

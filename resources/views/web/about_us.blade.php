@@ -252,12 +252,12 @@
 
                 <div class="certs-grid">
                     <div class="cert-item">
-                        <img src="{{ asset('images/Certifications 1.webp') }}" alt="API Q1 Certification">
+                        <img src="{{ asset('images/Certifications.png') }}" alt="API Q1 Certification">
                     </div>
 
-                    <div class="cert-item">
-                        <img src="{{ asset('images/Certifications 2.webp') }}" alt="API 5B Certification">
-                    </div>
+                    <!--<div class="cert-item">-->
+                    <!--    <img src="{{ asset('images/Certifications 2.webp') }}" alt="API 5B Certification">-->
+                    <!--</div>-->
 
                     <div class="cert-item">
                         <img src="{{ asset('images/Certifications 3.webp') }}" alt="ISO 45001:2018 Certification">
@@ -381,41 +381,41 @@
                         </svg>
                     </button>
 
-                    <div class="au-infra-viewport">
-                        <div class="au-infra-track" id="infraTrack">
-                            @foreach ($bts as $item)
-                            <div class="au-infra-item">
+                   <div class="au-infra-viewport">
+    <div class="au-infra-track" id="infraTrack">
+        @foreach ($bts as $item)
+        <div class="au-infra-item">
 
-                                @if ($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}">
+            @if ($item->image)
+            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}">
 
-                                @elseif ($item->video)
-                                <video class="au-infra-media" controls muted playsinline>
-                                    <source src="{{ asset('storage/' . $item->video) }}" type="video/mp4">
-                                </video>
+            @elseif ($item->video)
+            <video class="au-infra-media" controls muted playsinline>
+                <source src="{{ asset('storage/' . $item->video) }}" type="video/mp4">
+            </video>
 
-                                @elseif ($item->video_url && $item->embed_url)
-                                <div class="au-infra-video-wrap">
-                                    <iframe src="{{ $item->embed_url }}" title="{{ $item->title }}" frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen>
-                                    </iframe>
-                                </div>
-                                @endif
+            @elseif ($item->video_url && $item->embed_url)
+            <div class="au-infra-video-wrap">
+                <iframe src="{{ $item->embed_url }}" title="{{ $item->title }}" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+            @endif
 
-                                @if ($item->service)
-                                <a href="{{ url('/services/' . $item->service->slug) }}" class="au-infra-link">
-                                    <h3>{{ $item->title }}</h3>
-                                    <p>{{ $item->description }}</p>
-                                </a>
-                                @else
-                                <h3>{{ $item->title }}</h3>
-                                <p>{{ $item->description }}</p>
-                                @endif
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+            @if ($item->service)
+            <a href="{{ url('/services/' . $item->service->slug) }}" class="au-infra-link">
+                <h3>{{ $item->title }}</h3>
+                <p>{{ $item->description }}</p>
+            </a>
+            @else
+            <h3>{{ $item->title }}</h3>
+            <p>{{ $item->description }}</p>
+            @endif
+        </div>
+        @endforeach
+    </div>
+</div>
 
                     <button class="au-infra-arrow au-infra-next" id="infraNext" aria-label="Next">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -480,7 +480,7 @@
         </script>
         {{-- ===== End About Us — Behind the Scenes Section ===== --}}
 
-        {{-- ===== About Us — Closing CTA Section ===== --}}
+        {{-- ===== About Us  Closing CTA Section ===== --}}
         <section class="au-closing-section">
             <div class="au-bg-decor au-bg-decor-left">
                 <svg viewBox="0 0 220 400" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
@@ -540,7 +540,8 @@
 
             <div class="au-closing-inner">
                 <div class="au-closing-image">
-                    <img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">
+                    <!--<img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">-->
+                   <img src="{{ asset('images/contact.jpeg') }}" alt="EGTS Technician at Work">- 
                 </div>
 
                 <div class="au-closing-content">
@@ -589,6 +590,108 @@
     })();
 </script>
 
+<style>
+/* Hide carousel arrows */
+.au-infra-arrow {
+    display: none !important;
+}
+
+/* Center the header */
+.au-infra-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 48px;
+}
+.au-infra-header p {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Track and items */
+.au-infra-viewport,
+.au-infra-track {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 32px;
+    transform: none !important;
+}
+
+/* Item takes full row, centered */
+.au-infra-item {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Wider video, same height */
+.au-infra-item .au-infra-media {
+    width: 100%;
+    max-width: 900px;        /* increase for an even wider video */
+    height: 600px;           /* height stays the same */
+    aspect-ratio: auto;
+    object-fit: cover;       /* fills the box, trims a little from top/bottom */
+    background: #000;
+    border-radius: 16px;
+    display: block;
+    margin: 0 auto 24px;
+}
+
+.au-infra-video-wrap {
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    aspect-ratio: auto;
+}
+
+/* Title and description full width */
+.au-infra-item h3,
+.au-infra-item p,
+.au-infra-link {
+    width: 100%;
+    max-width: 100% !important;
+    text-align: center;
+}
+
+@media (max-width: 991px) {
+    .au-infra-item .au-infra-media,
+    .au-infra-video-wrap {
+        height: 480px;
+    }
+}
+
+@media (max-width: 575px) {
+    .au-infra-item .au-infra-media,
+    .au-infra-video-wrap {
+        height: 380px;
+    }
+}
+
+/* Description same width as the video */
+.au-infra-item p,
+.au-infra-link {
+    width: 100%;
+    max-width: 900px !important;   /* same as the video's max-width */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* Red heading */
+.au-infra-item h3,
+.au-infra-link h3 {
+    color: #BF0001 !important;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 </body>
 
 </html>

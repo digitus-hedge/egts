@@ -16,7 +16,7 @@ class WhyChooseUsRequest extends FormRequest
         $why = \App\Models\WhyChooseUs::first();
 
         return [
-            'heading'                => 'required|string|max:65',
+            'heading'                => 'required|string|max:90',
             'description'            => 'required|string',
 
             // 'mission_title'          => 'required|string|max:100',
