@@ -17,7 +17,7 @@ class WhyChooseUsRequest extends FormRequest
 
         return [
             'heading'                => 'required|string|max:65',
-            'description'            => 'required|string|max:650',
+            'description'            => 'required|string',
 
             // 'mission_title'          => 'required|string|max:100',
             // 'mission_description'    => 'required|string|max:1000',

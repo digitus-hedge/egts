@@ -549,7 +549,8 @@
             <div class="why-inner">
                 <span class="why-eyebrow">WHY CHOOSE EGTS</span>
                 <h2>{{ $whyChooseUs->heading ?? '' }}</h2>
-                <p class="why-sub">{{ $whyChooseUs->description ?? '' }}</p>
+                <!-- <p class="why-sub">{{ $whyChooseUs->description ?? '' }}</p> -->
+                <p class="why-sub">{!! $whyChooseUs->description ?? '' !!}</p>
 
                 <div class="why-grid">
 

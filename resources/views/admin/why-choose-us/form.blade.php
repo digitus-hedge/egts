@@ -4,6 +4,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+{{-- TinyMCE rich text editor (self-hosted build via CDN, no API key needed) --}}
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
+
 @if ($errors->any())
 <div class="notice caution" style="margin-bottom:20px;">
     <i class="bi bi-exclamation-triangle" style="font-size:15px;flex-shrink:0;margin-top:1px;"></i>
@@ -64,9 +67,12 @@
                 <div class="field-top">
                     <label class="field-label">Description <span class="req">*</span></label>
                 </div>
-                <textarea name="description" rows="3"
-                          class="{{ $errors->has('description') ? 'input-error' : '' }}"
-                          placeholder="Our approach is built around...">{{ old('description', $why->description) }}</textarea>
+
+                <div class="rte-wrap {{ $errors->has('description') ? 'input-error' : '' }}">
+                    <textarea name="description" id="descriptionInput" rows="8"
+                              placeholder="Our approach is built around...">{{ old('description', $why->description) }}</textarea>
+                </div>
+
                 @error('description')
                     <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
                 @enderror
@@ -90,19 +96,43 @@
 
 
 <script>
-           document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    // ===== TinyMCE rich text editor for Description =====
+    tinymce.init({
+        selector: '#descriptionInput',
+        license_key: 'gpl',            // free self-hosted (GPL) build
+        height: 280,
+        menubar: false,
+        branding: false,
+        promotion: false,
+        statusbar: false,
+        plugins: 'lists link autolink code',
+        toolbar: 'blocks | bold italic underline strikethrough | forecolor | ' +
+                 'alignleft aligncenter alignright | bullist numlist | link blockquote | removeformat code',
+        block_formats: 'Paragraph=p; Heading 2=h2; Heading 3=h3; Heading 4=h4',
+        content_style: "body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:14px; color:#171B2C; line-height:1.6; margin:12px 14px; }",
+        setup: function (editor) {
+            // Mirror the red focus ring used by the other inputs
+            const wrap = document.querySelector('.rte-wrap');
+            editor.on('focus', () => wrap.classList.add('is-focused'));
+            editor.on('blur',  () => wrap.classList.remove('is-focused'));
+        }
+    });
+
+    // Make sure the latest editor HTML is in the textarea on submit
+    document.getElementById('whyChooseUsForm').addEventListener('submit', function () {
+        tinymce.triggerSave();
+    });
+
     // ===== Scroll to the first validation error on page load =====
     const firstErrorField = document.querySelector('.input-error, .upload-btn-error');
     const firstErrorMsg = document.querySelector('.field-error');
 
     if (firstErrorField) {
         firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Give a brief highlight so the eye lands exactly on the right field
         firstErrorField.classList.add('error-flash');
         setTimeout(() => firstErrorField.classList.remove('error-flash'), 1500);
     } else if (firstErrorMsg) {
-        // Fallback: some errors (like the "at least 1 image" group error) don't
-        // sit on an input directly — scroll to the message itself instead.
         firstErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 });
@@ -141,6 +171,22 @@
     }
     .input-error{ border-color:#e74c3c !important; background:#fff8f8; }
     .field-error{ display:flex; align-items:center; gap:5px; color:#e74c3c; font-size:12.5px; margin-top:6px; }
+
+    /* ===== Rich text editor, styled to match the inputs ===== */
+    .rte-wrap{
+        border:1px solid var(--input-border,#DBDFEA); border-radius:10px; background:#fff;
+        overflow:hidden; transition:box-shadow .15s, border-color .15s;
+    }
+    .rte-wrap.is-focused{
+        border-color: var(--orange,#BF0001);
+        box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
+    }
+    .rte-wrap .tox-tinymce{ border:none !important; border-radius:0 !important; }
+    .rte-wrap .tox .tox-editor-header{ box-shadow:none !important; border-bottom:1px solid var(--line,#E9EBF2) !important; }
+    .rte-wrap .tox .tox-toolbar,
+    .rte-wrap .tox .tox-toolbar__primary,
+    .rte-wrap .tox .tox-toolbar-overlord{ background: var(--canvas,#F6F7FB) !important; }
+    .rte-wrap.input-error .tox .tox-toolbar__primary{ background:#fff3f3 !important; }
 
     .notice{ display:flex; align-items:flex-start; gap:8px; background: var(--canvas,#F6F7FB); border-radius:10px; padding:10px 12px; }
     .notice.caution{ background:#FFF8E8; border:1px solid #F5E3B3; }

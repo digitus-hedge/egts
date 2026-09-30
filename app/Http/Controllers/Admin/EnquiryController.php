@@ -17,7 +17,7 @@ class EnquiryController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where('full_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('subject', 'like', "%{$search}%");
+                    ->orWhere('address', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate($perPage)
@@ -28,9 +28,9 @@ class EnquiryController extends Controller
 
     public function show(Enquiry $enquiry)
     {
-        if (!$enquiry->is_read) {
-            $enquiry->update(['is_read' => true]);
-        }
+        // if (!$enquiry->is_read) {
+        //     $enquiry->update(['is_read' => true]);
+        // }
 
         return view('admin.enquiry.show', compact('enquiry'));
     }
