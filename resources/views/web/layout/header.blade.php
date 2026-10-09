@@ -61,6 +61,7 @@
                     <a href="{{ url('/about') }}" class="{{ request()->is('about') ? 'active' : '' }}">About Us</a>
                     <a href="{{ url('/facility_capabilities') }}" class="{{ request()->is('facility_capabilities') ? 'active' : '' }}">Facility & Capabilities</a>
                     <a href="{{ url('/services') }}" class="{{ request()->is('services') || request()->is('services/*') ? 'active' : '' }}">Services</a>
+                    <a href="{{ url('/career') }}" class="{{ request()->is('career') || request()->is('career/*') ? 'active' : '' }}">Careers</a>
                     <a href="{{ url('/projects_clients') }}" class="{{ request()->is('projects_clients') ? 'active' : '' }}">Projects & Clients</a>
                     <a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                 </nav>

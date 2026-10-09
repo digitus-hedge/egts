@@ -33,6 +33,7 @@ use App\Mail\EnquiryReceived;
 use App\Models\Enquiry;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CareerPageController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -60,7 +61,12 @@ Route::post('/contact/submit', function (EnquiryRequest $request) {
     return back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
 });
 
+Route::get('/career', [CareerPageController::class, 'index'])->name('career');
+Route::post('/career/apply', [CareerPageController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('career.apply');
 
+    
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Guest routes (login)
