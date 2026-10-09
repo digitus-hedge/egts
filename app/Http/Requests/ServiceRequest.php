@@ -26,7 +26,7 @@ class ServiceRequest extends FormRequest
             'specifications'                 => 'required|array|min:1',
             'specifications.*.specification' => 'required|string|max:35',
             'specifications.*.details'       => 'required|string|max:100',
-            'specifications.*.compliance'    => 'required|string|max:30',
+            'specifications.*.compliance'    => 'required|string|max:60',
 
             'image'        => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
 
@@ -49,7 +49,7 @@ class ServiceRequest extends FormRequest
             // Image mandatory too, but enforced in withValidator() below since it
             // must accept EITHER a new upload OR an existing saved image (on update).
             'inspection_process'                 => 'required|array|min:1',
-            'inspection_process.*.heading'       => 'required|string|max:40',
+            'inspection_process.*.heading'       => 'required|string|max:70',
             'inspection_process.*.description'   => 'required|string|max:500',
             'inspection_process.*.image'         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'inspection_process.*.existing_image' => 'nullable|string',
@@ -83,7 +83,7 @@ class ServiceRequest extends FormRequest
             'specifications.*.details.required' => 'Details is required for this row.',
             'specifications.*.details.max'      => 'Details must not exceed 100 characters.',
             'specifications.*.compliance.required' => 'Compliance is required for this row.',
-            'specifications.*.compliance.max'      => 'Compliance must not exceed 30 characters.',
+            'specifications.*.compliance.max'      => 'Compliance must not exceed 60 characters.',
 
             'image.image' => 'The hero/card image must be a valid image.',
             'image.mimes' => 'The hero/card image must be a JPG, PNG, or WEBP file.',
@@ -109,7 +109,7 @@ class ServiceRequest extends FormRequest
             'inspection_process.required' => 'Please add at least one inspection process step.',
             'inspection_process.min'      => 'Please add at least one inspection process step.',
             'inspection_process.*.heading.required'     => 'Heading is required for this inspection step.',
-            'inspection_process.*.heading.max'          => 'Heading must not exceed 40 characters.',
+            'inspection_process.*.heading.max'          => 'Heading must not exceed 70 characters.',
             'inspection_process.*.description.required' => 'Description is required for this inspection step.',
             'inspection_process.*.description.max'      => 'Description must not exceed 500 characters.',
             'inspection_process.*.image.image' => 'The inspection step image must be a valid image.',
