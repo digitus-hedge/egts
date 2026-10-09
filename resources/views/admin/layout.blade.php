@@ -683,6 +683,40 @@
                 </ul>
             </div>
 
+
+
+            @php
+            $careerOpen = request()->routeIs('admin.career') || request()->routeIs('admin.career.*');
+            @endphp
+            <div class="nav-group {{ $careerOpen ? 'expanded' : '' }}">
+                <a class="nav-item" onclick="toggleSub(this)">
+                    <i class="bi bi-person-workspace nav-ico"></i>
+                    Career
+                    <i class="bi bi-chevron-right chev"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a class="nav-item {{ request()->routeIs('admin.career.banner*') ? 'active' : '' }}"
+                            href="{{ route('admin.career.banner') }}">
+                            <i class="bi bi-image nav-ico"></i> Banner
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-item {{ request()->routeIs('admin.career', 'admin.career.create', 'admin.career.edit') ? 'active' : '' }}"
+                            href="{{ route('admin.career') }}">
+                            <i class="bi bi-list-ul nav-ico"></i> Career List
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-item {{ request()->routeIs('admin.career.enquiries*') ? 'active' : '' }}"
+                            href="{{ route('admin.career.enquiries') }}">
+                            <i class="bi bi-chat-left-text nav-ico"></i> Career Enquiries
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+
             {{-- Licenses (Banner only) --}}
             @php
             $licenseOpen = request()->routeIs('admin.home.license-banner') || request()->routeIs('admin.home.license-banner.*');

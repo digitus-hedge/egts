@@ -22,6 +22,11 @@ use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\StatController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
+
+use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\Admin\CareerEnquiryController;
+use App\Http\Controllers\Admin\CareerBannerController;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Requests\EnquiryRequest;
 use App\Mail\EnquiryReceived;
@@ -141,6 +146,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('home/facility/machines/{machine}/edit', [MachineController::class, 'edit'])->name('home.facility.machines.edit');
         Route::put('home/facility/machines/{machine}', [MachineController::class, 'update'])->name('home.facility.machines.update');
         Route::delete('home/facility/machines/{machine}', [MachineController::class, 'destroy'])->name('home.facility.machines.destroy');
+
+        // carrrer
+
+       Route::get('career/enquiries', [CareerEnquiryController::class, 'index'])->name('career.enquiries');   // NEW: Career > Career Enquiries
+
+        Route::get('career', [CareerController::class, 'index'])->name('career');                              // Career > Career List
+        Route::get('career/create', [CareerController::class, 'create'])->name('career.create');               // "Add Career" button
+        Route::post('career', [CareerController::class, 'store'])->name('career.store');
+        Route::get('career/{career}/edit', [CareerController::class, 'edit'])->name('career.edit');
+        Route::put('career/{career}', [CareerController::class, 'update'])->name('career.update');
+        Route::delete('career/{career}', [CareerController::class, 'destroy'])->name('career.destroy');
+
+
+        Route::get('career/banner', [CareerBannerController::class, 'edit'])->name('career.banner');                 // NEW: Career > Banner
+        Route::post('career/banner', [CareerBannerController::class, 'store'])->name('career.banner.store');
+
 
 
         Route::get('service/banner', [ServiceBannerController::class, 'index'])->name('service.banner');       // Shows form directly (pre-filled if exists)
