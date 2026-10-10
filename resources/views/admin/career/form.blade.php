@@ -52,7 +52,7 @@
     <div class="header">
         <div>
             <h1>{{ $career->exists ? 'Edit Career' : 'Add Career' }}</h1>
-            <p>The title, job location and description of a career shown on the Career page  list of your website.</p>
+            <p>The title, job location and description of a career shown on the Career page  list of your website fgdfgfg.</p>
         </div>
     </div>
 
