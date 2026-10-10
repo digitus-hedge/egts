@@ -20,7 +20,21 @@
             icon: 'error',
             title: 'Error',
             text: @json(session('error')),
-            confirmButtonColor: '#D5392F'
+            confirmButtonColor: '#BF0001'
+        });
+    });
+</script>
+@endif
+
+{{-- ADD THIS BLOCK --}}
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: @json(session('success')),
+            confirmButtonColor: '#BF0001'
         });
     });
 </script>
@@ -162,6 +176,11 @@
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
     .icon{ display:inline-flex; color: var(--orange,#EF7B2E); }
     .req{ color: var(--orange, #EF7B2E); }
+    
+    
+   
+    
+    
 
     .field{ margin-bottom:0; }
 

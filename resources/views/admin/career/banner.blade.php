@@ -20,7 +20,7 @@
             icon: 'success',
             title: 'Saved!',
             text: @json(session('success')),
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2500,
             timerProgressBar: true
         });
@@ -562,7 +562,7 @@ function submitCareerBannerForm() {
             icon: 'success',
             title: 'Saved!',
             text: 'Career banner updated successfully.',
-            confirmButtonColor: '#EF7B2E',
+            confirmButtonColor: '#BF0001',
             timer: 2000,
             timerProgressBar: true
         }).then(() => {

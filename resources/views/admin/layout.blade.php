@@ -122,6 +122,14 @@
             height: 100%;
             object-fit: fill;
         }
+        
+        
+         .swal2-confirm 
+         {
+           background-color: #BF0001 !important;
+          }
+        
+      
 
         .brand-text {
             display: flex;
@@ -682,10 +690,10 @@
                     </li>
                 </ul>
             </div>
-
-
-
-            @php
+            
+            
+            
+             @php
             $careerOpen = request()->routeIs('admin.career') || request()->routeIs('admin.career.*');
             @endphp
             <div class="nav-group {{ $careerOpen ? 'expanded' : '' }}">
@@ -715,6 +723,7 @@
                     </li>
                 </ul>
             </div>
+            
             
 
             {{-- Licenses (Banner only) --}}
