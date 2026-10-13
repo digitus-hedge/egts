@@ -31,6 +31,7 @@
                     <li><a href="{{ url('/') }}">Home</a></li>
                     <li><a href="{{ url('/about') }}">About Us</a></li>
                     <li><a href="{{ url('/services') }}">Services</a></li>
+                    <li><a href="{{ url('/career') }}">Careers</a></li>
                     <li><a href="{{ url('/facility_capabilities') }}">Facility & Capabilities</a></li>
                     <li><a href="{{ url('/projects_clients') }}">Projects & Clients</a></li>
                     <li><a href="{{ url('/licenses') }}">Licenses</a></li>

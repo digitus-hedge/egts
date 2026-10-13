@@ -62,12 +62,12 @@
         <section class="capabilities-section">
             <div class="capabilities-inner">
 
-                <div class="capabilities-header">
-                    <div class="capabilities-header-left">
-                        <span class="capabilities-eyebrow">CAREERS</span>
+                <div class="capabilities-header cr-intro-stacked">
+                    <div class="capabilities-header-top">
+                        <span class="capabilities-eyebrow">Careers</span>
                         <h2>{{ $careerTitle }}</h2>
                     </div>
-                    <div class="capabilities-header-right">
+                    <div class="capabilities-header-bottom">
                         @if ($careerDescIsHtml)
                         <div class="cr-intro-text">{!! \App\Models\Career::cleanHtml($careerDesc) !!}</div>
                         @else
