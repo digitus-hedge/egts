@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CareerPageController;
 
+
+
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/about', [HomeController::class,'about']);
@@ -45,6 +47,9 @@ Route::get('/services/{slug}', [HomeController::class, 'serviceDetails']);
 Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 
 Route::get('/contact', [HomeController::class, 'contact']);
+
+
+
 
 Route::get('/projects_clients', [HomeController::class, 'projectsClients']);
 
