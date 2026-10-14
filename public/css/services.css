@@ -184,10 +184,16 @@
 }
 
 .capability-card img {
-    width: 100%;
+    /* width: 100%;
     height: 200px;
     object-fit: fill;
+    display: block; */
+        width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
     display: block;
+
 }
 
 .capability-body {
@@ -286,11 +292,18 @@
 }
 
 .services-cta-image img {
-    width: 100%;
+    /* width: 100%;
     height: 220px;
     object-fit: fill;
     border-radius: 14px;
+    display: block; */
+
+    width: 100%;
+    height: 220px;
+    border-radius: 14px;
     display: block;
+    object-fit: cover;
+    object-position: center;
 }
 
 .services-cta-content h2 {

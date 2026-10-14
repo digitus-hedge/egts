@@ -34,6 +34,7 @@ use App\Models\Enquiry;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CareerPageController;
+use App\Http\Controllers\FeedbackController;
 
 
 
@@ -49,6 +50,9 @@ Route::get('/facility_capabilities', [HomeController::class, 'facility']);
 Route::get('/contact', [HomeController::class, 'contact']);
 
 
+Route::post('/feedback', [FeedbackController::class, 'store'])
+    ->middleware('throttle:3,1')
+    ->name('feedback.store');
 
 
 Route::get('/projects_clients', [HomeController::class, 'projectsClients']);

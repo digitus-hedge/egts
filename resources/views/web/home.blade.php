@@ -723,6 +723,66 @@
 
     </main>
 
+
+    <style>
+        .about-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 64px;
+    align-items: center;   /* already centered — good */
+}
+
+/* Image container */
+.about-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    max-height: 600px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px -20px rgba(15, 21, 38, 0.25);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;        /* fills container, crops nicely */
+    object-position: center;  /* centers the subject */
+    display: block;
+}
+
+/* Content stays centered vertically with image */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Mobile — stack */
+@media (max-width: 900px) {
+    .about-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    .about-image {
+        min-height: 320px;
+        max-height: 400px;
+    }
+}
+
+@media (max-width: 560px) {
+    .about-image {
+        min-height: 260px;
+    }
+}
+</style>
+
     @include('web.layout.footer')
 
 </body>
