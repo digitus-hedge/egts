@@ -216,7 +216,7 @@ a {
 
 .about-eyebrow {
     display: inline-block;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #b40707;
@@ -241,7 +241,7 @@ a {
 }
 
 .about-text p {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.7;
     color: #444;
     margin: 0 0 12px;
@@ -350,7 +350,7 @@ a {
 .services-section {
     position: relative;
     width: 100%;
-    padding: 100px 24px;
+    padding: 100px 12px;
     background-color: #ffffff;
     overflow: visible;
 }
@@ -360,9 +360,13 @@ a {
     top: 100px;
     width: 100%;
     height: 700px;
-    color: rgba(180, 7, 7, 0.16);
+    color: rgba(248, 106, 106, 0.299);
     pointer-events: none;
     align-self: start;
+}
+
+.services-bg-decor svg {
+    stroke-width: 2.5;
 }
 
 .services-bg-decor svg {
@@ -385,8 +389,8 @@ a {
     max-width: 1280px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 140px 0.85fr 1.15fr 140px;
-    gap: 40px;
+    grid-template-columns: 110px 0.9fr 1.2fr 110px;
+    gap: 28px;
     align-items: start;
 }
 
@@ -398,7 +402,7 @@ a {
 
 .services-eyebrow {
     display: inline-block;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #b40707;
@@ -409,14 +413,14 @@ a {
 
 .services-left h2 {
     font-size: 40px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.25;
     color: #1a1a1a;
     margin: 0 0 24px;
 }
 
 .services-left p {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.75;
     color: #555;
     max-width: 440px;
@@ -450,7 +454,7 @@ a {
 }
 
 .service-card p {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.6;
     color: #666;
     margin: 0 0 16px;
@@ -500,7 +504,7 @@ a {
 
 .clients-eyebrow {
     display: inline-block;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #fff;
@@ -516,7 +520,7 @@ a {
 }
 
 .clients-left p {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.85);
     text-align: justify;
@@ -619,7 +623,7 @@ a {
 
 .why-eyebrow {
     display: inline-block;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #b40707;
@@ -638,7 +642,7 @@ a {
 }
 
 .why-sub {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.7;
     color: #555;
     max-width: 620px;
@@ -774,13 +778,13 @@ a {
 
 .certs-inner h2 {
     font-size: 36px;
-    font-weight: 500;
+    font-weight: 700;
     color: #fff;
     margin: 0 0 16px;
 }
 
 .certs-inner>p {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.85);
     max-width: 720px;
@@ -861,14 +865,14 @@ a {
 
 .closing-content h2 {
     font-size: 42px;
-    font-weight: 500;
+    font-weight: 700;
     line-height: 1.25;
     color: #1a1a1a;
     margin: 0 0 28px;
 }
 
 .closing-content p {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.75;
     color: #444;
     margin: 0 0 32px;
@@ -963,7 +967,7 @@ a {
     }
 
     .clients-left h2 {
-        font-size: 28px;
+        font-size: 30px;
     }
 
     .why-grid {

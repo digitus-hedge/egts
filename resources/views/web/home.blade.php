@@ -235,8 +235,8 @@
 
                 {{-- Left decor — sticky, scattered --}}
                 <div class="services-bg-decor services-bg-decor-left">
-                    <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 150 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet">
 
                         {{-- Gauge/meter --}}
                         <g transform="translate(140,0) rotate(-12)">
@@ -354,8 +354,8 @@
 
                 {{-- Right decor — sticky, scattered --}}
                 <div class="services-bg-decor services-bg-decor-right">
-                    <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 150 700" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet">
 
                         {{-- Hexagon --}}
                         <g transform="translate(30,0) rotate(15)">
@@ -450,7 +450,7 @@
 
                 <div class="clients-left">
                     <span class="clients-eyebrow">OUR VALUED CLIENTS</span>
-                    <h2>{{ $clientSection->title ?? '' }}</h2>
+                    <h2 style="font-size: 38px; font-weight: 700;">{{ $clientSection->title ?? '' }}</h2>
                     <p>{{ $clientSection->description ?? '' }}</p>
                 </div>
 
@@ -703,7 +703,7 @@
             <div class="closing-inner">
                 <div class="closing-image">
                     <!--<img src="{{ asset('images/contact.webp') }}" alt="EGTS Technician at Work">-->
-                    
+
                     <img src="{{ asset('images/contact.jpeg') }}" alt="EGTS Technician at Work">
                 </div>
 
