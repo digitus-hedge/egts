@@ -56,7 +56,7 @@ Route::get('/licenses', [HomeController::class, 'licenses']);
 Route::post('/contact/submit', function (EnquiryRequest $request) {
     $enquiry = Enquiry::create($request->validated());
 
-    Mail::to('resnithnest@gmail.com')->send(new EnquiryReceived($enquiry));
+    Mail::to('info.egts26@gmail.com')->send(new EnquiryReceived($enquiry));
 
     return back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
 });
@@ -66,7 +66,7 @@ Route::post('/career/apply', [CareerPageController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('career.apply');
 
-    
+
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Guest routes (login)
