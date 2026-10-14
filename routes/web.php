@@ -35,8 +35,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CareerPageController;
 use App\Http\Controllers\FeedbackController;
-
-
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -65,10 +64,19 @@ Route::get('/licenses', [HomeController::class, 'licenses']);
 Route::post('/contact/submit', function (EnquiryRequest $request) {
     $enquiry = Enquiry::create($request->validated());
 
-    Mail::to('info.egts26@gmail.com')->send(new EnquiryReceived($enquiry));
+    try {
+        Mail::to(env('MAIL_TO_ADDRESS', 'ajithkumar@erbiltech.com'))
+            ->send(new EnquiryReceived($enquiry));
+
+        Log::info('Enquiry email sent', ['enquiry_id' => $enquiry->id]);
+    } catch (\Throwable $e) {
+        Log::error('Enquiry email FAILED: ' . $e->getMessage(), [
+            'enquiry_id' => $enquiry->id,
+        ]);
+    }
 
     return back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
-});
+})->name('contact.submit');
 
 Route::get('/career', [CareerPageController::class, 'index'])->name('career');
 Route::post('/career/apply', [CareerPageController::class, 'store'])
