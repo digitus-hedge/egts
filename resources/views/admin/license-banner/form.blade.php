@@ -130,7 +130,7 @@
 </div>
 
 
- <div class="card">
+<div class="card">
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-search"></i></span> SEO Meta</h2>
             </div>
@@ -159,6 +159,7 @@
                 @enderror
             </div>
         </div>
+
 
 
         <div class="form-actions">
@@ -539,7 +540,6 @@ function removeLicenseVideo(event) {
     height:35px; /* matches .choose-btn's total rendered height (padding + border + line-height) */
 }
 
-
 .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }
     .icon{ display:inline-flex; color: var(--orange,#BF0001); }
@@ -556,6 +556,7 @@ function removeLicenseVideo(event) {
         border-color: var(--orange,#BF0001);
         box-shadow: 0 0 0 4px var(--orange-tint-strong,#FFE9D8);
     }
+
 </style>
 
 @endsection

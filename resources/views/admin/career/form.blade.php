@@ -52,7 +52,7 @@
     <div class="header">
         <div>
             <h1>{{ $career->exists ? 'Edit Career' : 'Add Career' }}</h1>
-            <p>The title, job location and description of a career shown on the Career page  list of your website.</p>
+            <p>The title, job location and description of a career shown on the Career page of your website.</p>
         </div>
     </div>
 
@@ -170,7 +170,7 @@
 
     .header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; flex-wrap:wrap; }
     .header h1{ font-size:25px; font-weight:700; letter-spacing:-0.02em; margin:0; color: var(--ink,#171B2C); }
-    .header p{ font-size:13.5px; color: var(--muted,#667085); margin:7px 0 0; max-width:560px; line-height:1.55; }
+    .header p{ font-size:13.5px; color: var(--muted,#667085); margin:7px 0 0;  line-height:1.55; }
 
     .section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:6px; }
     .section-title h2{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; margin:0; color: var(--ink,#171B2C); }

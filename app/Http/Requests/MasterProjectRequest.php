@@ -26,7 +26,7 @@ class MasterProjectRequest extends FormRequest
     {
         return [
             'title.required' => 'Please enter a project title.',
-            'title.max'      => 'Title must not exceed 255 characters.',
+            'title.max'      => 'Title must not exceed 70 characters.',
 
             'description.required' => 'Please enter a project description.',
             'description.max'      => 'Description must not exceed 1000 characters.',

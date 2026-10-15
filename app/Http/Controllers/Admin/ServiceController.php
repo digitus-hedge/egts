@@ -27,7 +27,7 @@ class ServiceController extends Controller
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             })
-            ->orderByDesc('id')
+             ->orderByDesc('id')
             ->paginate($perPage)
             ->withQueryString();
 

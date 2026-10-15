@@ -22,8 +22,8 @@ class HomeAboutRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     // Strip HTML tags (e.g. from TinyMCE/CKEditor) to count pure character length
                     $plainText = trim(strip_tags($value));
-                    if (mb_strlen($plainText) > 600) {
-                        $fail('Description cannot exceed 600 characters.');
+                    if (mb_strlen($plainText) > 800) {
+                        $fail('Description cannot exceed 800 characters.');
                     }
                 },
             ],

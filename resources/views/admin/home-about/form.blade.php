@@ -104,7 +104,7 @@
             <div class="section-title">
                 <h2><span class="icon"><i class="bi bi-code-slash"></i></span> Description <span class="req">*</span></h2>
                 <span class="section-sub" id="char-count-msg" style="margin:0;">
-                    <span id="char-count">0</span> / 600 characters
+                    <span id="char-count">0</span> / 800 characters
                 </span>
             </div>
 

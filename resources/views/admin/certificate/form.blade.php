@@ -84,7 +84,7 @@
         {{-- Description --}}
         <div class="card">
             <div class="section-title">
-                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description<span class="req">*</span></h2>
+                <h2><span class="icon"><i class="bi bi-text-paragraph"></i></span> Description</h2>
             </div>
             <div class="field" style="margin-bottom:0;">
                 <textarea name="description" rows="4"

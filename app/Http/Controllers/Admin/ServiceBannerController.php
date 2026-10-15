@@ -42,7 +42,7 @@ class ServiceBannerController extends Controller
     $about->meta_title       = $data['meta_title'] ?? null;
     $about->meta_description = $data['meta_description'] ?? null;
 
- // ----- Image -----
+   // ----- Image -----
 if ($request->hasFile('image')) {
     if ($about->image) {
         Storage::disk('public')->delete($about->image);

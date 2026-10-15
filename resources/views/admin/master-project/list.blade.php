@@ -36,8 +36,6 @@
         </a>
     </div>
 
-
-
     <div class="card">
         <div class="toolbar">
             <form method="GET" action="{{ route('admin.home.masters.projects') }}" class="search-box" id="searchForm">
@@ -110,7 +108,6 @@
                         </td>
                     </tr>
                     @empty
-                        {{-- Empty state rendered outside <tbody> below --}}
                     @endforelse
                 </tbody>
             </table>
@@ -124,10 +121,57 @@
         </div>
         @else
         <div class="table-footer">
-            <span class="count">Showing {{ $masterProjects->firstItem() ?? 0 }} to {{ $masterProjects->lastItem() ?? 0 }} of {{ $masterProjects->total() }} entries</span>
-            <div class="pagination-wrap">
-                {{ $masterProjects->links() }}
-            </div>
+            <span class="count">
+                Showing {{ $masterProjects->firstItem() ?? 0 }} to {{ $masterProjects->lastItem() ?? 0 }} of {{ $masterProjects->total() }} entries
+            </span>
+
+            {{-- ============================================================
+                 CUSTOM PAGINATION — only the buttons we actually want
+               ============================================================ --}}
+            @if ($masterProjects->hasPages())
+            <nav class="pagination-wrap" aria-label="Pagination">
+                <ul class="pagination">
+                    {{-- Previous --}}
+                    @if ($masterProjects->onFirstPage())
+                        <li class="disabled" aria-disabled="true">
+                            <span><i class="bi bi-chevron-left"></i></span>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ $masterProjects->previousPageUrl() }}" rel="prev" aria-label="Previous">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Numbered page links --}}
+                    @foreach ($masterProjects->getUrlRange(1, $masterProjects->lastPage()) as $page => $url)
+                        @if ($page == $masterProjects->currentPage())
+                            <li class="active" aria-current="page">
+                                <span>{{ $page }}</span>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ $url }}">{{ $page }}</a>
+                            </li>
+                        @endif
+                    @endforeach
+
+                    {{-- Next --}}
+                    @if ($masterProjects->hasMorePages())
+                        <li>
+                            <a href="{{ $masterProjects->nextPageUrl() }}" rel="next" aria-label="Next">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    @else
+                        <li class="disabled" aria-disabled="true">
+                            <span><i class="bi bi-chevron-right"></i></span>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+            @endif
         </div>
         @endif
     </div>
@@ -204,17 +248,6 @@
     }
     .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -6px rgba(15,21,38,0.5); color:#fff; }
 
-    .stats-row{ display:flex; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
-    .stat-chip{
-        flex:1; min-width:170px; background:#fff; border:1px solid var(--line,#E9EBF2); border-radius:14px;
-        padding:14px 16px; display:flex; align-items:center; gap:12px;
-        box-shadow:0 1px 2px rgba(15,21,38,0.03);
-    }
-    .stat-chip .ico{ width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
-    .stat-chip .ico.orange{ background: var(--orange-tint-strong,#FFE9D8); color: var(--orange,#BF0001); }
-    .stat-chip .num{ font-family:'Sora',sans-serif; font-size:18px; font-weight:700; color: var(--ink,#171B2C); line-height:1.1; }
-    .stat-chip .label{ font-size:11.5px; color: var(--muted,#667085); margin-top:2px; }
-
     .card{
         background:#fff; border:1px solid var(--line,#E9EBF2); border-radius:16px;
         box-shadow:0 1px 2px rgba(15,21,38,0.03), 0 8px 24px -16px rgba(15,21,38,0.10);
@@ -280,20 +313,62 @@
     }
     .table-footer .count{ font-size:12.5px; color: var(--faint,#9AA1B2); }
 
-    .pagination-wrap nav{ display:flex; }
-    .pagination-wrap ul{ list-style:none; display:flex; gap:6px; margin:0; padding:0; }
-    .pagination-wrap li{ display:flex; }
-    .pagination-wrap li > a, .pagination-wrap li > span{
-        min-width:32px; height:32px; padding:0 8px; border-radius:8px; border:1px solid var(--input-border,#DBDFEA);
-        background:#fff; font-size:12.5px; font-weight:600; color: var(--muted,#667085); cursor:pointer;
-        display:flex; align-items:center; justify-content:center; text-decoration:none;
+    /* ============================================================
+       PAGINATION — custom buttons only
+       ============================================================ */
+    .pagination-wrap{
+        display:flex;
+    }
+    .pagination-wrap .pagination{
+        list-style:none;
+        display:flex;
+        gap:6px;
+        margin:0;
+        padding:0;
+        align-items:center;
+        flex-wrap:wrap;
+    }
+    .pagination-wrap .pagination li{
+        display:flex;
+    }
+    .pagination-wrap .pagination li > a,
+    .pagination-wrap .pagination li > span{
+        min-width:34px;
+        height:34px;
+        padding:0 10px;
+        border-radius:8px;
+        border:1px solid var(--input-border,#DBDFEA);
+        background:#fff;
+        font-size:13px;
+        font-weight:600;
+        color: var(--muted,#667085);
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        text-decoration:none;
+        line-height:1;
         transition:background .15s, color .15s, border-color .15s;
+        box-sizing:border-box;
     }
-    .pagination-wrap li > a:hover{ border-color: var(--orange,#BF0001); color: var(--orange,#BF0001); }
-    .pagination-wrap li.active span, .pagination-wrap li > span[aria-current]{
-        background: linear-gradient(135deg, #0F1526, #1D2439); border-color: transparent; color:#fff;
+    .pagination-wrap .pagination li > a:hover{
+        border-color: var(--orange,#BF0001);
+        color: var(--orange,#BF0001);
+        background:#fff;
     }
-    .pagination-wrap li.disabled span{ opacity:.4; cursor:not-allowed; }
+    .pagination-wrap .pagination li.active > span{
+        background: linear-gradient(135deg, #0F1526, #1D2439);
+        border-color: transparent;
+        color:#fff;
+    }
+    .pagination-wrap .pagination li.disabled > span{
+        opacity:.4;
+        cursor:not-allowed;
+        background:#FBFBFD;
+    }
+    .pagination-wrap .pagination li i{
+        font-size:12px;
+        line-height:1;
+    }
 
     .empty-state{ padding:64px 24px; text-align:center; }
     .empty-state .ico{

@@ -19,7 +19,7 @@ class ContactBannerRequest extends FormRequest
             'title'         => 'required|string|max:80',
             'company_name'  => 'required|string|max:50',
             'description'   => 'required|string|max:700',
-            // image / video are never "required" directly here — the after()
+            // image / video are never "required" directly here  the after()
             // hook below decides whether at least one is missing.
             'image'         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'video'         => 'nullable|mimes:mp4,mov,webm|max:20480',
@@ -47,6 +47,7 @@ class ContactBannerRequest extends FormRequest
     {
         return [
             'title.required' => 'Please enter a title.',
+            'title.max'      => 'Title must not exceed 80 characters.',
 
             'company_name.required' => 'Please enter the company name.',
             'company_name.max'      => 'Company name must not exceed 50 characters.',

@@ -37,6 +37,7 @@ class BannerRequest extends FormRequest
             'title.min'            => 'Title must be at least :min characters.',
             'title.max'            => 'Title cannot exceed :max characters.',
 
+
             'description.required' => 'Please enter a banner description.',
             'description.max'      => 'Description cannot exceed :max characters.',
 

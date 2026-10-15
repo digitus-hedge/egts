@@ -67,7 +67,7 @@ class AboutUsRequest extends FormRequest
         return [
             'required' => 'The :attribute is required.',
             'string'   => 'The :attribute must be plain text.',
-            'max'      => 'The :attribute :max is too long.',
+                 'max' => 'The :attribute must not exceed :max characters.',
             'image'    => 'The :attribute must be a valid image (JPG, PNG, or WEBP).',
             'mimes'    => 'The :attribute must be a file of type: :values.',
         ];
