@@ -119,7 +119,7 @@
             <div class="field" style="margin-bottom:0;">
     <div class="field-top">
         <label class="field-label">Banner Image or Video<span class="req">*</span></label>
-        <span class="field-hint">Provide either one</span>
+        <!-- <span class="field-hint">Provide either one</span> -->
     </div>
 
     <div class="notice caution">
