@@ -10,6 +10,7 @@
             <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
 
+                    {{-- Header --}}
                     <tr>
                         <td style="background:linear-gradient(135deg,#BF0001,#8C0001);padding:28px 32px;color:#fff;">
                             <h1 style="margin:0;font-size:22px;font-weight:700;">New Feedback Received</h1>
@@ -17,8 +18,44 @@
                         </td>
                     </tr>
 
+                    {{-- Optional sender section (only if name or email was given) --}}
+                    @if (!empty($data['name']) || !empty($data['email']))
+                        <tr>
+                            <td style="padding:28px 32px 4px;">
+                                <div style="font-size:13px;color:#667085;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">
+                                    From
+                                </div>
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    @if (!empty($data['name']))
+                                        <tr>
+                                            <td style="padding:6px 0;font-size:12px;color:#9AA1B2;font-weight:600;width:120px;">NAME</td>
+                                            <td style="padding:6px 0;font-size:14px;color:#171B2C;">{{ $data['name'] }}</td>
+                                        </tr>
+                                    @endif
+                                    @if (!empty($data['email']))
+                                        <tr>
+                                            <td style="padding:6px 0;font-size:12px;color:#9AA1B2;font-weight:600;width:120px;">EMAIL</td>
+                                            <td style="padding:6px 0;font-size:14px;color:#171B2C;">
+                                                <a href="mailto:{{ $data['email'] }}" style="color:#BF0001;text-decoration:none;">{{ $data['email'] }}</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                </table>
+                            </td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td style="padding:24px 32px 0;">
+                                <div style="display:inline-block;padding:6px 12px;background:#F6F7FB;border-radius:999px;font-size:11.5px;color:#667085;font-weight:600;letter-spacing:0.04em;">
+                                    SUBMITTED ANONYMOUSLY
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
+
+                    {{-- Message --}}
                     <tr>
-                        <td style="padding:30px 32px;">
+                        <td style="padding:24px 32px 10px;">
                             <div style="font-size:13px;color:#667085;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">
                                 Message
                             </div>
@@ -26,6 +63,7 @@
                         </td>
                     </tr>
 
+                    {{-- Meta --}}
                     <tr>
                         <td style="padding:0 32px 24px;">
                             <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-top:1px solid #EDEEF3;">
@@ -45,9 +83,10 @@
                         </td>
                     </tr>
 
+                    {{-- Footer --}}
                     <tr>
                         <td style="padding:18px 32px;background:#FAFBFD;border-top:1px solid #EDEEF3;font-size:12px;color:#9AA1B2;text-align:center;">
-                            Sent anonymously from <strong style="color:#002F5F;">EGTS Website</strong>
+                            Sent from <strong style="color:#002F5F;">EGTS Website</strong>
                         </td>
                     </tr>
                 </table>

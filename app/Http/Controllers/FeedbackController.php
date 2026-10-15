@@ -13,19 +13,25 @@ class FeedbackController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
+            'name'    => ['nullable', 'string', 'max:120'],
+            'email'   => ['nullable', 'email', 'max:180'],
             'message' => ['required', 'string', 'min:5', 'max:3000'],
         ], [
             'message.required' => 'Please write your feedback message.',
             'message.min'      => 'Please write at least 5 characters.',
             'message.max'      => 'Message is too long (max 3000 characters).',
+            'email.email'      => 'Please enter a valid email address.',
         ]);
 
+        // Normalise optional fields so the mail view can rely on them.
+        $data['name']       = trim($data['name'] ?? '') ?: null;
+        $data['email']      = trim($data['email'] ?? '') ?: null;
         $data['ip']         = $request->ip();
         $data['user_agent'] = substr((string) $request->userAgent(), 0, 255);
         $data['sent_at']    = now()->format('d M Y, h:i A');
 
         try {
-            Mail::to(config('mail.feedback_to', 'info.egts26@gmail.com'))
+            Mail::to(config('mail.feedback_to', 'ajithkumar@erbiltech.com'))
                 ->send(new FeedbackMail($data));
 
             return response()->json([
