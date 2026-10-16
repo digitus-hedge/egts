@@ -245,7 +245,7 @@
             </div>
 
             <div class="lc-group-inner">
-                <h2>ISO ND Q1</h2>
+                <h2>ISO/Q1 License</h2>
                 <p class="lc-group-desc">EGTS is certified to ISO 9001:2015 and API Spec Q1, ensuring every product and service is delivered through controlled, traceable and continually improving quality processes built for the oil and gas industry.</p>
 
                 @if ($isoCertificates->count())

@@ -72,8 +72,8 @@
                     <option value="">-- Select License Type --</option>
                     <option value="API License" {{ old('license_type', $certificate->license_type) === 'API License' ? 'selected' : '' }}>API License</option>
                     <option value="Premium License" {{ old('license_type', $certificate->license_type) === 'Premium License' ? 'selected' : '' }}>Premium License</option>
-                         <option value="ISO License" {{ old('license_type', $certificate->license_type) === 'ISO License' ? 'selected' : '' }}>ISO ND Q1</option>
-                  
+                         <option value="ISO License" {{ old('license_type', $certificate->license_type) === 'ISO License' ? 'selected' : '' }}>ISO/Q1</option>
+
                 </select>
                 @error('license_type')
                     <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span>
@@ -153,7 +153,7 @@
 </div>
 
 
-      
+
 
         <div class="savebar">
             <div class="savebar-inner">

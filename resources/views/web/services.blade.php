@@ -137,7 +137,7 @@
                 <div class="capabilities-header">
                     <div class="capabilities-header-left">
                         <span class="capabilities-eyebrow">OUR TECHNICAL CAPABILITIES</span>
-                        <h2>Inspection expertise for demanding oil & gas operations.</h2>
+                        <h2>Service expertise for demanding oil & gas operations.</h2>
                     </div>
                     <div class="capabilities-header-right">
                         <p>Focused technical services covering equipment inspection, NDT, quality control, repair
@@ -173,13 +173,13 @@
         <section class="services-cta-section">
             <div class="services-cta-inner">
                 <div class="services-cta-image">
-                    <img src="{{ asset('images/about 9.jpeg') }}" alt="Technician performing inspection">
+                    <img src="{{ asset('images/Threading and Repair services.webp') }}" alt="Precision Threading and Repair services">
                 </div>
 
                 <div class="services-cta-content">
-                    <h2>Need reliable inspection support?</h2>
-                    <p>Talk to EGTS about your equipment, inspection requirements and technical challenges. Our team can
-                        help identify the right inspection approach for your operation.</p>
+                    <h2>Looking for Precision Threading and Repair services?</h2>
+                    <p>Talk to EGTS about your equipment, service requirements and technical challenges. Our team can
+                        help identify the right service approach for your operation.</p>
                     <a href="{{ url('/contact') }}" class="services-cta-btn">Request Consultation</a>
                 </div>
             </div>
@@ -191,34 +191,35 @@
     @include('web.layout.footer')
 
     <script>
-    (function () {
-        const heroes = document.querySelectorAll('.page-hero, .sd-hero');
+        (function () {
+            const heroes = document.querySelectorAll('.page-hero, .sd-hero');
 
-        heroes.forEach(function (hero) {
-            function matchHeroToImage() {
-                if (window.innerWidth > 991) {
-                    hero.style.aspectRatio = '';
-                    return;
+            heroes.forEach(function (hero) {
+                function matchHeroToImage() {
+                    if (window.innerWidth > 991) {
+                        hero.style.aspectRatio = '';
+                        return;
+                    }
+
+                    const bgImage = getComputedStyle(hero).backgroundImage;
+                    const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
+                    if (!match || !match[1]) return;
+
+                    const img = new Image();
+                    img.onload = function () {
+                        if (img.naturalWidth && img.naturalHeight) {
+                            hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+                        }
+                    };
+                    img.src = match[1];
                 }
 
-                const bgImage = getComputedStyle(hero).backgroundImage;
-                const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
-                if (!match || !match[1]) return;
+                matchHeroToImage();
+                window.addEventListener('resize', matchHeroToImage);
+            });
+        })();
 
-                const img = new Image();
-                img.onload = function () {
-                    if (img.naturalWidth && img.naturalHeight) {
-                        hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
-                    }
-                };
-                img.src = match[1];
-            }
-
-            matchHeroToImage();
-            window.addEventListener('resize', matchHeroToImage);
-        });
-    })();
-</script>
+    </script>
 
 </body>
 
