@@ -12,6 +12,34 @@
     <link rel="icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="shortcut icon" type="image/webp" href="{{ asset('images/logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.webp') }}">
+    <style>
+        @media (max-width: 991px) {
+
+            /* Force the outer two-column layout to a single column */
+            .ct-content-inner {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+            }
+
+            /* Force the red info column to full width */
+            .ct-info-col-red {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Force the dept cards to stack as a single column */
+            .ct-dept-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            .ct-dept-card {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+        }
+
+    </style>
 </head>
 
 <body>
@@ -146,21 +174,27 @@
                         </div>
                     </div>
 
-                    <div class="ct-dept-grid">
-                        <div class="ct-dept-card">
+                    <div class="ct-dept-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                        <div class="ct-dept-card" style="width: 100%; min-width: 0;">
                             <h4>QA / QC</h4>
-                            <span>{{ $contactBanner->qaqc_phone }}</span>
-                            <span>{{ $contactBanner->qaqc_email }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->qaqc_phone }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->qaqc_email }}</span>
                         </div>
-                        <div class="ct-dept-card">
+                        <div class="ct-dept-card" style="width: 100%; min-width: 0;">
                             <h4>Operations</h4>
-                            <span>{{ $contactBanner->operations_phone }}</span>
-                            <span>{{ $contactBanner->operations_email }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->operations_phone }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->operations_email }}</span>
                         </div>
-                        <div class="ct-dept-card">
+                        <div class="ct-dept-card" style="width: 100%; min-width: 0;">
                             <h4>Sales</h4>
-                            <span>{{ $contactBanner->sales_phone }}</span>
-                            <span>{{ $contactBanner->sales_email }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->sales_phone }}</span>
+                            <span
+                                style="word-break: normal; overflow-wrap: break-word;">{{ $contactBanner->sales_email }}</span>
                         </div>
                     </div>
 
@@ -274,11 +308,11 @@
             <!--<iframe src="https://www.google.com/maps?q={{ $mapQuery }}&output=embed" width="100%" height="100%"-->
             <!--    style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">-->
             <!--</iframe>-->
-            
-             <iframe src="https://www.google.com/maps?q=36.268120,43.964869&z=16&output=embed" width="100%" height="100%"
+
+            <iframe src="https://www.google.com/maps?q=36.268120,43.964869&z=16&output=embed" width="100%" height="100%"
                 style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
             </iframe>
-            
+
         </section>
         {{-- ===== End Map Section ===== --}}
 
@@ -366,33 +400,34 @@
     </script>
 
     <script>
-    (function () {
-        const hero = document.querySelector('.ct-hero');
-        if (!hero) return;
+        (function () {
+            const hero = document.querySelector('.ct-hero');
+            if (!hero) return;
 
-        function matchHeroToImage() {
-            if (window.innerWidth > 991) {
-                hero.style.aspectRatio = '';
-                return;
+            function matchHeroToImage() {
+                if (window.innerWidth > 991) {
+                    hero.style.aspectRatio = '';
+                    return;
+                }
+
+                const bgImage = getComputedStyle(hero).backgroundImage;
+                const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
+                if (!match || !match[1]) return;
+
+                const img = new Image();
+                img.onload = function () {
+                    if (img.naturalWidth && img.naturalHeight) {
+                        hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+                    }
+                };
+                img.src = match[1];
             }
 
-            const bgImage = getComputedStyle(hero).backgroundImage;
-            const match = bgImage.match(/url\(["']?(.*?)["']?\)/);
-            if (!match || !match[1]) return;
+            matchHeroToImage();
+            window.addEventListener('resize', matchHeroToImage);
+        })();
 
-            const img = new Image();
-            img.onload = function () {
-                if (img.naturalWidth && img.naturalHeight) {
-                    hero.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
-                }
-            };
-            img.src = match[1];
-        }
-
-        matchHeroToImage();
-        window.addEventListener('resize', matchHeroToImage);
-    })();
-</script>
+    </script>
 
 </body>
 

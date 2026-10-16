@@ -523,8 +523,17 @@
     z-index: 0;
 }
 
-@media (max-width: 991px) {
-    .ct-dept-grid {
+
+/* Force stacked layout on tablet + below, regardless of other rules */
+@media only screen and (max-width: 991px) {
+    .ct-content-inner .ct-info-col-red .ct-dept-grid,
+    section .ct-dept-grid {
+        display: grid !important;
         grid-template-columns: 1fr !important;
+    }
+    .ct-content-inner .ct-info-col-red .ct-dept-grid > .ct-dept-card,
+    section .ct-dept-grid > .ct-dept-card {
+        width: auto !important;
+        min-width: 0 !important;
     }
 }
