@@ -18,8 +18,8 @@ class CertificateRequest extends FormRequest
         return [
             'title'       => 'required|string|max:50',
             'description' => 'nullable|string|max:1000',
-            'license_type' => 'required|in:API License,Premium License,ISO License',
-                 'image'        => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'license_type' => 'required|in:API License,Premium License,ISO License,MNR,Establishment certificate,OEM',
+            'image'        => 'nullable|file|mimes:pdf,doc,docx|max:10240',
 
             'meta_title'       => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',

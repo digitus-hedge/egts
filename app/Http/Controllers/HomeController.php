@@ -88,9 +88,11 @@ class HomeController extends Controller
         $licenseBanner = LicenseBanner::first();
         $apiCertificates = Certificate::where('license_type', 'API License')->latest()->get();
         $premiumCertificates = Certificate::where('license_type', 'Premium License')->latest()->get();
-
         $isoCertificates = Certificate::where('license_type', 'ISO License')->latest()->get();
-        return view('web.licenses', compact('licenseBanner', 'apiCertificates', 'premiumCertificates','isoCertificates'));
+        $mnrCertificates = Certificate::where('license_type', 'MNR')->latest()->get();
+        $establishmentCertificates = Certificate::where('license_type', 'Establishment certificate')->latest()->get();
+        $oemCertificates = Certificate::where('license_type', 'OEM')->latest()->get();
+        return view('web.licenses', compact('licenseBanner', 'apiCertificates', 'premiumCertificates','isoCertificates', 'mnrCertificates', 'establishmentCertificates', 'oemCertificates'));
     }
 
     public function contact()

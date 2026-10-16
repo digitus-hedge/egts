@@ -72,7 +72,10 @@
                     <option value="">-- Select License Type --</option>
                     <option value="API License" {{ old('license_type', $certificate->license_type) === 'API License' ? 'selected' : '' }}>API License</option>
                     <option value="Premium License" {{ old('license_type', $certificate->license_type) === 'Premium License' ? 'selected' : '' }}>Premium License</option>
-                         <option value="ISO License" {{ old('license_type', $certificate->license_type) === 'ISO License' ? 'selected' : '' }}>ISO/Q1</option>
+                    <option value="ISO License" {{ old('license_type', $certificate->license_type) === 'ISO License' ? 'selected' : '' }}>ISO/Q1</option>
+                    <option value="MNR" {{ old('license_type', $certificate->license_type) === 'MNR' ? 'selected' : '' }}>MNR</option>
+                    <option value="Establishment certificate" {{ old('license_type', $certificate->license_type) === 'Establishment certificate' ? 'selected' : '' }}>Establishment certificate</option>
+                    <option value="OEM" {{ old('license_type', $certificate->license_type) === 'OEM' ? 'selected' : '' }}>OEM</option>
 
                 </select>
                 @error('license_type')
